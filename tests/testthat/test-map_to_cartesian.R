@@ -7,7 +7,7 @@
 # writes. Adjust if your package uses a different accessor.
 # -----------------------------------------------------------------
 get_coordinate_system <- function(df) {
-  get_metadata(df, "coordinate_system")
+  aniframe::get_metadata(df, "coordinate_system")
 }
 
 # -----------------------------------------------------------------
@@ -20,7 +20,7 @@ make_polar_df <- function() {
     rho = c(1, sqrt(2), 0),
     phi = c(0, pi / 4, pi / 2)
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
 }
 
 make_cylindrical_df <- function() {
@@ -31,7 +31,7 @@ make_cylindrical_df <- function() {
     phi = c(0, pi / 4, pi / 2),
     z = c(0, 5, -3)
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
 }
 
 make_spherical_df <- function() {
@@ -42,7 +42,7 @@ make_spherical_df <- function() {
     phi = c(0, pi / 4, pi / 2),
     theta = c(pi / 3, pi / 2, 0) # various polar angles
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
 }
 
 # -----------------------------------------------------------------
@@ -50,7 +50,7 @@ make_spherical_df <- function() {
 # -----------------------------------------------------------------
 test_that("map_to_cartesian_polar() drops polar columns and creates x/y", {
   df_in <- make_polar_df()
-  df_out <- map_to_cartesian_polar(df_in) |> as_aniframe()
+  df_out <- map_to_cartesian_polar(df_in) |> aniframe::as_aniframe()
 
   # Expected Cartesian values (use the same primitives for consistency)
   expect_equal(df_out$x, polar_to_x(df_in$rho, df_in$phi))
@@ -65,7 +65,7 @@ test_that("map_to_cartesian_polar() drops polar columns and creates x/y", {
 
 test_that("map_to_cartesian_cylindrical() retains original z", {
   df_in <- make_cylindrical_df()
-  df_out <- map_to_cartesian_cylindrical(df_in) |> as_aniframe()
+  df_out <- map_to_cartesian_cylindrical(df_in) |> aniframe::as_aniframe()
 
   expect_equal(df_out$x, polar_to_x(df_in$rho, df_in$phi))
   expect_equal(df_out$y, polar_to_y(df_in$rho, df_in$phi))
@@ -77,7 +77,7 @@ test_that("map_to_cartesian_cylindrical() retains original z", {
 
 test_that("map_to_cartesian_spherical() correctly computes z via spherical_to_z()", {
   df_in <- make_spherical_df()
-  df_out <- map_to_cartesian_spherical(df_in) |> as_aniframe()
+  df_out <- map_to_cartesian_spherical(df_in) |> aniframe::as_aniframe()
 
   expect_equal(df_out$x, polar_to_x(df_in$rho, df_in$phi))
   expect_equal(df_out$y, polar_to_y(df_in$rho, df_in$phi))
@@ -93,7 +93,7 @@ test_that("map_to_cartesian_spherical() correctly computes z via spherical_to_z(
 test_that("map_to_cartesian() dispatches to the correct helper (polar)", {
   df_in <- make_polar_df()
   df_out <- map_to_cartesian(df_in)
-  df_correct <- map_to_cartesian_polar(df_in) |> as_aniframe()
+  df_correct <- map_to_cartesian_polar(df_in) |> aniframe::as_aniframe()
 
   # Should be identical to the direct call
   expect_identical(df_out, df_correct)
@@ -102,7 +102,7 @@ test_that("map_to_cartesian() dispatches to the correct helper (polar)", {
 test_that("map_to_cartesian() dispatches to the correct helper (cylindrical)", {
   df_in <- make_cylindrical_df()
   df_out <- map_to_cartesian(df_in)
-  df_correct <- map_to_cartesian_cylindrical(df_in) |> as_aniframe()
+  df_correct <- map_to_cartesian_cylindrical(df_in) |> aniframe::as_aniframe()
 
   expect_identical(df_out, df_correct)
 })
@@ -110,7 +110,7 @@ test_that("map_to_cartesian() dispatches to the correct helper (cylindrical)", {
 test_that("map_to_cartesian() dispatches to the correct helper (spherical)", {
   df_in <- make_spherical_df()
   df_out <- map_to_cartesian(df_in)
-  df_correct <- map_to_cartesian_spherical(df_in) |> as_aniframe()
+  df_correct <- map_to_cartesian_spherical(df_in) |> aniframe::as_aniframe()
 
   expect_identical(df_out, df_correct)
 })
@@ -134,7 +134,7 @@ test_that("map_to_cartesian_*() works with empty data frames (zero rows)", {
     rho = numeric(),
     phi = numeric()
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
   empty_cyl <- dplyr::tibble(
     keypoint = integer(),
     time = numeric(),
@@ -142,7 +142,7 @@ test_that("map_to_cartesian_*() works with empty data frames (zero rows)", {
     phi = numeric(),
     z = numeric()
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
   empty_sph <- dplyr::tibble(
     keypoint = integer(),
     time = as.numeric(),
@@ -150,7 +150,7 @@ test_that("map_to_cartesian_*() works with empty data frames (zero rows)", {
     phi = numeric(),
     theta = numeric()
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
 
   expect_equal(nrow(map_to_cartesian_polar(empty_polar)), 0L)
   expect_equal(nrow(map_to_cartesian_cylindrical(empty_cyl)), 0L)
@@ -164,7 +164,7 @@ test_that("map_to_cartesian_*() works with empty data frames (zero rows)", {
 
 test_that("map_to_cartesian_*() preserves additional non‑coordinate columns", {
   df_extra <- make_polar_df() |>
-    as_aniframe() |>
+    aniframe::as_aniframe() |>
     dplyr::mutate(label = letters[1], weight = c(10))
 
   out <- map_to_cartesian(df_extra)
@@ -192,7 +192,7 @@ test_that("Cartesian results from the three systems are mutually consistent when
 
   # Polar (no z)
   df_pol <- dplyr::tibble(keypoint = 1, time = 1, rho = rho_xy, phi = phi_xy) |>
-    as_aniframe()
+    aniframe::as_aniframe()
   # Cylindrical (adds the known z)
   df_cyl <- dplyr::tibble(
     keypoint = 1,
@@ -201,7 +201,7 @@ test_that("Cartesian results from the three systems are mutually consistent when
     phi = phi_xy,
     z = z
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
   # Spherical (uses theta)
   df_sph <- dplyr::tibble(
     keypoint = 1,
@@ -210,7 +210,7 @@ test_that("Cartesian results from the three systems are mutually consistent when
     phi = phi_xy,
     theta = theta_sp
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
 
   cart_pol <- map_to_cartesian(df_pol)
   cart_cyl <- map_to_cartesian(df_cyl)

@@ -6,7 +6,7 @@ test_that("map_to_cylindrical() correctly converts simple Cartesian data", {
     y = c(0, 1, 0, -1),
     z = c(0, 1, 2, 3)
   ) |>
-    as_aniframe()
+    aniframe::as_aniframe()
 
   cyl <- map_to_cylindrical(df)
 

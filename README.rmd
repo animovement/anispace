@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-install.packages('anispace', repos = c('https://animovement.r-universe.dev', 'https://cloud.r-project.org'))
+#install.packages('anispace', repos = c('https://animovement.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 
@@ -54,6 +54,6 @@ If you enjoy the package, please make sure to cite it. If you find a bug, feel f
 
 To cite *anispace* in publications use:
 
-```{r}
+```{r, eval = FALSE}
 citation("anispace")
 ```

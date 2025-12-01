@@ -1,6 +1,6 @@
-url: http://animovement.dev/aniframe/
+url: http://animovement.dev/anispace/
 home:
-  title: "aniframe – An R package providing core data structures for movement data"
+  title: "anispace – An R package providing spatial transformation methods for movement data"
 
 authors:
   - name: "Mikkel Roald‑Arbøl"
@@ -22,30 +22,6 @@ navbar:
       - lightswitch
 
 reference:
-  - title: "Creating and converting aniframe objects"
-    desc: >
-      Functions that create an aniframe, coerce other objects to aniframe,
-      or provide example data.
-    contents:
-      - as_aniframe
-      - aniframe
-      - example_aniframe
-      - is_aniframe
-      - ensure_is_aniframe
-
-  - title: "Metadata handling"
-    desc: >
-      Functions for reading, setting, and retrieving the metadata attached to an aniframe.
-    contents:
-      - get_metadata
-      - set_metadata
-      - set_unit_time
-      - set_unit_space
-      - set_unit_angle
-      - set_sampling_rate
-      - get_trackball_calibration_factor
-      - default_metadata
-
   - title: "Transformations"
     desc: |
       These functions allow you to make tranformations to your coordinate system,
@@ -64,48 +40,11 @@ reference:
     - polar_to_x
     - polar_to_y
     - spherical_to_z
-    - is_cartesian
-    - is_cartesian_1d
-    - is_cartesian_2d
-    - is_cartesian_3d
-    - is_polar
-    - is_cylindrical
-    - is_spherical
 
   - title: "Helpers"
     desc:
     contents:
-    - rad_to_deg
-    - deg_to_rad
     - calculate_angular_difference
     - wrap_angle
     - unwrap_angle
     - diff_angle
-
-  - title: "Data manipulation (dplyr‑style verbs)"
-    desc: >
-      S3 methods that mirror dplyr verbs for aniframe objects.
-    contents:
-      - arrange.aniframe
-      - filter.aniframe
-      - group_by.aniframe
-      - mutate.aniframe
-      - relocate.aniframe
-      - rename.aniframe
-      - select.aniframe
-      - slice.aniframe
-      - tbl_sum.aniframe   # (or tbl_sum.aniframe if that’s the name)
-      - ungroup.aniframe
-
-  - title: "Conversion helpers"
-    desc: |
-      Methods that let you treat aniframe objects like regular data frames.
-    contents:
-      - as.data.frame.aniframe
-      - "[.aniframe"
-      - "[[.aniframe"
-      - "[[<-.aniframe"
-      - "[<-.aniframe"
-      - "$<-.aniframe"
-      - "$.aniframe"
-      - names<-.aniframe    # if you expose the setter for names

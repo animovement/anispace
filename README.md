@@ -1,0 +1,52 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# anispace
+
+<!-- badges: start -->
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17344597.svg)](10.5281/zenodo.17344597)
+[![R-CMD-check](https://github.com/animovement/anispace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/animovement/anispace/actions/workflows/R-CMD-check.yaml)
+[![anispace status
+badge](https://animovement.r-universe.dev/badges/anispace)](https://animovement.r-universe.dev)
+[![Codecov test
+coverage](https://codecov.io/gh/animovement/anispace/graph/badge.svg)](https://app.codecov.io/gh/animovement/anispace)
+<!-- badges: end -->
+
+*An R package providing spatial transformation methods for movement
+data*
+
+The primary aim of the *anispace* package is to provide spatial
+transformation methods for movement data.
+
+## Installation
+
+You can install the development version of *anispace* with:
+
+``` r
+install.packages('anispace', repos = c('https://animovement.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+Once you have installed the package, you can load it with:
+
+``` r
+library("anispace")
+```
+
+## Status
+
+> **Warning**
+>
+> 🏗️ The package is currently in early development and the interface is
+> subject to change. Feel free to play around and provide feedback.
+
+## Citation
+
+If you enjoy the package, please make sure to cite it. If you find a
+bug, feel free to open an issue.
+
+To cite *anispace* in publications use:
+
+``` r
+citation("anispace")
+```

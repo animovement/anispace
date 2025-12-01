@@ -12,7 +12,7 @@ wrap_angle(x, modulo = c("2pi", "pi", "asis"))
 \item{modulo}{Character string specifying the target range:
 \describe{
 \item{\code{"2pi"}}{Wrap to [0, 2π) (default)}
-\item{\code{"pi"}}{Wrap to [-π, π)}
+\item{\code{"pi"}}{Wrap to (-π, π]}
 \item{\code{"asis"}}{No wrapping, return unchanged}
 }}
 }
@@ -30,7 +30,7 @@ angles <- c(-pi, 0, pi, 2 * pi, 3 * pi)
 # Wrap to [0, 2π)
 wrap_angle(angles, "2pi")
 
-# Wrap to [-π, π)
+# Wrap to (-π, π]
 wrap_angle(angles, "pi")
 
 # No wrapping

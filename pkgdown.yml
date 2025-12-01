@@ -1,0 +1,8 @@
+pandoc: 3.1.11
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles: {}
+last_built: 2025-12-01T10:57Z
+urls:
+  reference: http://animovement.dev/anispace/reference
+  article: http://animovement.dev/anispace/articles

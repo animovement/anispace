@@ -113,21 +113,3 @@ unwrap_angle <- function(x) {
   angle_diff_wrapped <- wrap_angle(angle_diff, modulo = "pi")
   c(x[1], x[1] + cumsum(angle_diff_wrapped))
 }
-
-#' Convert radians to degrees
-#'
-#' @param x Numeric vector of angles (radians).
-#' @return Numeric vector of angles expressed in degrees.
-#' @export
-rad_to_deg <- function(x) {
-  (x * 180) / pi
-}
-
-#' Convert degrees to radians
-#'
-#' @param x Numeric vector of angles (degrees).
-#' @return Numeric vector of angles expressed in radians.
-#' @export
-deg_to_rad <- function(x) {
-  (x * pi) / 180
-}

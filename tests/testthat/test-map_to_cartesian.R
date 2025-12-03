@@ -2,17 +2,22 @@
 # tests/testthat/test-map_to_cartesian.R
 # -------------------------------------------------------------
 
-# -----------------------------------------------------------------
-# Helper to read the coordinate‑system metadata that `set_metadata()`
-# writes. Adjust if your package uses a different accessor.
-# -----------------------------------------------------------------
+# Testing:
+# - map_to_cartesian_polar() drops polar columns and creates x/y
+# - map_to_cartesian_cylindrical() retains original z
+# - map_to_cartesian_spherical() correctly computes z via spherical_to_z()
+# - map_to_cartesian() dispatches to the correct helper (polar)
+# - map_to_cartesian() dispatches to the correct helper (cylindrical)
+# - map_to_cartesian() dispatches to the correct helper (spherical)
+# - map_to_cartesian() aborts with a clear message for unknown systems
+# - map_to_cartesian_*() works with empty data frames (zero rows)
+# - map_to_cartesian_*() preserves additional non-coordinate columns
+# - Cartesian results from the three systems are mutually consistent when the inputs represent the same point
+
 get_coordinate_system <- function(df) {
   aniframe::get_metadata(df, "coordinate_system")
 }
 
-# -----------------------------------------------------------------
-# 1️⃣  Minimal synthetic data frames for each coordinate system
-# -----------------------------------------------------------------
 make_polar_df <- function() {
   dplyr::tibble(
     keypoint = 1:3,
@@ -40,27 +45,21 @@ make_spherical_df <- function() {
     time = seq(1:3),
     rho = c(1, sqrt(2), 0),
     phi = c(0, pi / 4, pi / 2),
-    theta = c(pi / 3, pi / 2, 0) # various polar angles
+    theta = c(pi / 3, pi / 2, 0)
   ) |>
     aniframe::as_aniframe()
 }
 
-# -----------------------------------------------------------------
-# 2️⃣  Tests for the *internal* helpers
-# -----------------------------------------------------------------
 test_that("map_to_cartesian_polar() drops polar columns and creates x/y", {
   df_in <- make_polar_df()
   df_out <- map_to_cartesian_polar(df_in) |> aniframe::as_aniframe()
 
-  # Expected Cartesian values (use the same primitives for consistency)
   expect_equal(df_out$x, polar_to_x(df_in$rho, df_in$phi))
   expect_equal(df_out$y, polar_to_y(df_in$rho, df_in$phi))
 
-  # Original polar columns must be gone
   expect_false(any(c("rho", "phi") %in% colnames(df_out)))
 
-  # Metadata should indicate cartesian
-  expect_equal(get_coordinate_system(df_out) |> as.character(), "cartesian")
+  expect_equal(get_coordinate_system(df_out) |> as.character(), "cartesian_2d")
 })
 
 test_that("map_to_cartesian_cylindrical() retains original z", {
@@ -69,10 +68,10 @@ test_that("map_to_cartesian_cylindrical() retains original z", {
 
   expect_equal(df_out$x, polar_to_x(df_in$rho, df_in$phi))
   expect_equal(df_out$y, polar_to_y(df_in$rho, df_in$phi))
-  expect_equal(df_out$z, df_in$z) # z unchanged
+  expect_equal(df_out$z, df_in$z)
 
   expect_false(any(c("rho", "phi") %in% colnames(df_out)))
-  expect_equal(get_coordinate_system(df_out) |> as.character(), "cartesian")
+  expect_equal(get_coordinate_system(df_out) |> as.character(), "cartesian_3d")
 })
 
 test_that("map_to_cartesian_spherical() correctly computes z via spherical_to_z()", {
@@ -84,18 +83,14 @@ test_that("map_to_cartesian_spherical() correctly computes z via spherical_to_z(
   expect_equal(df_out$z, spherical_to_z(df_in$rho, df_in$theta))
 
   expect_false(any(c("rho", "phi", "theta") %in% colnames(df_out)))
-  expect_equal(get_coordinate_system(df_out) |> as.character(), "cartesian")
+  expect_equal(get_coordinate_system(df_out) |> as.character(), "cartesian_3d")
 })
 
-# -----------------------------------------------------------------
-# 3️⃣  Tests for the public dispatcher `map_to_cartesian()`
-# -----------------------------------------------------------------
 test_that("map_to_cartesian() dispatches to the correct helper (polar)", {
   df_in <- make_polar_df()
   df_out <- map_to_cartesian(df_in)
   df_correct <- map_to_cartesian_polar(df_in) |> aniframe::as_aniframe()
 
-  # Should be identical to the direct call
   expect_identical(df_out, df_correct)
 })
 
@@ -116,7 +111,6 @@ test_that("map_to_cartesian() dispatches to the correct helper (spherical)", {
 })
 
 test_that("map_to_cartesian() aborts with a clear message for unknown systems", {
-  # Create a data frame that lacks any of the recognised signatures
   bad_df <- dplyr::tibble(keypoint = 1, a = 1, b = 2)
 
   expect_error(
@@ -124,9 +118,6 @@ test_that("map_to_cartesian() aborts with a clear message for unknown systems", 
   )
 })
 
-# -----------------------------------------------------------------
-# 4️⃣  Edge‑case handling
-# -----------------------------------------------------------------
 test_that("map_to_cartesian_*() works with empty data frames (zero rows)", {
   empty_polar <- dplyr::tibble(
     keypoint = integer(),
@@ -156,44 +147,35 @@ test_that("map_to_cartesian_*() works with empty data frames (zero rows)", {
   expect_equal(nrow(map_to_cartesian_cylindrical(empty_cyl)), 0L)
   expect_equal(nrow(map_to_cartesian_spherical(empty_sph)), 0L)
 
-  # Dispatcher should also return an empty cartesian aniframe
   expect_equal(nrow(map_to_cartesian(empty_polar)), 0L)
   expect_equal(nrow(map_to_cartesian(empty_cyl)), 0L)
   expect_equal(nrow(map_to_cartesian(empty_sph)), 0L)
 })
 
-test_that("map_to_cartesian_*() preserves additional non‑coordinate columns", {
+test_that("map_to_cartesian_*() preserves additional non-coordinate columns", {
   df_extra <- make_polar_df() |>
     aniframe::as_aniframe() |>
     dplyr::mutate(label = letters[1], weight = c(10))
 
   out <- map_to_cartesian(df_extra)
 
-  # The extra columns should survive untouched
   expect_equal(out$label, df_extra$label)
   expect_equal(out$weight, df_extra$weight)
 
-  # Still get the cartesian metadata
-  expect_equal(get_coordinate_system(out) |> as.character(), "cartesian")
+  expect_equal(get_coordinate_system(out) |> as.character(), "cartesian_2d")
 })
 
-# -----------------------------------------------------------------
-# 5️⃣  Consistency check across the three systems
-# -----------------------------------------------------------------
 test_that("Cartesian results from the three systems are mutually consistent when the inputs represent the same point", {
-  # Build three representations of the same physical point (x = 1, y = 1, z = 2)
   x <- 1
   y <- 1
   z <- 2
-  rho_xy <- sqrt(x^2 + y^2) # cylindrical/polar radius
-  phi_xy <- atan2(y, x) %% (2 * pi) # azimuth
-  r_total <- sqrt(x^2 + y^2 + z^2) # spherical radius (not needed here)
-  theta_sp <- acos(z / sqrt(x^2 + y^2 + z^2)) # polar angle from +z
+  rho_xy <- sqrt(x^2 + y^2)
+  phi_xy <- atan2(y, x) %% (2 * pi)
+  r_total <- sqrt(x^2 + y^2 + z^2)
+  theta_sp <- acos(z / sqrt(x^2 + y^2 + z^2))
 
-  # Polar (no z)
   df_pol <- dplyr::tibble(keypoint = 1, time = 1, rho = rho_xy, phi = phi_xy) |>
     aniframe::as_aniframe()
-  # Cylindrical (adds the known z)
   df_cyl <- dplyr::tibble(
     keypoint = 1,
     time = 1,
@@ -202,7 +184,6 @@ test_that("Cartesian results from the three systems are mutually consistent when
     z = z
   ) |>
     aniframe::as_aniframe()
-  # Spherical (uses theta)
   df_sph <- dplyr::tibble(
     keypoint = 1,
     time = 1,
@@ -216,7 +197,6 @@ test_that("Cartesian results from the three systems are mutually consistent when
   cart_cyl <- map_to_cartesian(df_cyl)
   cart_sph <- map_to_cartesian(df_sph)
 
-  # All three should give the same (x, y, z) triple (within tolerance)
   expect_equal(cart_pol$x, x, tolerance = 1e-8)
   expect_equal(cart_pol$y, y, tolerance = 1e-8)
 

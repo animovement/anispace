@@ -1,4 +1,93 @@
-# tests/testthat/test-angle-helpers.R
+# Tests for unwrap_angle
+# - basic unwrapping without NAs
+# - NA at start of vector
+# - NA in middle of vector
+# - NA at end of vector
+# - multiple NAs
+# - all NA input
+# - empty vector
+# - single element vector
+# - unwrapping across 2*pi boundary
+
+test_that("unwrap_angle correctly unwraps continuous angles", {
+  # Simple increasing sequence that doesn't need unwrapping
+  x <- c(0, 0.1, 0.2, 0.3)
+  expect_equal(unwrap_angle(x), x)
+
+  # Sequence that wraps around 2*pi -> 0
+  x <- c(3 * pi / 2, 7 * pi / 4, 2 * pi - 0.1, 0.1)
+  result <- unwrap_angle(x)
+  # Should be monotonically increasing after unwrapping
+  expect_true(all(diff(result) > 0))
+})
+test_that("unwrap_angle handles NA at start", {
+  x <- c(NA, 0.1, 0.2, 0.3)
+  result <- unwrap_angle(x)
+
+  expect_true(is.na(result[1]))
+  # Remaining values should still be correctly unwrapped
+  expect_equal(result[2:4], c(0.1, 0.2, 0.3))
+})
+
+test_that("unwrap_angle handles NA in middle", {
+  x <- c(0.1, 0.2, NA, 0.4, 0.5)
+  result <- unwrap_angle(x)
+
+  expect_equal(result[1:2], c(0.1, 0.2))
+  expect_true(is.na(result[3]))
+  # Values after NA should continue unwrapping from non-NA values
+  expect_false(is.na(result[4]))
+  expect_false(is.na(result[5]))
+})
+
+test_that("unwrap_angle handles NA at end", {
+  x <- c(0.1, 0.2, 0.3, NA)
+  result <- unwrap_angle(x)
+
+  expect_equal(result[1:3], c(0.1, 0.2, 0.3))
+  expect_true(is.na(result[4]))
+})
+
+test_that("unwrap_angle handles multiple NAs", {
+  x <- c(0.1, NA, 0.3, NA, 0.5)
+  result <- unwrap_angle(x)
+
+  expect_false(is.na(result[1]))
+  expect_true(is.na(result[2]))
+  expect_false(is.na(result[3]))
+  expect_true(is.na(result[4]))
+  expect_false(is.na(result[5]))
+})
+
+test_that("unwrap_angle handles all NA input", {
+  x <- c(NA_real_, NA_real_, NA_real_)
+  result <- unwrap_angle(x)
+
+  expect_length(result, 3)
+  expect_true(all(is.na(result)))
+})
+
+test_that("unwrap_angle handles empty vector", {
+  result <- unwrap_angle(numeric(0))
+  expect_length(result, 0)
+})
+
+test_that("unwrap_angle handles single element", {
+  expect_equal(unwrap_angle(0.5), 0.5)
+  expect_true(is.na(unwrap_angle(NA_real_)))
+})
+
+test_that("unwrap_angle preserves monotonicity across 2*pi boundary", {
+  # Angles that cross from just below 2*pi to just above 0
+  x <- c(5.5, 6.0, 6.2, 0.1, 0.3)
+  result <- unwrap_angle(x)
+
+  # After unwrapping, should be monotonically increasing
+  expect_true(all(diff(result) > 0))
+  # Last values should be > 2*pi after unwrapping
+
+  expect_true(result[5] > 2 * pi)
+})
 
 test_that("wrap_angle() wraps angles to [0, 2pi)", {
   expect_equal(wrap_angle(0), 0)

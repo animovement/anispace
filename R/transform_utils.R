@@ -111,9 +111,9 @@ wrap_angle <- function(x, modulo = c("2pi", "pi", "asis")) {
 unwrap_angle <- function(x) {
   if (length(x) == 0L) {
     return(x)
- }
+  }
 
- if (all(is.na(x))) {
+  if (all(is.na(x))) {
     return(x)
   }
 

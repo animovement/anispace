@@ -9,17 +9,16 @@
 # - single element vector
 # - unwrapping across 2*pi boundary
 
-test_that("unwrap_angle correctly unwraps continuous angles",
-{
- # Simple increasing sequence that doesn't need unwrapping
+test_that("unwrap_angle correctly unwraps continuous angles", {
+  # Simple increasing sequence that doesn't need unwrapping
   x <- c(0, 0.1, 0.2, 0.3)
   expect_equal(unwrap_angle(x), x)
 
- # Sequence that wraps around 2*pi -> 0
+  # Sequence that wraps around 2*pi -> 0
   x <- c(3 * pi / 2, 7 * pi / 4, 2 * pi - 0.1, 0.1)
   result <- unwrap_angle(x)
   # Should be monotonically increasing after unwrapping
- expect_true(all(diff(result) > 0))
+  expect_true(all(diff(result) > 0))
 })
 test_that("unwrap_angle handles NA at start", {
   x <- c(NA, 0.1, 0.2, 0.3)

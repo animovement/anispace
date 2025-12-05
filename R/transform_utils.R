@@ -109,7 +109,24 @@ wrap_angle <- function(x, modulo = c("2pi", "pi", "asis")) {
 #' @return Numeric vector of the same length.
 #' @export
 unwrap_angle <- function(x) {
-  angle_diff <- diff(x)
+  if (length(x) == 0L) {
+    return(x)
+ }
+
+ if (all(is.na(x))) {
+    return(x)
+  }
+
+  result <- numeric(length(x))
+  result[is.na(x)] <- NA_real_
+
+  non_na_idx <- which(!is.na(x))
+  x_clean <- x[non_na_idx]
+
+  angle_diff <- diff(x_clean)
   angle_diff_wrapped <- wrap_angle(angle_diff, modulo = "pi")
-  c(x[1], x[1] + cumsum(angle_diff_wrapped))
+  unwrapped_clean <- c(x_clean[1], x_clean[1] + cumsum(angle_diff_wrapped))
+
+  result[non_na_idx] <- unwrapped_clean
+  result
 }

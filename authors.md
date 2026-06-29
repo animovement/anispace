@@ -2,8 +2,8 @@
 
 ## Authors
 
-- **Mikkel Roald-Arbøl**. Author, maintainer.
-  [](https://orcid.org/0000-0002-9998-0058)
+- **[Mikkel Roald-Arbøl](https://roald-arboel.com)**. Author,
+  maintainer. [](https://orcid.org/0000-0002-9998-0058)
 
 ## Citation
 
@@ -12,7 +12,7 @@ Source:
 
 Roald-Arbøl M (2025). “aniframe: An R package providing spatial
 transformation methods for movement data.”
-[doi:10.5281/zenodo.17344598](https://doi.org/10.5281/zenodo.17344598),
+[doi:10.5281/zenodo.17344598](https://doi.org/10.5281/zenodo.17344598).
 <http://animovement.dev/aniframe/>.
 
     @Misc{anispace,

@@ -11,12 +11,14 @@ transformation methods for movement data.
 You can install the development version of *anispace* with:
 
 ``` r
+
 install.packages('anispace', repos = c('https://animovement.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 Once you have installed the package, you can load it with:
 
 ``` r
+
 library("anispace")
 ```
 
@@ -35,5 +37,6 @@ bug, feel free to open an issue.
 To cite *anispace* in publications use:
 
 ``` r
+
 citation("anispace")
 ```

@@ -22,5 +22,5 @@ transformation methods for movement data.”
       year = {2025},
       url = {http://animovement.dev/aniframe/},
       abstract = {An R package providing spatial transformation methods for movement data.},
-      version = {0.1.3},
+      version = {0.2.0},
     }

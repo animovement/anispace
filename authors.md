@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/animovement/anispace/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/animovement/anispace/blob/v0.2.0/inst/CITATION)
 
 Roald-Arbøl M (2025). “aniframe: An R package providing spatial
 transformation methods for movement data.”

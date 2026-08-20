@@ -3,7 +3,7 @@
 Computes lagged differences between successive angles (in radians) and
 converts each raw subtraction into the shortest signed angular distance
 using
-[`calculate_angular_difference()`](http://animovement.dev/anispace/reference/calculate_angular_difference.md).
+[`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md).
 The output mimics [`base::diff()`](https://rdrr.io/r/base/diff.html),
 returning `NA`s for the first `lag` positions so it works nicely inside
 [`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html).

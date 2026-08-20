@@ -22,13 +22,6 @@ Once you have installed the package, you can load it with:
 library("anispace")
 ```
 
-## Status
-
-> **Warning**
->
-> 🏗️ The package is currently in early development and the interface is
-> subject to change. Feel free to play around and provide feedback.
-
 ## Citation
 
 If you enjoy the package, please make sure to cite it. If you find a
@@ -39,4 +32,22 @@ To cite *anispace* in publications use:
 ``` r
 
 citation("anispace")
+#> To cite anispace in publications, please cite the animovement toolbox
+#> as a whole (the first entry below). If your work used only anispace,
+#> you may cite the package directly instead (the second entry).
+#> 
+#>   Roald-Arbøl M (2026). "animovement: An R toolbox for analysing
+#>   movement across space and time." doi:10.5281/zenodo.13235277
+#>   <https://doi.org/10.5281/zenodo.13235277>.
+#>   <https://animovement.dev/animovement/>.
+#> 
+#>   Roald-Arbøl M (2026). "anispace: An R package providing spatial
+#>   transformation methods for movement data."
+#>   doi:10.5281/zenodo.21996854
+#>   <https://doi.org/10.5281/zenodo.21996854>.
+#>   <https://animovement.dev/anispace/>.
+#> 
+#> To see these entries in BibTeX format, use 'print(<citation>,
+#> bibtex=TRUE)', 'toBibtex(.)', or set
+#> 'options(citation.bibtex.max=999)'.
 ```

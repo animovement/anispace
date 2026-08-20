@@ -2,23 +2,34 @@
 % Please edit documentation in R/transform_coords_rotate.R
 \name{rotate_coords}
 \alias{rotate_coords}
-\title{Rotate coordinates in Cartesian space (2D or 3D)}
+\title{Rotate coordinates in Cartesian space}
 \usage{
 rotate_coords(data, alignment_points, align_perpendicular = FALSE)
 }
 \arguments{
-\item{data}{movement data frame with columns: time, individual, keypoint, x, y, z (optional)}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{alignment_points}{character vector of length 2 specifying the keypoints used for alignment}
+\item{alignment_points}{A character vector of length 2 naming the keypoints
+used for alignment.}
 
-\item{align_perpendicular}{logical; if TRUE, alignment_points are rotated to be
-perpendicular to the 0-degree axis (y-axis). If FALSE (default), they are
-aligned with the x-axis.}
+\item{align_perpendicular}{A logical value (default \code{FALSE}) determining the
+axis of alignment. \code{FALSE} aligns \code{alignment_points} with the x-axis;
+\code{TRUE} rotates them perpendicular to it.}
 }
 \value{
-movement data frame with rotated coordinates
+An aniframe with rotated \code{x} and \code{y} (and \code{z}, where present).
 }
 \description{
-Automatically detects whether data are 2D or 3D and applies
-the corresponding rotation method.
+Rotates coordinates so that two chosen keypoints define the axis, detecting
+whether the data are two- or three-dimensional.
 }
+\examples{
+af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+rotate_coords(af, alignment_points = c("head", "neck"))
+}
+\seealso{
+Other coordinate transforms:
+\code{\link[=transform_to_egocentric]{transform_to_egocentric()}},
+\code{\link[=translate_coords]{translate_coords()}}
+}
+\concept{coordinate transforms}

@@ -1,50 +1,40 @@
-#' Transform coordinates to egocentric reference frame
+#' Transform coordinates to an egocentric reference frame
 #'
-#' Transforms Cartesian coordinates into an egocentric reference frame through
-#' a two-step process: translation followed by rotation. First translates all
-#' coordinates relative to a reference keypoint, then rotates the coordinate
-#' system based on specified alignment points.
+#' Places the animal at the centre of its own coordinate system, by translating
+#' all coordinates onto a reference keypoint and then rotating so that two
+#' chosen keypoints define the forward axis. Positions then describe the
+#' animal's own geometry rather than where it happened to be in the arena,
+#' which is what makes poses comparable across frames and individuals.
 #'
-#' @param data movement data frame with columns: time, individual, keypoint, x, y
-#' @param to_keypoint character; keypoint to use as the new origin
-#' @param alignment_points character vector of length 2 specifying the keypoint names
-#'        to use for alignment
-#' @param align_perpendicular logical; if TRUE, alignment_points will be rotated to be
-#'        perpendicular to the 0-degree axis. If FALSE (default), alignment_points
-#'        will be rotated to align with the 0-degree axis
-#'
-#' @details
-#' This function combines translation and rotation to create an egocentric reference
-#' frame. It:
-#' 1. Translates all coordinates relative to the specified keypoint (to_keypoint)
-#' 2. Rotates the coordinate system based on the alignment points
-#'
-#' The translation makes the reference keypoint the new origin (0,0), while the
-#' rotation standardizes the orientation. This is particularly useful for:
-#' * Creating egocentric reference frames
-#' * Standardizing pose data across frames or individuals
-#' * Analyzing relative motion patterns
-#'
+#' @param data An aniframe in a Cartesian coordinate system.
+#' @param to_keypoint A character string naming the keypoint to place at the
+#'   origin.
+#' @param alignment_points A character vector of length 2 naming the keypoints
+#'   that define the axis.
+#' @param align_perpendicular A logical value (default `FALSE`) determining the
+#'   axis of alignment. `FALSE` aligns `alignment_points` with the forward axis;
+#'   `TRUE` rotates them perpendicular to it.
+#' @return An aniframe with translated and rotated coordinates, in which
+#'   `to_keypoint` sits at the origin.
+#' @family coordinate transforms
+#' @seealso [translate_coords()] and [rotate_coords()], which this combines.
 #' @examples
-#' \dontrun{
-#' # Transform coordinates to make nose the origin and align body axis
-#' transformed_data <- transform_to_egocentric(
-#'   data,
-#'   to_keypoint = "nose",
-#'   alignment_points = c("nose", "tail"),
-#'   align_perpendicular = FALSE
+#' af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+#'
+#' # The head becomes the origin, and the head-neck axis points forward
+#' transform_to_egocentric(
+#'   af,
+#'   to_keypoint = "head",
+#'   alignment_points = c("head", "neck")
 #' )
 #'
-#' # Transform to make nose origin and ears perpendicular to forward axis
-#' transformed_data <- transform_to_egocentric(
-#'   data,
-#'   to_keypoint = "nose",
-#'   alignment_points = c("ear_left", "ear_right"),
+#' # Aligning perpendicular instead puts that axis across the forward direction
+#' transform_to_egocentric(
+#'   af,
+#'   to_keypoint = "head",
+#'   alignment_points = c("head", "neck"),
 #'   align_perpendicular = TRUE
 #' )
-#' }
-#'
-#' @return movement data frame in egocentric reference frame
 #' @export
 transform_to_egocentric <- function(
   data,

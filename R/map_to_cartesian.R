@@ -1,8 +1,18 @@
-#' Map from polar to Cartesian coordinates
+#' Map to Cartesian coordinates
 #'
-#' @param data an aniframe with polar coordinates
+#' Converts an aniframe back to Cartesian coordinates, detecting whether it is
+#' currently polar, cylindrical or spherical.
 #'
-#' @return an aniframe with Cartesian coordinates
+#' @param data An aniframe in a polar, cylindrical or spherical coordinate
+#'   system.
+#' @return An aniframe with `x` and `y` (and `z`, where the input was
+#'   three-dimensional) in place of the polar columns.
+#' @family coordinate systems
+#' @examples
+#' af <- aniframe::example_aniframe(n_obs = 5, n_individuals = 1, n_keypoints = 1)
+#'
+#' # Round-trips back to the coordinates it started from
+#' map_to_cartesian(map_to_polar(af))
 #' @export
 map_to_cartesian <- function(data) {
   aniframe::ensure_is_aniframe(data)

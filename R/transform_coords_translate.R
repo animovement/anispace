@@ -1,17 +1,23 @@
-#' Translate coordinates (Cartesian)
+#' Translate coordinates in Cartesian space
 #'
-#' Translates coordinates in Cartesian space. Takes either a single point
-#' (`to_x` and `to_y`), a vector with the same length as the time dimension or a
-#' keypoint (`to_keypoint`), which can be used to transform the data into an
-#' egocentric reference frame.
+#' Moves the origin, either to a fixed point, to a per-observation position, or
+#' onto a keypoint. Translating onto a keypoint is how coordinates are made
+#' relative to the animal rather than the arena.
 #'
-#' @param data movement data frame with columns: time, individual, keypoint, x, y
-#' @param to_x x coordinates; either a single value or a time-length vector
-#' @param to_y y coordinates; either a single value or a time-length vector
-#' @param to_z z coordinates (only if 3D); either a single value or a time-length vector
-#' @param to_keypoint all other coordinates becomes relative to this keypoint
+#' @param data An aniframe in a Cartesian coordinate system.
+#' @param to_x A numeric x-coordinate: either one value, or one per time point.
+#' @param to_y A numeric y-coordinate: either one value, or one per time point.
+#' @param to_z A numeric z-coordinate, for three-dimensional data: either one
+#'   value, or one per time point.
+#' @param to_keypoint A character string naming a keypoint to place at the
+#'   origin. All other coordinates become relative to it.
+#' @return An aniframe with translated coordinates.
+#' @family coordinate transforms
+#' @examples
+#' af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 #'
-#' @return movement data frame with translated coordinates
+#' # Everything becomes relative to the head, which sits at the origin
+#' translate_coords(af, to_keypoint = "head")
 #' @export
 translate_coords <- function(
   data,

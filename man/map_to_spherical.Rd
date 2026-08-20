@@ -7,11 +7,24 @@
 map_to_spherical(data)
 }
 \arguments{
-\item{data}{A data frame/tibble containing columns \code{x}, \code{y}, \code{z}}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 }
 \value{
-Same data frame with columns \code{rho}, \code{theta}, \code{phi}
+An aniframe with \code{rho}, \code{phi} and \code{theta} in place of \code{x}, \code{y} and \code{z}.
 }
 \description{
 Map from Cartesian to spherical coordinates
 }
+\examples{
+af <- aniframe::example_aniframe(
+  n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
+)
+map_to_spherical(af)
+}
+\seealso{
+Other coordinate systems:
+\code{\link[=map_to_cartesian]{map_to_cartesian()}},
+\code{\link[=map_to_cylindrical]{map_to_cylindrical()}},
+\code{\link[=map_to_polar]{map_to_polar()}}
+}
+\concept{coordinate systems}

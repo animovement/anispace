@@ -1,8 +1,13 @@
 #' Map from Cartesian to cylindrical coordinates
 #'
-#' @param data movement data frame with Cartesian coordinates
-#'
-#' @return movement data frame with cylindrical coordinates
+#' @param data An aniframe in a Cartesian coordinate system.
+#' @return An aniframe with `rho` and `phi` in place of `x` and `y`, keeping `z`.
+#' @family coordinate systems
+#' @examples
+#' af <- aniframe::example_aniframe(
+#'   n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
+#' )
+#' map_to_cylindrical(af)
 #' @export
 map_to_cylindrical <- function(data) {
   aniframe::ensure_is_aniframe(data)

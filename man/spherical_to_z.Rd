@@ -2,19 +2,35 @@
 % Please edit documentation in R/map_to_utils.R
 \name{spherical_to_z}
 \alias{spherical_to_z}
-\title{Convert cylindrical radius and polar angle to Cartesian z‑coordinate}
+\title{Cartesian z-coordinate from spherical coordinates}
 \usage{
 spherical_to_z(rho, theta)
 }
 \arguments{
-\item{rho}{Numeric vector – cylindrical radius (√(x² + y²)).}
+\item{rho}{A numeric vector of cylindrical radii, that is \code{sqrt(x^2 + y^2)}.}
 
-\item{theta}{Numeric vector – polar angle measured from the +z axis (radians).}
+\item{theta}{A numeric vector of inclination angles measured from the
+positive z-axis, in radians.}
 }
 \value{
-Numeric vector of z‑coordinates (same length as input)
+A numeric vector of z-coordinates, the same length as \code{rho}.
 }
 \description{
-Handles regular points as well as the two pole regions (θ≈0 and θ≈π).
-Non‑finite inputs remain \code{NA}.
+Handles the two pole regions (inclination near \code{0} or \code{pi}) as well as
+regular points. Non-finite inputs return \code{NA}.
 }
+\examples{
+spherical_to_z(1, pi / 4)
+
+# Non-finite input propagates as NA
+spherical_to_z(c(1, NA), c(pi / 4, pi / 4))
+}
+\seealso{
+Other coordinate conversion:
+\code{\link[=cartesian_to_phi]{cartesian_to_phi()}},
+\code{\link[=cartesian_to_rho]{cartesian_to_rho()}},
+\code{\link[=cartesian_to_theta]{cartesian_to_theta()}},
+\code{\link[=polar_to_x]{polar_to_x()}},
+\code{\link[=polar_to_y]{polar_to_y()}}
+}
+\concept{coordinate conversion}

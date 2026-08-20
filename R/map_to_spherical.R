@@ -1,7 +1,13 @@
 #' Map from Cartesian to spherical coordinates
 #'
-#' @param data A data frame/tibble containing columns `x`, `y`, `z`
-#' @return Same data frame with columns `rho`, `theta`, `phi`
+#' @param data An aniframe in a Cartesian coordinate system.
+#' @return An aniframe with `rho`, `phi` and `theta` in place of `x`, `y` and `z`.
+#' @family coordinate systems
+#' @examples
+#' af <- aniframe::example_aniframe(
+#'   n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
+#' )
+#' map_to_spherical(af)
 #' @export
 map_to_spherical <- function(data) {
   aniframe::ensure_is_aniframe(data) # your existing sanity check
@@ -9,7 +15,7 @@ map_to_spherical <- function(data) {
 
   data <- data |>
     dplyr::mutate(
-      rho = cartesian_to_rho(.data$x, .data$y), # distance in xy‑plane
+      rho = cartesian_to_rho(.data$x, .data$y), # distance in xy-plane
       phi = cartesian_to_phi(.data$x, .data$y), # azimuth (same as cylindrical)
       theta = cartesian_to_theta(.data$x, .data$y, .data$z) # polar angle
     ) |>

@@ -1,15 +1,19 @@
-#' Rotate coordinates in Cartesian space (2D or 3D)
+#' Rotate coordinates in Cartesian space
 #'
-#' Automatically detects whether data are 2D or 3D and applies
-#' the corresponding rotation method.
+#' Rotates coordinates so that two chosen keypoints define the axis, detecting
+#' whether the data are two- or three-dimensional.
 #'
-#' @param data movement data frame with columns: time, individual, keypoint, x, y, z (optional)
-#' @param alignment_points character vector of length 2 specifying the keypoints used for alignment
-#' @param align_perpendicular logical; if TRUE, alignment_points are rotated to be
-#'        perpendicular to the 0-degree axis (y-axis). If FALSE (default), they are
-#'        aligned with the x-axis.
-#'
-#' @return movement data frame with rotated coordinates
+#' @param data An aniframe in a Cartesian coordinate system.
+#' @param alignment_points A character vector of length 2 naming the keypoints
+#'   used for alignment.
+#' @param align_perpendicular A logical value (default `FALSE`) determining the
+#'   axis of alignment. `FALSE` aligns `alignment_points` with the x-axis;
+#'   `TRUE` rotates them perpendicular to it.
+#' @return An aniframe with rotated `x` and `y` (and `z`, where present).
+#' @family coordinate transforms
+#' @examples
+#' af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+#' rotate_coords(af, alignment_points = c("head", "neck"))
 #' @export
 rotate_coords <- function(
   data,

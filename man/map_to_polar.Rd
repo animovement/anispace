@@ -7,11 +7,24 @@
 map_to_polar(data)
 }
 \arguments{
-\item{data}{movement data frame with Cartesian coordinates}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 }
 \value{
-movement data frame with polar coordinates
+An aniframe with \code{rho} and \code{phi} in place of \code{x} and \code{y}.
 }
 \description{
 Map from Cartesian to polar coordinates
 }
+\examples{
+af <- aniframe::example_aniframe(
+  n_obs = 5, n_individuals = 1, n_keypoints = 1
+)
+map_to_polar(af)
+}
+\seealso{
+Other coordinate systems:
+\code{\link[=map_to_cartesian]{map_to_cartesian()}},
+\code{\link[=map_to_cylindrical]{map_to_cylindrical()}},
+\code{\link[=map_to_spherical]{map_to_spherical()}}
+}
+\concept{coordinate systems}

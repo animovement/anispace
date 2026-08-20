@@ -1,26 +1,25 @@
-#' Difference of angular values
+#' Differences between successive angles
 #'
-#' Computes lagged differences between successive angles (in radians) and
-#' converts each raw subtraction into the shortest signed angular distance
-#' using `calculate_angular_difference()`.  The output mimics `base::diff()`,
-#' returning `NA`s for the first `lag` positions so it works nicely inside
-#' `dplyr::mutate()`.
+#' Computes lagged differences between successive angles, converting each raw
+#' subtraction into the shortest signed angular distance with
+#' [calculate_angular_difference()]. The output mirrors [base::diff()], returning
+#' `NA` for the first `lag` positions so it can be used inside
+#' [dplyr::mutate()].
 #'
-#' @param x   Numeric vector of angles (radians).
-#' @param lag Positive integer indicating the lag (default = 1L). Must be
-#'            an integer ≥ 1.
-#' @return Numeric vector of the same length as `x`. The first `lag` entries
-#'         are `NA`; subsequent entries contain the angular differences.
+#' @param x A numeric vector of angles, in radians.
+#' @param lag A positive integer (default `1L`) giving the lag to difference at.
+#' @return A numeric vector the same length as `x`. The first `lag` entries are
+#'   `NA`; the rest are angular differences in radians.
+#' @family angle utilities
 #' @examples
-#' # Simple example
-#' angles <- c(0, pi/2, pi, 3*pi/2)
+#' angles <- c(0, pi / 2, pi, 3 * pi / 2)
 #' diff_angle(angles)
 #'
-#' # Using a lag of 2
+#' # A larger lag compares points further apart
 #' diff_angle(angles, lag = 2L)
 #' @export
 diff_angle <- function(x, lag = 1L) {
-  # Input validation – mimic base::diff's checks
+  # Input validation - mimic base::diff's checks
   if (!is.numeric(x)) {
     cli::cli_abort("`x` must be a numeric vector of angles (in radians).")
   }
@@ -36,7 +35,7 @@ diff_angle <- function(x, lag = 1L) {
   # Compute successive differences recursively, just like base::diff
   result <- x[(lag + 1):length(x)] - x[seq_len(length(x) - lag)]
 
-  # Apply the angular‑distance conversion element‑wise
+  # Apply the angular-distance conversion element-wise
   result <- mapply(
     calculate_angular_difference,
     from_angle = x[seq_len(length(x) - lag)],
@@ -48,14 +47,21 @@ diff_angle <- function(x, lag = 1L) {
   result
 }
 
-#' Calculate angular difference
+#' Shortest signed distance between two angles
 #'
-#' Computes the shortest signed angular distance (in radians) from
-#' `from_angle` to `to_angle`.
+#' Computes the shortest signed angular distance from `from_angle` to
+#' `to_angle`, wrapped to `(-pi, pi]`. Going from one angle to another the long
+#' way round therefore returns the short way, with a sign giving the direction.
 #'
-#' @param from_angle Numeric. Starting angle (radians).
-#' @param to_angle   Numeric. Target angle (radians).
-#' @return Numeric scalar – the angular difference wrapped to \[-π, π\].
+#' @param from_angle A numeric starting angle, in radians.
+#' @param to_angle A numeric target angle, in radians.
+#' @return A numeric angular difference in radians, in `(-pi, pi]`.
+#' @family angle utilities
+#' @examples
+#' calculate_angular_difference(0, pi / 2)
+#'
+#' # The short way round is anticlockwise, so the result is negative
+#' calculate_angular_difference(0.1, 2 * pi - 0.1)
 #' @export
 calculate_angular_difference <- function(from_angle, to_angle) {
   wrap_angle(to_angle - from_angle, modulo = "pi")
@@ -63,32 +69,27 @@ calculate_angular_difference <- function(from_angle, to_angle) {
 
 #' Constrain angles to a standard range
 #'
-#' Wraps any numeric vector of angles (in radians) to a standard interval
-#' using modulo arithmetic.
+#' Wraps a vector of angles to a standard interval using modulo arithmetic.
 #'
-#' @param x Numeric vector of angles (radians).
-#' @param modulo Character string specifying the target range:
+#' @param x A numeric vector of angles, in radians.
+#' @param modulo A character string (default `"2pi"`) giving the target range:
 #'   \describe{
-#'     \item{`"2pi"`}{Wrap to \[0, 2π) (default)}
-#'     \item{`"pi"`}{Wrap to (-π, π]}
-#'     \item{`"asis"`}{No wrapping, return unchanged}
+#'     \item{`"2pi"`}{Wrap to `[0, 2*pi)`.}
+#'     \item{`"pi"`}{Wrap to `(-pi, pi]`.}
+#'     \item{`"asis"`}{Return unchanged.}
 #'   }
-#'
-#' @return Numeric vector of the same length as `x`, with angles wrapped
-#'   to the specified range.
-#'
+#' @return A numeric vector the same length as `x`, wrapped to the chosen range.
+#' @family angle utilities
 #' @examples
 #' angles <- c(-pi, 0, pi, 2 * pi, 3 * pi)
 #'
-#' # Wrap to [0, 2π)
 #' wrap_angle(angles, "2pi")
 #'
-#' # Wrap to (-π, π]
+#' # The same angles on the signed interval
 #' wrap_angle(angles, "pi")
 #'
-#' # No wrapping
+#' # "asis" is a no-op, useful when the range is chosen by a caller
 #' wrap_angle(angles, "asis")
-#'
 #' @export
 wrap_angle <- function(x, modulo = c("2pi", "pi", "asis")) {
   modulo <- match.arg(modulo)
@@ -101,12 +102,24 @@ wrap_angle <- function(x, modulo = c("2pi", "pi", "asis")) {
   )
 }
 
-#' Remove constrain for angles to keep within \[0, 2π)
+#' Remove wrapping from a sequence of angles
 #'
-#' Unwraps any numeric vector from the interval \[0, 2π).
+#' Reverses the discontinuity introduced by wrapping, by accumulating the
+#' shortest step between successive angles. A heading that crosses `2*pi`
+#' therefore continues to increase rather than jumping back to zero, which is
+#' what makes it differentiable. `NA` values are preserved in place.
 #'
-#' @param x Numeric vector of angles (radians).
-#' @return Numeric vector of the same length.
+#' @param x A numeric vector of angles, in radians.
+#' @return A numeric vector the same length as `x`, without wrapping
+#'   discontinuities.
+#' @family angle utilities
+#' @examples
+#' # A heading turning steadily past a full circle, wrapped to [0, 2*pi)
+#' wrapped <- wrap_angle(seq(0, 3 * pi, length.out = 7), "2pi")
+#' wrapped
+#'
+#' # Unwrapping restores the steady progression
+#' unwrap_angle(wrapped)
 #' @export
 unwrap_angle <- function(x) {
   if (length(x) == 0L) {

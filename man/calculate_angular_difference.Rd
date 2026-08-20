@@ -2,19 +2,33 @@
 % Please edit documentation in R/transform_utils.R
 \name{calculate_angular_difference}
 \alias{calculate_angular_difference}
-\title{Calculate angular difference}
+\title{Shortest signed distance between two angles}
 \usage{
 calculate_angular_difference(from_angle, to_angle)
 }
 \arguments{
-\item{from_angle}{Numeric. Starting angle (radians).}
+\item{from_angle}{A numeric starting angle, in radians.}
 
-\item{to_angle}{Numeric. Target angle (radians).}
+\item{to_angle}{A numeric target angle, in radians.}
 }
 \value{
-Numeric scalar – the angular difference wrapped to [-π, π].
+A numeric angular difference in radians, in \verb{(-pi, pi]}.
 }
 \description{
-Computes the shortest signed angular distance (in radians) from
-\code{from_angle} to \code{to_angle}.
+Computes the shortest signed angular distance from \code{from_angle} to
+\code{to_angle}, wrapped to \verb{(-pi, pi]}. Going from one angle to another the long
+way round therefore returns the short way, with a sign giving the direction.
 }
+\examples{
+calculate_angular_difference(0, pi / 2)
+
+# The short way round is anticlockwise, so the result is negative
+calculate_angular_difference(0.1, 2 * pi - 0.1)
+}
+\seealso{
+Other angle utilities:
+\code{\link[=diff_angle]{diff_angle()}},
+\code{\link[=unwrap_angle]{unwrap_angle()}},
+\code{\link[=wrap_angle]{wrap_angle()}}
+}
+\concept{angle utilities}

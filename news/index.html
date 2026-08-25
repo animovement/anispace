@@ -51,6 +51,17 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="anispace-development-version">anispace (development version)<a class="anchor" aria-label="anchor" href="#anispace-development-version"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<ul><li>
+<p><code><a href="../reference/map_to_spherical.html">map_to_spherical()</a></code> now returns the radial distance from the origin as <code>rho</code>, rather than the cylindrical radius — the distance from the z-axis (<a href="https://github.com/animovement/anispace/issues/19" class="external-link">#19</a>). <code>theta</code> already used the full radius, so the triple was internally inconsistent with the name “spherical”; ISO 80000-2 and the usual physics convention both use the radial distance.</p>
+<p>This was <strong>lossy</strong>, not merely non-standard. A point on the z-axis has a cylindrical radius of zero, so its height could not be recovered: <code>(0, 0, 5)</code> round-tripped through <code><a href="../reference/map_to_cartesian.html">map_to_cartesian()</a></code> to the origin. It now returns <code>(0, 0, 5)</code>.</p>
+<p><code><a href="../reference/map_to_cartesian.html">map_to_cartesian()</a></code> and <code><a href="../reference/spherical_to_z.html">spherical_to_z()</a></code> follow the same convention, so round trips are unaffected for points away from the axis. <strong>Code that read <code>rho</code> from a spherical frame, or called <code><a href="../reference/spherical_to_z.html">spherical_to_z()</a></code> directly, will need updating</strong>: <code>spherical_to_z(rho, theta)</code> is now <code>rho * cos(theta)</code> where it was <code>rho / tan(theta)</code>. <code><a href="../reference/map_to_cylindrical.html">map_to_cylindrical()</a></code> is unchanged — <code>rho</code> there is still the distance from the z-axis, which is correct for a cylindrical frame.</p>
+</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="anispace-development-version-1">anispace (development version)<a class="anchor" aria-label="anchor" href="#anispace-development-version-1"></a></h2>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="anispace-020-2026-08-18">anispace 0.2.0 (2026-08-18)<a class="anchor" aria-label="anchor" href="#anispace-020-2026-08-18"></a></h2>

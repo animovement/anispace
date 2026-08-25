@@ -1,7 +1,6 @@
 # Cartesian z-coordinate from spherical coordinates
 
-Handles the two pole regions (inclination near `0` or `pi`) as well as
-regular points. Non-finite inputs return `NA`.
+Non-finite inputs return `NA`.
 
 ## Usage
 
@@ -37,9 +36,9 @@ Other coordinate conversion:
 
 ``` r
 spherical_to_z(1, pi / 4)
-#> [1] 1
+#> [1] 0.7071068
 
 # Non-finite input propagates as NA
 spherical_to_z(c(1, NA), c(pi / 4, pi / 4))
-#> [1]  1 NA
+#> [1] 0.7071068        NA
 ```

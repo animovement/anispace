@@ -2,6 +2,37 @@
 
 ## anispace (development version)
 
+### Bug fixes
+
+- [`map_to_spherical()`](https://animovement.dev/anispace/reference/map_to_spherical.md)
+  now returns the radial distance from the origin as `rho`, rather than
+  the cylindrical radius — the distance from the z-axis
+  ([\#19](https://github.com/animovement/anispace/issues/19)). `theta`
+  already used the full radius, so the triple was internally
+  inconsistent with the name “spherical”; ISO 80000-2 and the usual
+  physics convention both use the radial distance.
+
+  This was **lossy**, not merely non-standard. A point on the z-axis has
+  a cylindrical radius of zero, so its height could not be recovered:
+  `(0, 0, 5)` round-tripped through
+  [`map_to_cartesian()`](https://animovement.dev/anispace/reference/map_to_cartesian.md)
+  to the origin. It now returns `(0, 0, 5)`.
+
+  [`map_to_cartesian()`](https://animovement.dev/anispace/reference/map_to_cartesian.md)
+  and
+  [`spherical_to_z()`](https://animovement.dev/anispace/reference/spherical_to_z.md)
+  follow the same convention, so round trips are unaffected for points
+  away from the axis. **Code that read `rho` from a spherical frame, or
+  called
+  [`spherical_to_z()`](https://animovement.dev/anispace/reference/spherical_to_z.md)
+  directly, will need updating**: `spherical_to_z(rho, theta)` is now
+  `rho * cos(theta)` where it was `rho / tan(theta)`.
+  [`map_to_cylindrical()`](https://animovement.dev/anispace/reference/map_to_cylindrical.md)
+  is unchanged — `rho` there is still the distance from the z-axis,
+  which is correct for a cylindrical frame.
+
+## anispace (development version)
+
 ## anispace 0.2.0 (2026-08-18)
 
 First tagged release. anispace has been usable for a while but was never

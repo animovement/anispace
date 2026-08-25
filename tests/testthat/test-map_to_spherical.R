@@ -42,8 +42,11 @@ test_that("map_to_spherical() currently reports rho as the cylindrical radius", 
 
 test_that("map_to_spherical() round-trips through map_to_cartesian()", {
   df <- data.frame(
-    time = 1:2, keypoint = "nose",
-    x = c(3, 1), y = c(4, -2), z = c(12, 2)
+    time = 1:2,
+    keypoint = "nose",
+    x = c(3, 1),
+    y = c(4, -2),
+    z = c(12, 2)
   ) |>
     aniframe::as_aniframe()
 
@@ -55,7 +58,13 @@ test_that("map_to_spherical() round-trips through map_to_cartesian()", {
 })
 
 test_that("map_to_spherical() drops the Cartesian columns", {
-  df <- data.frame(time = 1:2, keypoint = "nose", x = c(1, 2), y = c(3, 4), z = c(5, 6)) |>
+  df <- data.frame(
+    time = 1:2,
+    keypoint = "nose",
+    x = c(1, 2),
+    y = c(3, 4),
+    z = c(5, 6)
+  ) |>
     aniframe::as_aniframe()
 
   sph <- map_to_spherical(df)

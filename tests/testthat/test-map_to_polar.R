@@ -25,7 +25,12 @@ test_that("map_to_polar() drops the Cartesian columns", {
 })
 
 test_that("map_to_polar() round-trips through map_to_cartesian()", {
-  df <- data.frame(time = 1:3, keypoint = "nose", x = c(1, 2, -3), y = c(4, -5, 6)) |>
+  df <- data.frame(
+    time = 1:3,
+    keypoint = "nose",
+    x = c(1, 2, -3),
+    y = c(4, -5, 6)
+  ) |>
     aniframe::as_aniframe()
 
   back <- map_to_cartesian(map_to_polar(df))

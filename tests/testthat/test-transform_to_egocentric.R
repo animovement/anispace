@@ -60,7 +60,11 @@ test_that("align_perpendicular rotates the axis by a quarter turn", {
 
 test_that("transform_to_egocentric() keeps every row and returns an aniframe", {
   df <- make_frame()
-  ego <- transform_to_egocentric(df, to_keypoint = "head", alignment_points = c("head", "neck"))
+  ego <- transform_to_egocentric(
+    df,
+    to_keypoint = "head",
+    alignment_points = c("head", "neck")
+  )
 
   expect_true(aniframe::is_aniframe(ego))
   expect_equal(nrow(ego), nrow(df))

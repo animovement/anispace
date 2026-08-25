@@ -112,10 +112,27 @@ test_that("map_to_cartesian() dispatches to the correct helper (spherical)", {
 })
 
 test_that("map_to_cartesian() aborts with a clear message for unknown systems", {
-  bad_df <- dplyr::tibble(keypoint = 1, a = 1, b = 2)
+  # The frame has to be a valid aniframe, or `ensure_is_aniframe()` aborts
+  # first and the dispatch branch is never reached. The original version
+  # passed a bare tibble and asserted `expect_error()` with no message, so
+  # it caught "Data is not an aniframe." and passed while leaving the
+  # branch it is named for uncovered.
+  unknown_df <- suppressWarnings(
+    dplyr::tibble(keypoint = "a", time = 1, u = 1, v = 2) |>
+      aniframe::as_aniframe(variables_where = c("u", "v"))
+  )
+  expect_equal(get_coordinate_system(unknown_df) |> as.character(), "unknown")
 
   expect_error(
-    map_to_cartesian(bad_df)
+    map_to_cartesian(unknown_df),
+    "neither polar, cylindrical or spherical"
+  )
+})
+
+test_that("map_to_cartesian() rejects objects that are not aniframes", {
+  expect_error(
+    map_to_cartesian(dplyr::tibble(keypoint = 1, a = 1, b = 2)),
+    "not an aniframe"
   )
 })
 

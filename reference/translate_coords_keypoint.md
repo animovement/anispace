@@ -12,8 +12,9 @@ translate_coords_keypoint(data, to_keypoint)
 
 - data:
 
-  movement data frame with columns: time, individual, keypoint, x, y
+  An aniframe in a Cartesian coordinate system.
 
 - to_keypoint:
 
-  all other coordinates becomes relative to this keypoint
+  A character string naming a keypoint to place at the origin. All other
+  coordinates become relative to it.

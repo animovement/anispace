@@ -1,7 +1,6 @@
 # Constrain angles to a standard range
 
-Wraps any numeric vector of angles (in radians) to a standard interval
-using modulo arithmetic.
+Wraps a vector of angles to a standard interval using modulo arithmetic.
 
 ## Usage
 
@@ -13,43 +12,51 @@ wrap_angle(x, modulo = c("2pi", "pi", "asis"))
 
 - x:
 
-  Numeric vector of angles (radians).
+  A numeric vector of angles, in radians.
 
 - modulo:
 
-  Character string specifying the target range:
+  A character string (default `"2pi"`) giving the target range:
 
   `"2pi"`
 
-  :   Wrap to \[0, 2π) (default)
+  :   Wrap to `[0, 2*pi)`.
 
   `"pi"`
 
-  :   Wrap to (-π, π\]
+  :   Wrap to `(-pi, pi]`.
 
   `"asis"`
 
-  :   No wrapping, return unchanged
+  :   Return unchanged.
+
+  \[0, 2*pi)`.} \item{`"pi"`}{Wrap to `(-pi, pi\]:
+  R:0,%202*pi)%60.%7D%0A%20%20%5C%5Citem%7B%60%22pi%22%60%7D%7BWrap%20to%20%60(-pi,%20pi
 
 ## Value
 
-Numeric vector of the same length as `x`, with angles wrapped to the
-specified range.
+A numeric vector the same length as `x`, wrapped to the chosen range.
+
+## See also
+
+Other angle utilities:
+[`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md),
+[`diff_angle()`](https://animovement.dev/anispace/reference/diff_angle.md),
+[`unwrap_angle()`](https://animovement.dev/anispace/reference/unwrap_angle.md)
 
 ## Examples
 
 ``` r
 angles <- c(-pi, 0, pi, 2 * pi, 3 * pi)
 
-# Wrap to [0, 2π)
 wrap_angle(angles, "2pi")
 #> [1] 3.141593 0.000000 3.141593 0.000000 3.141593
 
-# Wrap to (-π, π]
+# The same angles on the signed interval
 wrap_angle(angles, "pi")
 #> [1] 3.141593 0.000000 3.141593 0.000000 3.141593
 
-# No wrapping
+# "asis" is a no-op, useful when the range is chosen by a caller
 wrap_angle(angles, "asis")
 #> [1] -3.141593  0.000000  3.141593  6.283185  9.424778
 ```

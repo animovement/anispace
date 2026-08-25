@@ -64,14 +64,40 @@
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A data frame/tibble containing columns <code>x</code>, <code>y</code>, <code>z</code></p></dd>
+<dd><p>An aniframe in a Cartesian coordinate system.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Same data frame with columns <code>rho</code>, <code>theta</code>, <code>phi</code></p>
+    <p>An aniframe with <code>rho</code>, <code>phi</code> and <code>theta</code> in place of <code>x</code>, <code>y</code> and <code>z</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other coordinate systems:
+<code><a href="map_to_cartesian.html">map_to_cartesian()</a></code>,
+<code><a href="map_to_cylindrical.html">map_to_cylindrical()</a></code>,
+<code><a href="map_to_polar.html">map_to_polar()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">af</span> <span class="op">&lt;-</span> <span class="fu">aniframe</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/aniframe/reference/example_aniframe.html" class="external-link">example_aniframe</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  n_obs <span class="op">=</span> <span class="fl">5</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span>, n_dims <span class="op">=</span> <span class="fl">3</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">map_to_spherical</span><span class="op">(</span><span class="va">af</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Individuals: 1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Keypoints:   centroid</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Sessions:    1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Trials:      1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial  time   rho    phi theta confidence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1     1 0.247 4.79   0.467      0.782</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>          1 centroid       1     1     2 1.18  4.74   2.54       0.669</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>          1 centroid       1     1     3 1.12  5.23   2.49       0.450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>          1 centroid       1     1     4 2.51  2.70   1.46       0.830</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>          1 centroid       1     1     5 2.69  0.049<span style="text-decoration: underline;">0</span> 1.11       0.438</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -12,17 +12,17 @@ translate_coords_vector(data, to_x, to_y, to_z = NULL)
 
 - data:
 
-  movement data frame with columns: time, individual, keypoint, x, y
+  An aniframe in a Cartesian coordinate system.
 
 - to_x:
 
-  x coordinates; either a single value or a time-length vector
+  A numeric x-coordinate: either one value, or one per time point.
 
 - to_y:
 
-  y coordinates; either a single value or a time-length vector
+  A numeric y-coordinate: either one value, or one per time point.
 
 - to_z:
 
-  z coordinates (only if 3D); either a single value or a time-length
-  vector
+  A numeric z-coordinate, for three-dimensional data: either one value,
+  or one per time point.

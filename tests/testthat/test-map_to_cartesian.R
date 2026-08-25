@@ -78,8 +78,9 @@ test_that("map_to_cartesian_spherical() correctly computes z via spherical_to_z(
   df_in <- make_spherical_df()
   df_out <- map_to_cartesian_spherical(df_in) |> aniframe::as_aniframe()
 
-  expect_equal(df_out$x, polar_to_x(df_in$rho, df_in$phi))
-  expect_equal(df_out$y, polar_to_y(df_in$rho, df_in$phi))
+  # rho is the radial distance, so the xy-plane projection is rho * sin(theta)
+  expect_equal(df_out$x, polar_to_x(df_in$rho * sin(df_in$theta), df_in$phi))
+  expect_equal(df_out$y, polar_to_y(df_in$rho * sin(df_in$theta), df_in$phi))
   expect_equal(df_out$z, spherical_to_z(df_in$rho, df_in$theta))
 
   expect_false(any(c("rho", "phi", "theta") %in% colnames(df_out)))
@@ -187,7 +188,9 @@ test_that("Cartesian results from the three systems are mutually consistent when
   df_sph <- dplyr::tibble(
     keypoint = 1,
     time = 1,
-    rho = rho_xy,
+    # A spherical frame is built from the radial distance, not the
+    # cylindrical radius — that conflation was #19.
+    rho = r_total,
     phi = phi_xy,
     theta = theta_sp
   ) |>

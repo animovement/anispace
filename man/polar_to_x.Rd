@@ -2,18 +2,30 @@
 % Please edit documentation in R/map_to_utils.R
 \name{polar_to_x}
 \alias{polar_to_x}
-\title{Convert polar radius to Cartesian x‑coordinate}
+\title{Cartesian x-coordinate from polar coordinates}
 \usage{
 polar_to_x(rho, phi)
 }
 \arguments{
-\item{rho}{numeric vector of radial distances}
+\item{rho}{A numeric vector of radial distances.}
 
-\item{phi}{numeric vector of azimuth angles (radians)}
+\item{phi}{A numeric vector of azimuth angles, in radians.}
 }
 \value{
-numeric vector of x‑coordinates
+A numeric vector of x-coordinates.
 }
 \description{
-Convert polar radius to Cartesian x‑coordinate
+Cartesian x-coordinate from polar coordinates
 }
+\examples{
+polar_to_x(1, pi / 3)
+}
+\seealso{
+Other coordinate conversion:
+\code{\link[=cartesian_to_phi]{cartesian_to_phi()}},
+\code{\link[=cartesian_to_rho]{cartesian_to_rho()}},
+\code{\link[=cartesian_to_theta]{cartesian_to_theta()}},
+\code{\link[=polar_to_y]{polar_to_y()}},
+\code{\link[=spherical_to_z]{spherical_to_z()}}
+}
+\concept{coordinate conversion}

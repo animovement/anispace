@@ -7,11 +7,24 @@
 map_to_cylindrical(data)
 }
 \arguments{
-\item{data}{movement data frame with Cartesian coordinates}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 }
 \value{
-movement data frame with cylindrical coordinates
+An aniframe with \code{rho} and \code{phi} in place of \code{x} and \code{y}, keeping \code{z}.
 }
 \description{
 Map from Cartesian to cylindrical coordinates
 }
+\examples{
+af <- aniframe::example_aniframe(
+  n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
+)
+map_to_cylindrical(af)
+}
+\seealso{
+Other coordinate systems:
+\code{\link[=map_to_cartesian]{map_to_cartesian()}},
+\code{\link[=map_to_polar]{map_to_polar()}},
+\code{\link[=map_to_spherical]{map_to_spherical()}}
+}
+\concept{coordinate systems}

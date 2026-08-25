@@ -7,9 +7,10 @@
 translate_coords_keypoint(data, to_keypoint)
 }
 \arguments{
-\item{data}{movement data frame with columns: time, individual, keypoint, x, y}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{to_keypoint}{all other coordinates becomes relative to this keypoint}
+\item{to_keypoint}{A character string naming a keypoint to place at the
+origin. All other coordinates become relative to it.}
 }
 \description{
 Translate coordinates relative to a keypoint

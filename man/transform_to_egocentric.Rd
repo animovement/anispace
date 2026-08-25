@@ -2,7 +2,7 @@
 % Please edit documentation in R/transform_to_egocentric.R
 \name{transform_to_egocentric}
 \alias{transform_to_egocentric}
-\title{Transform coordinates to egocentric reference frame}
+\title{Transform coordinates to an egocentric reference frame}
 \usage{
 transform_to_egocentric(
   data,
@@ -12,59 +12,52 @@ transform_to_egocentric(
 )
 }
 \arguments{
-\item{data}{movement data frame with columns: time, individual, keypoint, x, y}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{to_keypoint}{character; keypoint to use as the new origin}
+\item{to_keypoint}{A character string naming the keypoint to place at the
+origin.}
 
-\item{alignment_points}{character vector of length 2 specifying the keypoint names
-to use for alignment}
+\item{alignment_points}{A character vector of length 2 naming the keypoints
+that define the axis.}
 
-\item{align_perpendicular}{logical; if TRUE, alignment_points will be rotated to be
-perpendicular to the 0-degree axis. If FALSE (default), alignment_points
-will be rotated to align with the 0-degree axis}
+\item{align_perpendicular}{A logical value (default \code{FALSE}) determining the
+axis of alignment. \code{FALSE} aligns \code{alignment_points} with the forward axis;
+\code{TRUE} rotates them perpendicular to it.}
 }
 \value{
-movement data frame in egocentric reference frame
+An aniframe with translated and rotated coordinates, in which
+\code{to_keypoint} sits at the origin.
 }
 \description{
-Transforms Cartesian coordinates into an egocentric reference frame through
-a two-step process: translation followed by rotation. First translates all
-coordinates relative to a reference keypoint, then rotates the coordinate
-system based on specified alignment points.
-}
-\details{
-This function combines translation and rotation to create an egocentric reference
-frame. It:
-\enumerate{
-\item Translates all coordinates relative to the specified keypoint (to_keypoint)
-\item Rotates the coordinate system based on the alignment points
-}
-
-The translation makes the reference keypoint the new origin (0,0), while the
-rotation standardizes the orientation. This is particularly useful for:
-\itemize{
-\item Creating egocentric reference frames
-\item Standardizing pose data across frames or individuals
-\item Analyzing relative motion patterns
-}
+Places the animal at the centre of its own coordinate system, by translating
+all coordinates onto a reference keypoint and then rotating so that two
+chosen keypoints define the forward axis. Positions then describe the
+animal's own geometry rather than where it happened to be in the arena,
+which is what makes poses comparable across frames and individuals.
 }
 \examples{
-\dontrun{
-# Transform coordinates to make nose the origin and align body axis
-transformed_data <- transform_to_egocentric(
-  data,
-  to_keypoint = "nose",
-  alignment_points = c("nose", "tail"),
-  align_perpendicular = FALSE
+af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+
+# The head becomes the origin, and the head-neck axis points forward
+transform_to_egocentric(
+  af,
+  to_keypoint = "head",
+  alignment_points = c("head", "neck")
 )
 
-# Transform to make nose origin and ears perpendicular to forward axis
-transformed_data <- transform_to_egocentric(
-  data,
-  to_keypoint = "nose",
-  alignment_points = c("ear_left", "ear_right"),
+# Aligning perpendicular instead puts that axis across the forward direction
+transform_to_egocentric(
+  af,
+  to_keypoint = "head",
+  alignment_points = c("head", "neck"),
   align_perpendicular = TRUE
 )
 }
+\seealso{
+\code{\link[=translate_coords]{translate_coords()}} and \code{\link[=rotate_coords]{rotate_coords()}}, which this combines.
 
+Other coordinate transforms:
+\code{\link[=rotate_coords]{rotate_coords()}},
+\code{\link[=translate_coords]{translate_coords()}}
 }
+\concept{coordinate transforms}

@@ -2,32 +2,37 @@
 % Please edit documentation in R/transform_utils.R
 \name{diff_angle}
 \alias{diff_angle}
-\title{Difference of angular values}
+\title{Differences between successive angles}
 \usage{
 diff_angle(x, lag = 1L)
 }
 \arguments{
-\item{x}{Numeric vector of angles (radians).}
+\item{x}{A numeric vector of angles, in radians.}
 
-\item{lag}{Positive integer indicating the lag (default = 1L). Must be
-an integer ≥ 1.}
+\item{lag}{A positive integer (default \code{1L}) giving the lag to difference at.}
 }
 \value{
-Numeric vector of the same length as \code{x}. The first \code{lag} entries
-are \code{NA}; subsequent entries contain the angular differences.
+A numeric vector the same length as \code{x}. The first \code{lag} entries are
+\code{NA}; the rest are angular differences in radians.
 }
 \description{
-Computes lagged differences between successive angles (in radians) and
-converts each raw subtraction into the shortest signed angular distance
-using \code{calculate_angular_difference()}.  The output mimics \code{base::diff()},
-returning \code{NA}s for the first \code{lag} positions so it works nicely inside
-\code{dplyr::mutate()}.
+Computes lagged differences between successive angles, converting each raw
+subtraction into the shortest signed angular distance with
+\code{\link[=calculate_angular_difference]{calculate_angular_difference()}}. The output mirrors \code{\link[base:diff]{base::diff()}}, returning
+\code{NA} for the first \code{lag} positions so it can be used inside
+\code{\link[dplyr:mutate]{dplyr::mutate()}}.
 }
 \examples{
-# Simple example
-angles <- c(0, pi/2, pi, 3*pi/2)
+angles <- c(0, pi / 2, pi, 3 * pi / 2)
 diff_angle(angles)
 
-# Using a lag of 2
+# A larger lag compares points further apart
 diff_angle(angles, lag = 2L)
 }
+\seealso{
+Other angle utilities:
+\code{\link[=calculate_angular_difference]{calculate_angular_difference()}},
+\code{\link[=unwrap_angle]{unwrap_angle()}},
+\code{\link[=wrap_angle]{wrap_angle()}}
+}
+\concept{angle utilities}

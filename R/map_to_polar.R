@@ -1,8 +1,13 @@
 #' Map from Cartesian to polar coordinates
 #'
-#' @param data movement data frame with Cartesian coordinates
-#'
-#' @return movement data frame with polar coordinates
+#' @param data An aniframe in a Cartesian coordinate system.
+#' @return An aniframe with `rho` and `phi` in place of `x` and `y`.
+#' @family coordinate systems
+#' @examples
+#' af <- aniframe::example_aniframe(
+#'   n_obs = 5, n_individuals = 1, n_keypoints = 1
+#' )
+#' map_to_polar(af)
 #' @export
 map_to_polar <- function(data) {
   aniframe::ensure_is_aniframe(data)

@@ -2,21 +2,37 @@
 % Please edit documentation in R/map_to_utils.R
 \name{cartesian_to_rho}
 \alias{cartesian_to_rho}
-\title{Cartesian radius (ρ) from coordinates}
+\title{Radius (rho) from Cartesian coordinates}
 \usage{
 cartesian_to_rho(x, y, z = NULL)
 }
 \arguments{
-\item{x}{numeric vector of x‑coordinates}
+\item{x}{A numeric vector of x-coordinates.}
 
-\item{y}{numeric vector of y‑coordinates}
+\item{y}{A numeric vector of y-coordinates.}
 
-\item{z}{optional numeric vector of z‑coordinates; if \code{NULL} a 2‑D radius is returned}
+\item{z}{An optional numeric vector of z-coordinates (default \code{NULL}). When
+\code{NULL}, a two-dimensional radius is returned.}
 }
 \value{
-numeric vector of radii (ρ)
+A numeric vector of radii, the same length as \code{x}.
 }
 \description{
-Computes the Euclidean distance from the origin to a point in either 2‑D
-(\code{z} omitted) or 3‑D space.
+Computes the Euclidean distance from the origin to a point, in either two
+dimensions (\code{z} omitted) or three.
 }
+\examples{
+cartesian_to_rho(3, 4)
+
+# Supplying z gives the three-dimensional radius
+cartesian_to_rho(3, 4, 12)
+}
+\seealso{
+Other coordinate conversion:
+\code{\link[=cartesian_to_phi]{cartesian_to_phi()}},
+\code{\link[=cartesian_to_theta]{cartesian_to_theta()}},
+\code{\link[=polar_to_x]{polar_to_x()}},
+\code{\link[=polar_to_y]{polar_to_y()}},
+\code{\link[=spherical_to_z]{spherical_to_z()}}
+}
+\concept{coordinate conversion}

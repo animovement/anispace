@@ -2,16 +2,32 @@
 % Please edit documentation in R/map_to_cartesian.R
 \name{map_to_cartesian}
 \alias{map_to_cartesian}
-\title{Map from polar to Cartesian coordinates}
+\title{Map to Cartesian coordinates}
 \usage{
 map_to_cartesian(data)
 }
 \arguments{
-\item{data}{an aniframe with polar coordinates}
+\item{data}{An aniframe in a polar, cylindrical or spherical coordinate
+system.}
 }
 \value{
-an aniframe with Cartesian coordinates
+An aniframe with \code{x} and \code{y} (and \code{z}, where the input was
+three-dimensional) in place of the polar columns.
 }
 \description{
-Map from polar to Cartesian coordinates
+Converts an aniframe back to Cartesian coordinates, detecting whether it is
+currently polar, cylindrical or spherical.
 }
+\examples{
+af <- aniframe::example_aniframe(n_obs = 5, n_individuals = 1, n_keypoints = 1)
+
+# Round-trips back to the coordinates it started from
+map_to_cartesian(map_to_polar(af))
+}
+\seealso{
+Other coordinate systems:
+\code{\link[=map_to_cylindrical]{map_to_cylindrical()}},
+\code{\link[=map_to_polar]{map_to_polar()}},
+\code{\link[=map_to_spherical]{map_to_spherical()}}
+}
+\concept{coordinate systems}

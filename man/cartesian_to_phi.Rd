@@ -2,22 +2,39 @@
 % Please edit documentation in R/map_to_utils.R
 \name{cartesian_to_phi}
 \alias{cartesian_to_phi}
-\title{Cartesian azimuth (φ) from coordinates}
+\title{Azimuth (phi) from Cartesian coordinates}
 \usage{
 cartesian_to_phi(x, y, centered = FALSE)
 }
 \arguments{
-\item{x}{numeric vector of x‑coordinates}
+\item{x}{A numeric vector of x-coordinates.}
 
-\item{y}{numeric vector of y‑coordinates}
+\item{y}{A numeric vector of y-coordinates.}
 
-\item{centered}{logical; if \code{TRUE} keep the [-π, π] range, otherwise map to [0, 2π\)}
+\item{centered}{A logical value (default \code{FALSE}) determining the range of
+the result. \code{FALSE} maps angles to \verb{[0, 2*pi)}; \code{TRUE} keeps the native
+\code{\link[=atan2]{atan2()}} range of \verb{[-pi, pi]}.}
 }
 \value{
-numeric vector of azimuth angles (φ) in radians
+A numeric vector of azimuth angles in radians.
 }
 \description{
-Returns the planar angle measured from the positive x‑axis toward the
-positive y‑axis.  By default the result is mapped to [0, 2π); setting
-\code{centered = TRUE} leaves the native \code{atan2} range [-π, π].
+Returns the planar angle measured from the positive x-axis towards the
+positive y-axis.
 }
+\examples{
+cartesian_to_phi(1, 1)
+
+# The two ranges differ for points below the x-axis
+cartesian_to_phi(-1, -1)
+cartesian_to_phi(-1, -1, centered = TRUE)
+}
+\seealso{
+Other coordinate conversion:
+\code{\link[=cartesian_to_rho]{cartesian_to_rho()}},
+\code{\link[=cartesian_to_theta]{cartesian_to_theta()}},
+\code{\link[=polar_to_x]{polar_to_x()}},
+\code{\link[=polar_to_y]{polar_to_y()}},
+\code{\link[=spherical_to_z]{spherical_to_z()}}
+}
+\concept{coordinate conversion}

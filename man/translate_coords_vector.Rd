@@ -7,13 +7,14 @@
 translate_coords_vector(data, to_x, to_y, to_z = NULL)
 }
 \arguments{
-\item{data}{movement data frame with columns: time, individual, keypoint, x, y}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{to_x}{x coordinates; either a single value or a time-length vector}
+\item{to_x}{A numeric x-coordinate: either one value, or one per time point.}
 
-\item{to_y}{y coordinates; either a single value or a time-length vector}
+\item{to_y}{A numeric y-coordinate: either one value, or one per time point.}
 
-\item{to_z}{z coordinates (only if 3D); either a single value or a time-length vector}
+\item{to_z}{A numeric z-coordinate, for three-dimensional data: either one
+value, or one per time point.}
 }
 \description{
 Translate coordinates relative to coordinates

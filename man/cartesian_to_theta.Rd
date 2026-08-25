@@ -2,21 +2,38 @@
 % Please edit documentation in R/map_to_utils.R
 \name{cartesian_to_theta}
 \alias{cartesian_to_theta}
-\title{Polar angle (θ) from Cartesian coordinates}
+\title{Inclination (theta) from Cartesian coordinates}
 \usage{
 cartesian_to_theta(x, y, z)
 }
 \arguments{
-\item{x}{numeric vector of x‑coordinates}
+\item{x}{A numeric vector of x-coordinates.}
 
-\item{y}{numeric vector of y‑coordinates}
+\item{y}{A numeric vector of y-coordinates.}
 
-\item{z}{numeric vector of z‑coordinates}
+\item{z}{A numeric vector of z-coordinates.}
 }
 \value{
-numeric vector of polar angles (θ) in radians
+A numeric vector of inclination angles in radians, between \code{0} and
+\code{pi}.
 }
 \description{
-Calculates the inclination angle measured from the positive z‑axis
-(the “polar” angle) for each point.
+Calculates the angle measured from the positive z-axis. Points at the origin
+return \code{0}.
 }
+\examples{
+# On the positive z-axis, the inclination is zero
+cartesian_to_theta(0, 0, 1)
+
+# In the xy-plane, it is a quarter turn
+cartesian_to_theta(1, 0, 0)
+}
+\seealso{
+Other coordinate conversion:
+\code{\link[=cartesian_to_phi]{cartesian_to_phi()}},
+\code{\link[=cartesian_to_rho]{cartesian_to_rho()}},
+\code{\link[=polar_to_x]{polar_to_x()}},
+\code{\link[=polar_to_y]{polar_to_y()}},
+\code{\link[=spherical_to_z]{spherical_to_z()}}
+}
+\concept{coordinate conversion}

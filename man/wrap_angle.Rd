@@ -7,33 +7,38 @@
 wrap_angle(x, modulo = c("2pi", "pi", "asis"))
 }
 \arguments{
-\item{x}{Numeric vector of angles (radians).}
+\item{x}{A numeric vector of angles, in radians.}
 
-\item{modulo}{Character string specifying the target range:
+\item{modulo}{A character string (default \code{"2pi"}) giving the target range:
 \describe{
-\item{\code{"2pi"}}{Wrap to [0, 2π) (default)}
-\item{\code{"pi"}}{Wrap to (-π, π]}
-\item{\code{"asis"}}{No wrapping, return unchanged}
-}}
+\item{\code{"2pi"}}{Wrap to \verb{[0, 2*pi)}.}
+\item{\code{"pi"}}{Wrap to \verb{(-pi, pi]}.}
+\item{\code{"asis"}}{Return unchanged.}
+}
+
+[0, 2\emph{pi)\verb{.\} \\item\{}"pi"\verb{\}\{Wrap to }(-pi, pi]: R:0,\%202}pi)\%60.\%7D\%0A\%20\%20\%5C\%5Citem\%7B\%60\%22pi\%22\%60\%7D\%7BWrap\%20to\%20\%60(-pi,\%20pi}
 }
 \value{
-Numeric vector of the same length as \code{x}, with angles wrapped
-to the specified range.
+A numeric vector the same length as \code{x}, wrapped to the chosen range.
 }
 \description{
-Wraps any numeric vector of angles (in radians) to a standard interval
-using modulo arithmetic.
+Wraps a vector of angles to a standard interval using modulo arithmetic.
 }
 \examples{
 angles <- c(-pi, 0, pi, 2 * pi, 3 * pi)
 
-# Wrap to [0, 2π)
 wrap_angle(angles, "2pi")
 
-# Wrap to (-π, π]
+# The same angles on the signed interval
 wrap_angle(angles, "pi")
 
-# No wrapping
+# "asis" is a no-op, useful when the range is chosen by a caller
 wrap_angle(angles, "asis")
-
 }
+\seealso{
+Other angle utilities:
+\code{\link[=calculate_angular_difference]{calculate_angular_difference()}},
+\code{\link[=diff_angle]{diff_angle()}},
+\code{\link[=unwrap_angle]{unwrap_angle()}}
+}
+\concept{angle utilities}

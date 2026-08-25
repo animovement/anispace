@@ -1,12 +1,19 @@
-#' Cartesian radius (ρ) from coordinates
+#' Radius (rho) from Cartesian coordinates
 #'
-#' Computes the Euclidean distance from the origin to a point in either 2‑D
-#' (`z` omitted) or 3‑D space.
+#' Computes the Euclidean distance from the origin to a point, in either two
+#' dimensions (`z` omitted) or three.
 #'
-#' @param x numeric vector of x‑coordinates
-#' @param y numeric vector of y‑coordinates
-#' @param z optional numeric vector of z‑coordinates; if `NULL` a 2‑D radius is returned
-#' @return numeric vector of radii (ρ)
+#' @param x A numeric vector of x-coordinates.
+#' @param y A numeric vector of y-coordinates.
+#' @param z An optional numeric vector of z-coordinates (default `NULL`). When
+#'   `NULL`, a two-dimensional radius is returned.
+#' @return A numeric vector of radii, the same length as `x`.
+#' @family coordinate conversion
+#' @examples
+#' cartesian_to_rho(3, 4)
+#'
+#' # Supplying z gives the three-dimensional radius
+#' cartesian_to_rho(3, 4, 12)
 #' @export
 cartesian_to_rho <- function(x, y, z = NULL) {
   if (is.null(z)) {
@@ -16,16 +23,24 @@ cartesian_to_rho <- function(x, y, z = NULL) {
   }
 }
 
-#' Cartesian azimuth (φ) from coordinates
+#' Azimuth (phi) from Cartesian coordinates
 #'
-#' Returns the planar angle measured from the positive x‑axis toward the
-#' positive y‑axis.  By default the result is mapped to \[0, 2π); setting
-#' `centered = TRUE` leaves the native `atan2` range \[-π, π\].
+#' Returns the planar angle measured from the positive x-axis towards the
+#' positive y-axis.
 #'
-#' @param x numeric vector of x‑coordinates
-#' @param y numeric vector of y‑coordinates
-#' @param centered logical; if `TRUE` keep the \[-π, π\] range, otherwise map to \[0, 2π\)
-#' @return numeric vector of azimuth angles (φ) in radians
+#' @param x A numeric vector of x-coordinates.
+#' @param y A numeric vector of y-coordinates.
+#' @param centered A logical value (default `FALSE`) determining the range of
+#'   the result. `FALSE` maps angles to `[0, 2*pi)`; `TRUE` keeps the native
+#'   [atan2()] range of `[-pi, pi]`.
+#' @return A numeric vector of azimuth angles in radians.
+#' @family coordinate conversion
+#' @examples
+#' cartesian_to_phi(1, 1)
+#'
+#' # The two ranges differ for points below the x-axis
+#' cartesian_to_phi(-1, -1)
+#' cartesian_to_phi(-1, -1, centered = TRUE)
 #' @export
 cartesian_to_phi <- function(x, y, centered = FALSE) {
   # atan2(y, x) returns angles in [-pi, pi]
@@ -38,18 +53,26 @@ cartesian_to_phi <- function(x, y, centered = FALSE) {
   angle
 }
 
-#' Polar angle (θ) from Cartesian coordinates
+#' Inclination (theta) from Cartesian coordinates
 #'
-#' Calculates the inclination angle measured from the positive z‑axis
-#' (the “polar” angle) for each point.
+#' Calculates the angle measured from the positive z-axis. Points at the origin
+#' return `0`.
 #'
-#' @param x numeric vector of x‑coordinates
-#' @param y numeric vector of y‑coordinates
-#' @param z numeric vector of z‑coordinates
-#' @return numeric vector of polar angles (θ) in radians
+#' @param x A numeric vector of x-coordinates.
+#' @param y A numeric vector of y-coordinates.
+#' @param z A numeric vector of z-coordinates.
+#' @return A numeric vector of inclination angles in radians, between `0` and
+#'   `pi`.
+#' @family coordinate conversion
+#' @examples
+#' # On the positive z-axis, the inclination is zero
+#' cartesian_to_theta(0, 0, 1)
+#'
+#' # In the xy-plane, it is a quarter turn
+#' cartesian_to_theta(1, 0, 0)
 #' @export
 cartesian_to_theta <- function(x, y, z) {
-  # Full 3‑D radius for each observation
+  # Full 3-D radius for each observation
   rho <- cartesian_to_rho(x, y, z)
 
   # Initialise theta with zeros (covers the origin case automatically)
@@ -61,44 +84,57 @@ cartesian_to_theta <- function(x, y, z) {
   # Compute acos only where it is safe
   theta[idx] <- acos(z[idx] / rho[idx])
 
-  invisible(theta)
+  theta
 }
 
-#' Convert polar radius to Cartesian x‑coordinate
+#' Cartesian x-coordinate from polar coordinates
 #'
-#' @param rho numeric vector of radial distances
-#' @param phi numeric vector of azimuth angles (radians)
-#' @return numeric vector of x‑coordinates
+#' @param rho A numeric vector of radial distances.
+#' @param phi A numeric vector of azimuth angles, in radians.
+#' @return A numeric vector of x-coordinates.
+#' @family coordinate conversion
+#' @examples
+#' polar_to_x(1, pi / 3)
 #' @export
 polar_to_x <- function(rho, phi) {
   rho * cos(phi)
 }
 
-#' Convert polar radius to Cartesian y‑coordinate
+#' Cartesian y-coordinate from polar coordinates
 #'
-#' @param rho numeric vector of radial distances
-#' @param phi numeric vector of azimuth angles (radians)
-#' @return numeric vector of y‑coordinates
+#' @param rho A numeric vector of radial distances.
+#' @param phi A numeric vector of azimuth angles, in radians.
+#' @return A numeric vector of y-coordinates.
+#' @family coordinate conversion
+#' @examples
+#' polar_to_y(1, pi / 3)
 #' @export
 polar_to_y <- function(rho, phi) {
   rho * sin(phi)
 }
 
-#' Convert cylindrical radius and polar angle to Cartesian z‑coordinate
+#' Cartesian z-coordinate from spherical coordinates
 #'
-#' Handles regular points as well as the two pole regions (θ≈0 and θ≈π).
-#' Non‑finite inputs remain `NA`.
+#' Handles the two pole regions (inclination near `0` or `pi`) as well as
+#' regular points. Non-finite inputs return `NA`.
 #'
-#' @param rho   Numeric vector – cylindrical radius (√(x² + y²)).
-#' @param theta Numeric vector – polar angle measured from the +z axis (radians).
-#' @return Numeric vector of z‑coordinates (same length as input)
+#' @param rho A numeric vector of cylindrical radii, that is `sqrt(x^2 + y^2)`.
+#' @param theta A numeric vector of inclination angles measured from the
+#'   positive z-axis, in radians.
+#' @return A numeric vector of z-coordinates, the same length as `rho`.
+#' @family coordinate conversion
+#' @examples
+#' spherical_to_z(1, pi / 4)
+#'
+#' # Non-finite input propagates as NA
+#' spherical_to_z(c(1, NA), c(pi / 4, pi / 4))
 #' @export
 spherical_to_z <- function(rho, theta) {
-  # Initialise output with NA so that any non‑finite input stays NA.
+  # Initialise output with NA so that any non-finite input stays NA.
   z <- rep(NA_real_, length(rho))
 
   ## -----------------------------------------------------------------
-  ## 1.  Identify well‑behaved (non‑pole, finite) entries
+  ## 1.  Identify well-behaved (non-pole, finite) entries
   ## -----------------------------------------------------------------
   ok_idx <- is.finite(rho) &
     is.finite(theta) &
@@ -112,7 +148,7 @@ spherical_to_z <- function(rho, theta) {
   ## -----------------------------------------------------------------
   ## 2.  Handle the two pole regions (θ ≈ 0  or  θ ≈ π)
   ## -----------------------------------------------------------------
-  # Positive‑z pole (θ ≈ 0)
+  # Positive-z pole (θ ≈ 0)
   pos_pole_idx <- is.finite(rho) &
     is.finite(theta) &
     !ok_idx &
@@ -123,19 +159,19 @@ spherical_to_z <- function(rho, theta) {
     z[pos_pole_idx] <- 0
   }
 
-  # Negative‑z pole (θ ≈ π)
+  # Negative-z pole (θ ≈ π)
   neg_pole_idx <- is.finite(rho) &
     is.finite(theta) &
     !ok_idx &
     abs(theta - pi) < 0.5 * .Machine$double.eps
 
   if (any(neg_pole_idx)) {
-    # Point lies on the –z axis → z = 0 (sign is irrelevant because radius = 0)
+    # Point lies on the -z axis → z = 0 (sign is irrelevant because radius = 0)
     z[neg_pole_idx] <- 0
   }
 
   ## -----------------------------------------------------------------
   ## 3.  Anything left untouched remains NA (covers NA/NaN/Inf inputs)
   ## -----------------------------------------------------------------
-  invisible(z)
+  z
 }

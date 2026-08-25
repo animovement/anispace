@@ -2,27 +2,40 @@
 % Please edit documentation in R/transform_coords_translate.R
 \name{translate_coords}
 \alias{translate_coords}
-\title{Translate coordinates (Cartesian)}
+\title{Translate coordinates in Cartesian space}
 \usage{
 translate_coords(data, to_x = 0, to_y = 0, to_z = NULL, to_keypoint = NULL)
 }
 \arguments{
-\item{data}{movement data frame with columns: time, individual, keypoint, x, y}
+\item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{to_x}{x coordinates; either a single value or a time-length vector}
+\item{to_x}{A numeric x-coordinate: either one value, or one per time point.}
 
-\item{to_y}{y coordinates; either a single value or a time-length vector}
+\item{to_y}{A numeric y-coordinate: either one value, or one per time point.}
 
-\item{to_z}{z coordinates (only if 3D); either a single value or a time-length vector}
+\item{to_z}{A numeric z-coordinate, for three-dimensional data: either one
+value, or one per time point.}
 
-\item{to_keypoint}{all other coordinates becomes relative to this keypoint}
+\item{to_keypoint}{A character string naming a keypoint to place at the
+origin. All other coordinates become relative to it.}
 }
 \value{
-movement data frame with translated coordinates
+An aniframe with translated coordinates.
 }
 \description{
-Translates coordinates in Cartesian space. Takes either a single point
-(\code{to_x} and \code{to_y}), a vector with the same length as the time dimension or a
-keypoint (\code{to_keypoint}), which can be used to transform the data into an
-egocentric reference frame.
+Moves the origin, either to a fixed point, to a per-observation position, or
+onto a keypoint. Translating onto a keypoint is how coordinates are made
+relative to the animal rather than the arena.
 }
+\examples{
+af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+
+# Everything becomes relative to the head, which sits at the origin
+translate_coords(af, to_keypoint = "head")
+}
+\seealso{
+Other coordinate transforms:
+\code{\link[=rotate_coords]{rotate_coords()}},
+\code{\link[=transform_to_egocentric]{transform_to_egocentric()}}
+}
+\concept{coordinate transforms}

@@ -16,8 +16,7 @@ positive z-axis, in radians.}
 A numeric vector of z-coordinates, the same length as \code{rho}.
 }
 \description{
-Handles the two pole regions (inclination near \code{0} or \code{pi}) as well as
-regular points. Non-finite inputs return \code{NA}.
+Non-finite inputs return \code{NA}.
 }
 \examples{
 spherical_to_z(1, pi / 4)

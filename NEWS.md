@@ -1,3 +1,5 @@
+# anispace (development version)
+
 # anispace 0.2.0 (2026-08-18)
 
 First tagged release. anispace has been usable for a while but was never

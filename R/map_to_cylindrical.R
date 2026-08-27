@@ -4,14 +4,14 @@
 #' @return An aniframe with `rho` and `phi` in place of `x` and `y`, keeping `z`.
 #' @family coordinate systems
 #' @examples
-#' af <- aniframe::example_aniframe(
+#' af <- anicore::example_aniframe(
 #'   n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
 #' )
 #' map_to_cylindrical(af)
 #' @export
 map_to_cylindrical <- function(data) {
-  aniframe::ensure_is_aniframe(data)
-  aniframe::ensure_is_cartesian(data)
+  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_cartesian(data)
 
   data <- data |>
     dplyr::mutate(
@@ -23,6 +23,6 @@ map_to_cylindrical <- function(data) {
     dplyr::relocate("phi", .after = "rho") |>
     dplyr::relocate("z", .after = "phi")
 
-  aniframe::ensure_is_cylindrical(data)
-  aniframe::as_aniframe(data)
+  anicore::ensure_is_cylindrical(data)
+  anicore::as_aniframe(data)
 }

@@ -9,29 +9,29 @@
 #'   three-dimensional) in place of the polar columns.
 #' @family coordinate systems
 #' @examples
-#' af <- aniframe::example_aniframe(n_obs = 5, n_individuals = 1, n_keypoints = 1)
+#' af <- anicore::example_aniframe(n_obs = 5, n_individuals = 1, n_keypoints = 1)
 #'
 #' # Round-trips back to the coordinates it started from
 #' map_to_cartesian(map_to_polar(af))
 #' @export
 map_to_cartesian <- function(data) {
-  aniframe::ensure_is_aniframe(data)
-  if (aniframe::is_polar(data)) {
+  anicore::ensure_is_aniframe(data)
+  if (anicore::is_polar(data)) {
     data <- map_to_cartesian_polar(data)
-  } else if (aniframe::is_cylindrical(data)) {
+  } else if (anicore::is_cylindrical(data)) {
     data <- map_to_cartesian_cylindrical(data)
-  } else if (aniframe::is_spherical(data)) {
+  } else if (anicore::is_spherical(data)) {
     data <- map_to_cartesian_spherical(data)
   } else {
     cli::cli_abort("Data is neither polar, cylindrical or spherical.")
   }
 
-  aniframe::as_aniframe(data)
+  anicore::as_aniframe(data)
 }
 
 #' @keywords internal
 map_to_cartesian_polar <- function(data) {
-  aniframe::ensure_is_polar(data)
+  anicore::ensure_is_polar(data)
   data |>
     dplyr::mutate(
       x = polar_to_x(.data$rho, .data$phi),
@@ -42,7 +42,7 @@ map_to_cartesian_polar <- function(data) {
 
 #' @keywords internal
 map_to_cartesian_cylindrical <- function(data) {
-  aniframe::ensure_is_cylindrical(data)
+  anicore::ensure_is_cylindrical(data)
   data |>
     dplyr::mutate(
       x = polar_to_x(.data$rho, .data$phi),
@@ -54,7 +54,7 @@ map_to_cartesian_cylindrical <- function(data) {
 
 #' @keywords internal
 map_to_cartesian_spherical <- function(data) {
-  aniframe::ensure_is_spherical(data)
+  anicore::ensure_is_spherical(data)
   data |>
     dplyr::mutate(
       x = polar_to_x(.data$rho, .data$phi),

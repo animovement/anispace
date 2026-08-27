@@ -6,11 +6,11 @@ test_that("map_to_spherical() correctly converts simple Cartesian data", {
     y = c(0, 1, 0, -1),
     z = c(0, 0, 0, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   sph <- map_to_spherical(df)
 
-  expect_true(aniframe::is_spherical(sph))
+  expect_true(anicore::is_spherical(sph))
   expect_equal(sph$rho, c(1, 1, 1, 1), tolerance = 1e-8)
   expect_equal(sph$phi, c(0, pi / 2, pi, 3 * pi / 2), tolerance = 1e-8)
   # With z = 0 every point lies in the xy-plane, a quarter turn from +z
@@ -19,7 +19,7 @@ test_that("map_to_spherical() correctly converts simple Cartesian data", {
 
 test_that("map_to_spherical() places a point on the +z axis at theta = 0", {
   df <- data.frame(time = 1, keypoint = "nose", x = 0, y = 0, z = 5) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   sph <- map_to_spherical(df)
 
@@ -35,7 +35,7 @@ test_that("map_to_spherical() currently reports rho as the cylindrical radius", 
   # become 13 -- see issue #19. When that is fixed, this test should fail and
   # be updated rather than deleted.
   df <- data.frame(time = 1, keypoint = "nose", x = 3, y = 4, z = 12) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   expect_equal(map_to_spherical(df)$rho, 5, tolerance = 1e-8)
 })
@@ -48,7 +48,7 @@ test_that("map_to_spherical() round-trips through map_to_cartesian()", {
     y = c(4, -2),
     z = c(12, 2)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   back <- map_to_cartesian(map_to_spherical(df))
 
@@ -65,7 +65,7 @@ test_that("map_to_spherical() drops the Cartesian columns", {
     y = c(3, 4),
     z = c(5, 6)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   sph <- map_to_spherical(df)
 

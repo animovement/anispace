@@ -14,7 +14,7 @@
 #' @return An aniframe with translated coordinates.
 #' @family coordinate transforms
 #' @examples
-#' af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+#' af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 #'
 #' # Everything becomes relative to the head, which sits at the origin
 #' translate_coords(af, to_keypoint = "head")
@@ -26,8 +26,8 @@ translate_coords <- function(
   to_z = NULL,
   to_keypoint = NULL
 ) {
-  aniframe::ensure_is_aniframe(data)
-  aniframe::ensure_is_cartesian(data)
+  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_cartesian(data)
 
   # Takes a keypoint
   if (!is.null(to_keypoint)) {
@@ -63,7 +63,7 @@ translate_coords <- function(
     data <- translate_coords_vector(data, to_x, to_y, to_z)
   }
 
-  aniframe::as_aniframe(data)
+  anicore::as_aniframe(data)
 }
 
 #' Translate coordinates relative to a keypoint
@@ -94,7 +94,7 @@ translate_coords_keypoint <- function(data, to_keypoint) {
 #' @inheritParams translate_coords
 #' @keywords internal
 translate_coords_vector <- function(data, to_x, to_y, to_z = NULL) {
-  aniframe::ensure_is_cartesian(data)
+  anicore::ensure_is_cartesian(data)
   data <- data |>
     dplyr::mutate(x = .data$x - to_x, y = .data$y - to_y)
   # For 3D

@@ -18,9 +18,8 @@ map_to_polar <- function(data) {
       phi = cartesian_to_phi(.data$x, .data$y)
     ) |>
     dplyr::select(-c("x", "y")) |>
-    dplyr::relocate("rho", .after = "keypoint") |>
-    dplyr::relocate("phi", .after = "rho")
+    anicore::set_variables_where(c("rho", "phi"))
 
   anicore::ensure_is_polar(data)
-  anicore::as_aniframe(data)
+  data
 }

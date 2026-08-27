@@ -23,10 +23,8 @@ map_to_spherical <- function(data) {
       theta = cartesian_to_theta(.data$x, .data$y, .data$z) # polar angle
     ) |>
     dplyr::select(-c("x", "y", "z")) |>
-    dplyr::relocate("rho", .after = "keypoint") |>
-    dplyr::relocate("theta", .after = "rho") |>
-    dplyr::relocate("phi", .after = "theta")
+    anicore::set_variables_where(c("rho", "phi", "theta"))
 
   anicore::ensure_is_spherical(data) # optional validator (see below)
-  anicore::as_aniframe(data)
+  data
 }

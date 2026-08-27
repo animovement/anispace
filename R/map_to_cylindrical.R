@@ -19,10 +19,8 @@ map_to_cylindrical <- function(data) {
       phi = cartesian_to_phi(.data$x, .data$y)
     ) |>
     dplyr::select(-c("x", "y")) |>
-    dplyr::relocate("rho", .after = "keypoint") |>
-    dplyr::relocate("phi", .after = "rho") |>
-    dplyr::relocate("z", .after = "phi")
+    anicore::set_variables_where(c("rho", "phi", "z"))
 
   anicore::ensure_is_cylindrical(data)
-  anicore::as_aniframe(data)
+  data
 }

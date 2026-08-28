@@ -4,6 +4,46 @@
 
 ### Changed
 
+- The transforms read the frame’s declaration instead of naming its
+  columns ([\#20](https://github.com/animovement/anispace/issues/20)).
+  [`translate_coords()`](https://animovement.dev/anispace/reference/translate_coords.md),
+  [`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md)
+  and
+  [`transform_to_egocentric()`](https://animovement.dev/anispace/reference/transform_to_egocentric.md)
+  took `individual`, `keypoint`, `time`, `x`, `y` and `z` literally, so
+  a frame declaring anything else failed outright. They now resolve
+  identity through `variables_what`, the index through `get_index()` and
+  the coordinates through `get_axes()`.
+
+- The reference point is a member of any identity level, not a keypoint
+  ([\#20](https://github.com/animovement/anispace/issues/20)).
+  `to_keypoint` becomes `to`, `alignment_points` becomes `align`, and a
+  new `level` says which identity variable they name members of — so a
+  group centre can be taken on `individual` as readily as on `keypoint`.
+  `level` defaults to the frame’s only identity variable; a frame
+  declaring several has to be told, since `variables_what` order is not
+  something to rely on (animovement/anicore#140,
+  animovement/anicore#141).
+
+- [`translate_coords()`](https://animovement.dev/anispace/reference/translate_coords.md)
+  takes `by`, a named offset per axis role, in place of `to_x` / `to_y`
+  / `to_z`.
+
+- [`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md)
+  takes `about`, the centre of rotation — a member to turn around, or a
+  fixed point. It defaults to the coordinate origin, which is what the
+  previous behaviour was, unstated.
+
+- [`transform_to_egocentric()`](https://animovement.dev/anispace/reference/transform_to_egocentric.md)’s
+  `align` is optional. Omitted, the frame is re-centred without being
+  reoriented.
+
+- A quarter turn follows the frame’s declared sense of rotation
+  ([\#29](https://github.com/animovement/anispace/issues/29), in part).
+  `align_perpendicular` turned one way regardless; on a frame whose axes
+  say its angles run clockwise it now turns the other. The `map_to_*()`
+  half of that issue is still open.
+
 - `wrap_angle()` and `unwrap_angle()` move to `anicore`, which already
   held `deg_to_rad()` and `rad_to_deg()` (animovement/aniframe#128).
   They are angle arithmetic rather than coordinate transformation. Use
@@ -15,6 +55,28 @@
   the package providing it changed.
 
 ### Fixed
+
+- Rotating a frame with more than one temporal group no longer
+  multiplies its rows
+  ([\#20](https://github.com/animovement/anispace/issues/20)).
+  [`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md)
+  joined the rotation angles by the index alone, so every trial’s angle
+  matched every trial’s rows: two trials turned 12 rows into 48, of
+  which 36 were duplicates. It returned plausible-looking data rather
+  than an error. The standing
+  `# TODO: Will likely break with multiple trials` is resolved.
+
+- Rotating three-dimensional coordinates works
+  ([\#4](https://github.com/animovement/anispace/issues/4)). It aborted
+  with “not yet supported”. Two alignment points give the minimal
+  rotation onto the target axis, leaving the roll about it as it was; a
+  third fixes the orientation outright. Two dimensions are the same code
+  with the rotation axis fixed to `z`.
+
+- `translate_coords_keypoint()` looped with `1:length()`, which runs
+  twice on empty input
+  ([\#15](https://github.com/animovement/anispace/issues/15)). The loops
+  are gone entirely, replaced by grouped operations.
 
 - [`map_to_spherical()`](https://animovement.dev/anispace/reference/map_to_spherical.md)
   returns the radial distance from the origin as `rho`, rather than the
@@ -35,6 +97,11 @@
   [`map_to_cylindrical()`](https://animovement.dev/anispace/reference/map_to_cylindrical.md)
   is unchanged: `rho` there is the distance from the z-axis, which is
   correct for a cylindrical frame.
+
+### Removed
+
+- `convert_nan_to_na()`, which was neither called, exported nor tested —
+  left behind when the mappers were rewritten.
 
 ## anispace 0.2.0 (2026-08-18)
 

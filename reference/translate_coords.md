@@ -1,13 +1,14 @@
 # Translate coordinates in Cartesian space
 
-Moves the origin, either to a fixed point, to a per-observation
-position, or onto a keypoint. Translating onto a keypoint is how
-coordinates are made relative to the animal rather than the arena.
+Moves the origin: to a fixed offset, or onto a member of the frame's
+identity — a keypoint, an animal, or whatever level the frame declares.
+Translating onto a member is how coordinates are made relative to the
+subject rather than the arena.
 
 ## Usage
 
 ``` r
-translate_coords(data, to_x = 0, to_y = 0, to_z = NULL, to_keypoint = NULL)
+translate_coords(data, to = NULL, level = NULL, by = NULL)
 ```
 
 ## Arguments
@@ -16,23 +17,20 @@ translate_coords(data, to_x = 0, to_y = 0, to_z = NULL, to_keypoint = NULL)
 
   An aniframe in a Cartesian coordinate system.
 
-- to_x:
+- to:
 
-  A numeric x-coordinate: either one value, or one per time point.
+  A value of `level` to place at the origin. All other coordinates
+  become relative to it.
 
-- to_y:
+- level:
 
-  A numeric y-coordinate: either one value, or one per time point.
+  The identity variable `to` is a member of. Defaults to the frame's
+  only one; a frame declaring several has to be told.
 
-- to_z:
+- by:
 
-  A numeric z-coordinate, for three-dimensional data: either one value,
-  or one per time point.
-
-- to_keypoint:
-
-  A character string naming a keypoint to place at the origin. All other
-  coordinates become relative to it.
+  Named numeric giving a fixed offset per axis role, e.g.
+  `c(x = 100, y = 50)`. Mutually exclusive with `to`.
 
 ## Value
 
@@ -50,7 +48,7 @@ Other coordinate transforms:
 af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
 # Everything becomes relative to the head, which sits at the origin
-translate_coords(af, to_keypoint = "head")
+translate_coords(af, to = "head", level = "keypoint")
 #> # Individuals: 1
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
@@ -66,4 +64,22 @@ translate_coords(af, to_keypoint = "head")
 #> 7          1 shoulder_right       1     1     1  0.291  2.56       0.379
 #> 8          1 shoulder_right       1     1     2 -1.13  -0.855      0.890
 #> 9          1 shoulder_right       1     1     3  0.813 -0.391      0.599
+
+# Or shift by a fixed amount
+translate_coords(af, by = c(x = 100, y = 50))
+#> # Individuals: 1
+#> # Keypoints:   head, neck, shoulder_right
+#> # Sessions:    1
+#> # Trials:      1
+#>   individual keypoint       session trial  time      x     y confidence
+#>        <int> <fct>            <int> <int> <int>  <dbl> <dbl>      <dbl>
+#> 1          1 head                 1     1     1 -101.  -51.5      0.700
+#> 2          1 head                 1     1     2  -99.2 -48.5      0.746
+#> 3          1 head                 1     1     3  -99.9 -49.6      0.853
+#> 4          1 neck                 1     1     1 -101.  -49.9      0.226
+#> 5          1 neck                 1     1     2 -101.  -51.1      0.534
+#> 6          1 neck                 1     1     3  -99.5 -50.6      0.476
+#> 7          1 shoulder_right       1     1     1 -101.  -48.9      0.379
+#> 8          1 shoulder_right       1     1     2 -100.  -49.3      0.890
+#> 9          1 shoulder_right       1     1     3  -99.1 -50.0      0.599
 ```

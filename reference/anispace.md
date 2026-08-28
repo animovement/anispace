@@ -2,13 +2,11 @@
 
 An R package providing spatial transformation methods for movement data.
 
-An R package providing spatial transformation methods for movement data.
-
 ## See also
 
 Useful links:
 
-- <http://animovement.dev/anispace/>
+- <https://animovement.dev/anispace/>
 
 - <https://github.com/animovement/anispace/>
 

@@ -1,5 +1,11 @@
 # anispace (development version)
 
+## Changed
+
+* `wrap_angle()` and `unwrap_angle()` move to `anicore`, which already held `deg_to_rad()` and `rad_to_deg()` (animovement/aniframe#128). They are angle arithmetic rather than coordinate transformation. Use `anicore::wrap_angle()`.
+
+* The core data structures come from `anicore`, which is what the `aniframe` package was renamed to in its 0.8.0 (animovement/anicore#84). The `aniframe` class keeps its name; only the package providing it changed.
+
 ## Fixed
 
 * `map_to_spherical()` returns the radial distance from the origin as `rho`, rather than the cylindrical radius (#19). `theta` already used the full radius, so the triple was inconsistent with the name; ISO 80000-2 uses the radial distance. This was lossy as well as non-standard — a point on the z-axis has a cylindrical radius of zero, so `(0, 0, 5)` round-tripped through `map_to_cartesian()` to the origin, and now returns `(0, 0, 5)`.

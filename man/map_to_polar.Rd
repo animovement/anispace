@@ -16,7 +16,7 @@ An aniframe with \code{rho} and \code{phi} in place of \code{x} and \code{y}.
 Map from Cartesian to polar coordinates
 }
 \examples{
-af <- aniframe::example_aniframe(
+af <- anicore::example_aniframe(
   n_obs = 5, n_individuals = 1, n_keypoints = 1
 )
 map_to_polar(af)

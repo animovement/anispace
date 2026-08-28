@@ -12,14 +12,14 @@ Authors@R:
       )
 Description: An R package providing spatial transformation methods for movement data.
 License: MIT + file LICENSE
-URL: http://animovement.dev/anispace/, https://github.com/animovement/anispace/
+URL: https://animovement.dev/anispace/, https://github.com/animovement/anispace/
 BugReports: https://github.com/animovement/anispace/issues
 Encoding: UTF-8
 LazyData: true
 Depends:
   R (>= 4.1.0)
 Imports: 
-  aniframe,
+  anicore,
   cli,
   dplyr,
   rlang

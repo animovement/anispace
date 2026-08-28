@@ -6,11 +6,11 @@ test_that("map_to_spherical() correctly converts simple Cartesian data", {
     y = c(0, 1, 0, -1),
     z = c(0, 0, 0, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   sph <- map_to_spherical(df)
 
-  expect_true(aniframe::is_spherical(sph))
+  expect_true(anicore::is_spherical(sph))
   expect_equal(sph$rho, c(1, 1, 1, 1), tolerance = 1e-8)
   expect_equal(sph$phi, c(0, pi / 2, pi, 3 * pi / 2), tolerance = 1e-8)
   # With z = 0 every point lies in the xy-plane, a quarter turn from +z
@@ -19,7 +19,7 @@ test_that("map_to_spherical() correctly converts simple Cartesian data", {
 
 test_that("map_to_spherical() places a point on the +z axis at theta = 0", {
   df <- data.frame(time = 1, keypoint = "nose", x = 0, y = 0, z = 5) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   sph <- map_to_spherical(df)
 
@@ -33,7 +33,7 @@ test_that("map_to_spherical() reports rho as the radial distance", {
   # spherical coordinates use the radial distance, so rho is 13; the
   # cylindrical radius of 5 belongs to map_to_cylindrical() (#19).
   df <- data.frame(time = 1, keypoint = "nose", x = 3, y = 4, z = 12) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   expect_equal(map_to_spherical(df)$rho, 13, tolerance = 1e-8)
   expect_equal(map_to_cylindrical(df)$rho, 5, tolerance = 1e-8)
@@ -47,7 +47,7 @@ test_that("map_to_spherical() round-trips through map_to_cartesian()", {
     y = c(4, -2),
     z = c(12, 2)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   back <- map_to_cartesian(map_to_spherical(df))
 
@@ -64,7 +64,7 @@ test_that("map_to_spherical() drops the Cartesian columns", {
     y = c(3, 4),
     z = c(5, 6)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   sph <- map_to_spherical(df)
 
@@ -78,7 +78,7 @@ test_that("map_to_spherical() returns the distance from the origin as rho", {
   # Previously rho was sqrt(x^2 + y^2) — the distance from the z-axis — while
   # theta already used the full radius, leaving the triple internally
   # inconsistent with the name "spherical".
-  af <- aniframe::as_aniframe(
+  af <- anicore::as_aniframe(
     data.frame(time = 1, keypoint = "a", x = 3, y = 4, z = 12)
   )
 
@@ -93,7 +93,7 @@ test_that("a point on the z-axis survives the round trip", {
   # The sharp case. With rho as the xy-plane radius, a point on the z-axis
   # has rho = 0 and theta = 0, and its height cannot be recovered — the old
   # code returned z = 0, silently moving the point to the origin.
-  af <- aniframe::as_aniframe(
+  af <- anicore::as_aniframe(
     data.frame(time = c(1, 2), keypoint = "a", x = 0, y = 0, z = c(5, -5))
   )
 
@@ -103,7 +103,7 @@ test_that("a point on the z-axis survives the round trip", {
 })
 
 test_that("spherical coordinates round-trip away from the poles", {
-  af <- aniframe::as_aniframe(data.frame(
+  af <- anicore::as_aniframe(data.frame(
     time = 1:3,
     keypoint = "a",
     x = c(3, -2, 1),
@@ -122,7 +122,7 @@ test_that("cylindrical rho keeps its own meaning", {
   # rho means the distance from the z-axis in a cylindrical frame and the
   # distance from the origin in a spherical one. That is the ISO 80000-2
   # convention, and conflating the two is what #19 was.
-  af <- aniframe::as_aniframe(
+  af <- anicore::as_aniframe(
     data.frame(time = 1, keypoint = "a", x = 3, y = 4, z = 12)
   )
 

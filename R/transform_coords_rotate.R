@@ -12,7 +12,7 @@
 #' @return An aniframe with rotated `x` and `y` (and `z`, where present).
 #' @family coordinate transforms
 #' @examples
-#' af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+#' af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 #' rotate_coords(af, alignment_points = c("head", "neck"))
 #' @export
 rotate_coords <- function(
@@ -20,8 +20,8 @@ rotate_coords <- function(
   alignment_points,
   align_perpendicular = FALSE
 ) {
-  aniframe::ensure_is_aniframe(data)
-  aniframe::ensure_is_cartesian(data)
+  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_cartesian(data)
 
   if (length(alignment_points) != 2) {
     cli::cli_abort("alignment_points must contain exactly 2 keypoint names")
@@ -30,7 +30,7 @@ rotate_coords <- function(
     cli::cli_abort("Some specified keypoints not found in data")
   }
 
-  has_z <- aniframe::is_cartesian_3d(data)
+  has_z <- anicore::is_cartesian_3d(data)
 
   if (has_z) {
     rotate_coords_3d(data, alignment_points, align_perpendicular)
@@ -99,7 +99,7 @@ rotate_coords_2d <- function(
     out_data <- dplyr::bind_rows(out_data, ind_rotated)
   }
 
-  aniframe::as_aniframe(out_data)
+  anicore::as_aniframe(out_data)
 }
 
 #' @keywords internal

@@ -16,7 +16,7 @@ An aniframe with \code{rho} and \code{phi} in place of \code{x} and \code{y}, ke
 Map from Cartesian to cylindrical coordinates
 }
 \examples{
-af <- aniframe::example_aniframe(
+af <- anicore::example_aniframe(
   n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
 )
 map_to_cylindrical(af)

@@ -36,7 +36,7 @@ animal's own geometry rather than where it happened to be in the arena,
 which is what makes poses comparable across frames and individuals.
 }
 \examples{
-af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
 # The head becomes the origin, and the head-neck axis points forward
 transform_to_egocentric(

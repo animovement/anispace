@@ -2,15 +2,37 @@
 
 ## Changed
 
+* The transforms read the frame's declaration instead of naming its columns (#20). `translate_coords()`, `rotate_coords()` and `transform_to_egocentric()` took `individual`, `keypoint`, `time`, `x`, `y` and `z` literally, so a frame declaring anything else failed outright. They now resolve identity through `variables_what`, the index through `get_index()` and the coordinates through `get_axes()`.
+
+* The reference point is a member of any identity level, not a keypoint (#20). `to_keypoint` becomes `to`, `alignment_points` becomes `align`, and a new `level` says which identity variable they name members of — so a group centre can be taken on `individual` as readily as on `keypoint`. `level` defaults to the frame's only identity variable; a frame declaring several has to be told, since `variables_what` order is not something to rely on (animovement/anicore#140, animovement/anicore#141).
+
+* `translate_coords()` takes `by`, a named offset per axis role, in place of `to_x` / `to_y` / `to_z`.
+
+* `rotate_coords()` takes `about`, the centre of rotation — a member to turn around, or a fixed point. It defaults to the coordinate origin, which is what the previous behaviour was, unstated.
+
+* `transform_to_egocentric()`'s `align` is optional. Omitted, the frame is re-centred without being reoriented.
+
+* A quarter turn follows the frame's declared sense of rotation (#29, in part). `align_perpendicular` turned one way regardless; on a frame whose axes say its angles run clockwise it now turns the other. The `map_to_*()` half of that issue is still open.
+
 * `wrap_angle()` and `unwrap_angle()` move to `anicore`, which already held `deg_to_rad()` and `rad_to_deg()` (animovement/aniframe#128). They are angle arithmetic rather than coordinate transformation. Use `anicore::wrap_angle()`.
 
 * The core data structures come from `anicore`, which is what the `aniframe` package was renamed to in its 0.8.0 (animovement/anicore#84). The `aniframe` class keeps its name; only the package providing it changed.
 
 ## Fixed
 
+* Rotating a frame with more than one temporal group no longer multiplies its rows (#20). `rotate_coords()` joined the rotation angles by the index alone, so every trial's angle matched every trial's rows: two trials turned 12 rows into 48, of which 36 were duplicates. It returned plausible-looking data rather than an error. The standing `# TODO: Will likely break with multiple trials` is resolved.
+
+* Rotating three-dimensional coordinates works (#4). It aborted with "not yet supported". Two alignment points give the minimal rotation onto the target axis, leaving the roll about it as it was; a third fixes the orientation outright. Two dimensions are the same code with the rotation axis fixed to `z`.
+
+* `translate_coords_keypoint()` looped with `1:length()`, which runs twice on empty input (#15). The loops are gone entirely, replaced by grouped operations.
+
 * `map_to_spherical()` returns the radial distance from the origin as `rho`, rather than the cylindrical radius (#19). `theta` already used the full radius, so the triple was inconsistent with the name; ISO 80000-2 uses the radial distance. This was lossy as well as non-standard — a point on the z-axis has a cylindrical radius of zero, so `(0, 0, 5)` round-tripped through `map_to_cartesian()` to the origin, and now returns `(0, 0, 5)`.
 
   `spherical_to_z(rho, theta)` is now `rho * cos(theta)` where it was `rho / tan(theta)`. **Code reading `rho` from a spherical frame, or calling `spherical_to_z()` directly, needs updating.** `map_to_cylindrical()` is unchanged: `rho` there is the distance from the z-axis, which is correct for a cylindrical frame.
+
+## Removed
+
+* `convert_nan_to_na()`, which was neither called, exported nor tested — left behind when the mappers were rewritten.
 
 # anispace 0.2.0 (2026-08-18)
 

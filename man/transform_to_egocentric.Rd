@@ -6,34 +6,42 @@
 \usage{
 transform_to_egocentric(
   data,
-  to_keypoint,
-  alignment_points,
+  to,
+  align = NULL,
+  level = NULL,
   align_perpendicular = FALSE
 )
 }
 \arguments{
 \item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{to_keypoint}{A character string naming the keypoint to place at the
-origin.}
+\item{to}{A value of \code{level} to place at the origin.}
 
-\item{alignment_points}{A character vector of length 2 naming the keypoints
-that define the axis.}
+\item{align}{Optionally, two or three values of \code{level} defining the axes.
+Two give a direction; in 3D a third fixes the roll about it. Omitted, the
+frame is re-centred and left as it was oriented.}
 
-\item{align_perpendicular}{A logical value (default \code{FALSE}) determining the
-axis of alignment. \code{FALSE} aligns \code{alignment_points} with the forward axis;
-\code{TRUE} rotates them perpendicular to it.}
+\item{level}{The identity variable \code{to} and \code{align} name members of.
+Defaults to the frame's only one; a frame declaring several has to be
+told.}
+
+\item{align_perpendicular}{Put the primary axis across the target rather
+than along it.}
 }
 \value{
-An aniframe with translated and rotated coordinates, in which
-\code{to_keypoint} sits at the origin.
+An aniframe centred on \code{to}, with \code{reference_frame} set to
+\code{"egocentric"}.
 }
 \description{
-Places the animal at the centre of its own coordinate system, by translating
-all coordinates onto a reference keypoint and then rotating so that two
-chosen keypoints define the forward axis. Positions then describe the
-animal's own geometry rather than where it happened to be in the arena,
-which is what makes poses comparable across frames and individuals.
+Places the subject at the centre of its own coordinate system: translating
+onto a reference member, and then, if alignment points are given, rotating
+so they define the axes. Positions then describe the subject's own geometry
+rather than where it happened to be in the arena, which is what makes poses
+comparable across moments and individuals.
+
+Translation alone re-centres without changing orientation. Rotation alone
+is \code{\link[=rotate_coords]{rotate_coords()}}, which turns the frame about the coordinate origin
+rather than about the subject.
 }
 \examples{
 af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
@@ -41,17 +49,14 @@ af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 # The head becomes the origin, and the head-neck axis points forward
 transform_to_egocentric(
   af,
-  to_keypoint = "head",
-  alignment_points = c("head", "neck")
+  to = "head",
+  align = c("head", "neck"),
+  level = "keypoint"
 )
 
-# Aligning perpendicular instead puts that axis across the forward direction
-transform_to_egocentric(
-  af,
-  to_keypoint = "head",
-  alignment_points = c("head", "neck"),
-  align_perpendicular = TRUE
-)
+# Re-centre without reorienting
+transform_to_egocentric(af, to = "head", level = "keypoint")
+
 }
 \seealso{
 \code{\link[=translate_coords]{translate_coords()}} and \code{\link[=rotate_coords]{rotate_coords()}}, which this combines.

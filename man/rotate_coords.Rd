@@ -4,28 +4,49 @@
 \alias{rotate_coords}
 \title{Rotate coordinates in Cartesian space}
 \usage{
-rotate_coords(data, alignment_points, align_perpendicular = FALSE)
+rotate_coords(
+  data,
+  align,
+  level = NULL,
+  about = NULL,
+  align_perpendicular = FALSE
+)
 }
 \arguments{
 \item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{alignment_points}{A character vector of length 2 naming the keypoints
-used for alignment.}
+\item{align}{Two or three values of \code{level}. The first two define the
+primary axis. A third, in 3D, defines the plane and so the orientation
+outright.}
 
-\item{align_perpendicular}{A logical value (default \code{FALSE}) determining the
-axis of alignment. \code{FALSE} aligns \code{alignment_points} with the x-axis;
-\code{TRUE} rotates them perpendicular to it.}
+\item{level}{The identity variable \code{align} names members of. Defaults to
+the frame's only one; a frame declaring several has to be told.}
+
+\item{about}{Centre of rotation: a value of \code{level} to rotate around, or a
+named numeric such as \code{c(x = 500, y = 500)}. Defaults to the coordinate
+origin, which is what to rotate about once the frame has been translated
+onto its subject.}
+
+\item{align_perpendicular}{Put the primary axis across the target rather
+than along it.}
 }
 \value{
-An aniframe with rotated \code{x} and \code{y} (and \code{z}, where present).
+An aniframe with rotated coordinates.
 }
 \description{
-Rotates coordinates so that two chosen keypoints define the axis, detecting
-whether the data are two- or three-dimensional.
+Rotates each subject's coordinates so that chosen members of its identity
+define the axes. Two members give a direction; in three dimensions a third
+fixes the roll about it, which two cannot.
 }
 \examples{
 af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
-rotate_coords(af, alignment_points = c("head", "neck"))
+
+# Align the head-neck axis with x, rotating about the origin
+rotate_coords(af, align = c("head", "neck"), level = "keypoint")
+
+# Rotate each animal about its own head instead
+rotate_coords(af, align = c("head", "neck"), level = "keypoint", about = "head")
+
 }
 \seealso{
 Other coordinate transforms:

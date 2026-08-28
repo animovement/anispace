@@ -4,34 +4,38 @@
 \alias{translate_coords}
 \title{Translate coordinates in Cartesian space}
 \usage{
-translate_coords(data, to_x = 0, to_y = 0, to_z = NULL, to_keypoint = NULL)
+translate_coords(data, to = NULL, level = NULL, by = NULL)
 }
 \arguments{
 \item{data}{An aniframe in a Cartesian coordinate system.}
 
-\item{to_x}{A numeric x-coordinate: either one value, or one per time point.}
+\item{to}{A value of \code{level} to place at the origin. All other coordinates
+become relative to it.}
 
-\item{to_y}{A numeric y-coordinate: either one value, or one per time point.}
+\item{level}{The identity variable \code{to} is a member of. Defaults to the
+frame's only one; a frame declaring several has to be told.}
 
-\item{to_z}{A numeric z-coordinate, for three-dimensional data: either one
-value, or one per time point.}
-
-\item{to_keypoint}{A character string naming a keypoint to place at the
-origin. All other coordinates become relative to it.}
+\item{by}{Named numeric giving a fixed offset per axis role, e.g.
+\code{c(x = 100, y = 50)}. Mutually exclusive with \code{to}.}
 }
 \value{
 An aniframe with translated coordinates.
 }
 \description{
-Moves the origin, either to a fixed point, to a per-observation position, or
-onto a keypoint. Translating onto a keypoint is how coordinates are made
-relative to the animal rather than the arena.
+Moves the origin: to a fixed offset, or onto a member of the frame's
+identity — a keypoint, an animal, or whatever level the frame declares.
+Translating onto a member is how coordinates are made relative to the
+subject rather than the arena.
 }
 \examples{
 af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
 # Everything becomes relative to the head, which sits at the origin
-translate_coords(af, to_keypoint = "head")
+translate_coords(af, to = "head", level = "keypoint")
+
+# Or shift by a fixed amount
+translate_coords(af, by = c(x = 100, y = 50))
+
 }
 \seealso{
 Other coordinate transforms:

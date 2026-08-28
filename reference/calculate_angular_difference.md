@@ -28,9 +28,7 @@ A numeric angular difference in radians, in `(-pi, pi]`.
 ## See also
 
 Other angle utilities:
-[`diff_angle()`](https://animovement.dev/anispace/reference/diff_angle.md),
-[`unwrap_angle()`](https://animovement.dev/anispace/reference/unwrap_angle.md),
-[`wrap_angle()`](https://animovement.dev/anispace/reference/wrap_angle.md)
+[`diff_angle()`](https://animovement.dev/anispace/reference/diff_angle.md)
 
 ## Examples
 

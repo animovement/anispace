@@ -2,6 +2,18 @@
 
 ## anispace (development version)
 
+### Changed
+
+- `wrap_angle()` and `unwrap_angle()` move to `anicore`, which already
+  held `deg_to_rad()` and `rad_to_deg()` (animovement/aniframe#128).
+  They are angle arithmetic rather than coordinate transformation. Use
+  [`anicore::wrap_angle()`](https://animovement.dev/anicore/reference/wrap_angle.html).
+
+- The core data structures come from `anicore`, which is what the
+  `aniframe` package was renamed to in its 0.8.0
+  (animovement/anicore#84). The `aniframe` class keeps its name; only
+  the package providing it changed.
+
 ### Fixed
 
 - [`map_to_spherical()`](https://animovement.dev/anispace/reference/map_to_spherical.md)
@@ -45,9 +57,7 @@ tagged, so this marks the current state rather than a change in it.
   [`polar_to_y()`](https://animovement.dev/anispace/reference/polar_to_y.md)
   and
   [`spherical_to_z()`](https://animovement.dev/anispace/reference/spherical_to_z.md).
-- Angular arithmetic:
-  [`wrap_angle()`](https://animovement.dev/anispace/reference/wrap_angle.md),
-  [`unwrap_angle()`](https://animovement.dev/anispace/reference/unwrap_angle.md),
+- Angular arithmetic: `wrap_angle()`, `unwrap_angle()`,
   [`diff_angle()`](https://animovement.dev/anispace/reference/diff_angle.md)
   and
   [`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md).
@@ -68,8 +78,7 @@ tagged, so this marks the current state rather than a change in it.
 
 ### Fixed
 
-- [`unwrap_angle()`](https://animovement.dev/anispace/reference/unwrap_angle.md)
-  handles `NA` correctly.
+- `unwrap_angle()` handles `NA` correctly.
 
 ## anispace 0.1.2
 

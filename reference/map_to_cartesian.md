@@ -30,7 +30,7 @@ Other coordinate systems:
 ## Examples
 
 ``` r
-af <- aniframe::example_aniframe(n_obs = 5, n_individuals = 1, n_keypoints = 1)
+af <- anicore::example_aniframe(n_obs = 5, n_individuals = 1, n_keypoints = 1)
 
 # Round-trips back to the coordinates it started from
 map_to_cartesian(map_to_polar(af))

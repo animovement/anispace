@@ -31,9 +31,7 @@ A numeric vector the same length as `x`. The first `lag` entries are
 ## See also
 
 Other angle utilities:
-[`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md),
-[`unwrap_angle()`](https://animovement.dev/anispace/reference/unwrap_angle.md),
-[`wrap_angle()`](https://animovement.dev/anispace/reference/wrap_angle.md)
+[`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md)
 
 ## Examples
 

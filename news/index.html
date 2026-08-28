@@ -22,7 +22,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-animovement" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="animovement"><span class="fa fab fa-r-project"></span> animovement</button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-animovement"><li><a class="external-link dropdown-item" href="https://animovement.dev/anicheck/">anicheck</a></li>
-    <li><a class="external-link dropdown-item" href="https://animovement.dev/aniframe/">aniframe</a></li>
+    <li><a class="external-link dropdown-item" href="https://animovement.dev/anicore/">aniframe</a></li>
     <li><a class="external-link dropdown-item" href="https://animovement.dev/animetric/">animetric</a></li>
     <li><a class="external-link dropdown-item" href="https://animovement.dev/animovement/">animovement</a></li>
     <li><a class="external-link dropdown-item" href="https://animovement.dev/aniprocess/">aniprocess</a></li>
@@ -52,6 +52,11 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="anispace-development-version">anispace (development version)<a class="anchor" aria-label="anchor" href="#anispace-development-version"></a></h2>
 <div class="section level3">
+<h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
+<ul><li><p><code>wrap_angle()</code> and <code>unwrap_angle()</code> move to <code>anicore</code>, which already held <code>deg_to_rad()</code> and <code>rad_to_deg()</code> (animovement/aniframe#128). They are angle arithmetic rather than coordinate transformation. Use <code><a href="https://animovement.dev/anicore/reference/wrap_angle.html" class="external-link">anicore::wrap_angle()</a></code>.</p></li>
+<li><p>The core data structures come from <code>anicore</code>, which is what the <code>aniframe</code> package was renamed to in its 0.8.0 (animovement/anicore#84). The <code>aniframe</code> class keeps its name; only the package providing it changed.</p></li>
+</ul></div>
+<div class="section level3">
 <h3 id="fixed-development-version">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version"></a></h3>
 <ul><li>
 <p><code><a href="../reference/map_to_spherical.html">map_to_spherical()</a></code> returns the radial distance from the origin as <code>rho</code>, rather than the cylindrical radius (<a href="https://github.com/animovement/anispace/issues/19" class="external-link">#19</a>). <code>theta</code> already used the full radius, so the triple was inconsistent with the name; ISO 80000-2 uses the radial distance. This was lossy as well as non-standard — a point on the z-axis has a cylindrical radius of zero, so <code>(0, 0, 5)</code> round-tripped through <code><a href="../reference/map_to_cartesian.html">map_to_cartesian()</a></code> to the origin, and now returns <code>(0, 0, 5)</code>.</p>
@@ -65,7 +70,7 @@
 <div class="section level3">
 <h3 id="added-0-2-0">Added<a class="anchor" aria-label="anchor" href="#added-0-2-0"></a></h3>
 <ul><li>Coordinate-system conversion: <code><a href="../reference/map_to_cartesian.html">map_to_cartesian()</a></code>, <code><a href="../reference/map_to_polar.html">map_to_polar()</a></code>, <code><a href="../reference/map_to_cylindrical.html">map_to_cylindrical()</a></code> and <code><a href="../reference/map_to_spherical.html">map_to_spherical()</a></code>, with the element-wise helpers behind them — <code><a href="../reference/cartesian_to_rho.html">cartesian_to_rho()</a></code>, <code><a href="../reference/cartesian_to_phi.html">cartesian_to_phi()</a></code>, <code><a href="../reference/cartesian_to_theta.html">cartesian_to_theta()</a></code>, <code><a href="../reference/polar_to_x.html">polar_to_x()</a></code>, <code><a href="../reference/polar_to_y.html">polar_to_y()</a></code> and <code><a href="../reference/spherical_to_z.html">spherical_to_z()</a></code>.</li>
-<li>Angular arithmetic: <code><a href="../reference/wrap_angle.html">wrap_angle()</a></code>, <code><a href="../reference/unwrap_angle.html">unwrap_angle()</a></code>, <code><a href="../reference/diff_angle.html">diff_angle()</a></code> and <code><a href="../reference/calculate_angular_difference.html">calculate_angular_difference()</a></code>.</li>
+<li>Angular arithmetic: <code>wrap_angle()</code>, <code>unwrap_angle()</code>, <code><a href="../reference/diff_angle.html">diff_angle()</a></code> and <code><a href="../reference/calculate_angular_difference.html">calculate_angular_difference()</a></code>.</li>
 <li>Rigid transformations: <code><a href="../reference/rotate_coords.html">rotate_coords()</a></code>, <code><a href="../reference/translate_coords.html">translate_coords()</a></code> and <code><a href="../reference/transform_to_egocentric.html">transform_to_egocentric()</a></code>.</li>
 </ul></div>
 <div class="section level3">
@@ -78,7 +83,7 @@
 <div class="section level3">
 <h3 id="fixed-0-1-3">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-1-3"></a></h3>
 <ul><li>
-<code><a href="../reference/unwrap_angle.html">unwrap_angle()</a></code> handles <code>NA</code> correctly.</li>
+<code>unwrap_angle()</code> handles <code>NA</code> correctly.</li>
 </ul></div>
 </div>
     <div class="section level2">

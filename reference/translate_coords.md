@@ -47,7 +47,7 @@ Other coordinate transforms:
 ## Examples
 
 ``` r
-af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
 # Everything becomes relative to the head, which sits at the origin
 translate_coords(af, to_keypoint = "head")

@@ -39,7 +39,7 @@ Other coordinate transforms:
 ## Examples
 
 ``` r
-af <- aniframe::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 rotate_coords(af, alignment_points = c("head", "neck"))
 #> # Individuals: 1
 #> # Keypoints:   head, neck, shoulder_right

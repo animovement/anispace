@@ -37,9 +37,5 @@ coordinates.
 
 - [`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md)
   : Shortest signed distance between two angles
-- [`wrap_angle()`](https://animovement.dev/anispace/reference/wrap_angle.md)
-  : Constrain angles to a standard range
-- [`unwrap_angle()`](https://animovement.dev/anispace/reference/unwrap_angle.md)
-  : Remove wrapping from a sequence of angles
 - [`diff_angle()`](https://animovement.dev/anispace/reference/diff_angle.md)
   : Differences between successive angles

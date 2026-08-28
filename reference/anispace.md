@@ -2,6 +2,8 @@
 
 An R package providing spatial transformation methods for movement data.
 
+An R package providing spatial transformation methods for movement data.
+
 ## See also
 
 Useful links:

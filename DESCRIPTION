@@ -1,7 +1,7 @@
 Package: anispace
 Type: Package
 Title: An R package providing spatial transformation methods for movement data
-Version: 0.3.0
+Version: 0.3.0.9000
 Authors@R: 
     person(
       "Mikkel", 

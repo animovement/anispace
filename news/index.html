@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">anispace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,9 +50,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="anispace-development-version">anispace (development version)<a class="anchor" aria-label="anchor" href="#anispace-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.0" id="anispace-030-2026-08-28">anispace 0.3.0 (2026-08-28)<a class="anchor" aria-label="anchor" href="#anispace-030-2026-08-28"></a></h2>
 <div class="section level3">
-<h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
+<h3 id="changed-0-3-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-3-0"></a></h3>
 <ul><li><p>The transforms read the frame’s declaration instead of naming its columns (<a href="https://github.com/animovement/anispace/issues/20" class="external-link">#20</a>). <code><a href="../reference/translate_coords.html">translate_coords()</a></code>, <code><a href="../reference/rotate_coords.html">rotate_coords()</a></code> and <code><a href="../reference/transform_to_egocentric.html">transform_to_egocentric()</a></code> took <code>individual</code>, <code>keypoint</code>, <code>time</code>, <code>x</code>, <code>y</code> and <code>z</code> literally, so a frame declaring anything else failed outright. They now resolve identity through <code>variables_what</code>, the index through <code>get_index()</code> and the coordinates through <code>get_axes()</code>.</p></li>
 <li><p>The reference point is a member of any identity level, not a keypoint (<a href="https://github.com/animovement/anispace/issues/20" class="external-link">#20</a>). <code>to_keypoint</code> becomes <code>to</code>, <code>alignment_points</code> becomes <code>align</code>, and a new <code>level</code> says which identity variable they name members of — so a group centre can be taken on <code>individual</code> as readily as on <code>keypoint</code>. <code>level</code> defaults to the frame’s only identity variable; a frame declaring several has to be told, since <code>variables_what</code> order is not something to rely on (animovement/anicore#140, animovement/anicore#141).</p></li>
 <li><p><code><a href="../reference/translate_coords.html">translate_coords()</a></code> takes <code>by</code>, a named offset per axis role, in place of <code>to_x</code> / <code>to_y</code> / <code>to_z</code>.</p></li>
@@ -60,11 +60,16 @@
 <li><p><code><a href="../reference/transform_to_egocentric.html">transform_to_egocentric()</a></code>’s <code>align</code> is optional. Omitted, the frame is re-centred without being reoriented.</p></li>
 <li><p>A quarter turn follows the frame’s declared sense of rotation (<a href="https://github.com/animovement/anispace/issues/29" class="external-link">#29</a>, in part). <code>align_perpendicular</code> turned one way regardless; on a frame whose axes say its angles run clockwise it now turns the other. The <code>map_to_*()</code> half of that issue is still open.</p></li>
 <li><p><code>wrap_angle()</code> and <code>unwrap_angle()</code> move to <code>anicore</code>, which already held <code>deg_to_rad()</code> and <code>rad_to_deg()</code> (animovement/aniframe#128). They are angle arithmetic rather than coordinate transformation. Use <code><a href="https://animovement.dev/anicore/reference/wrap_angle.html" class="external-link">anicore::wrap_angle()</a></code>.</p></li>
+<li><p>The minimum <code>anicore</code> is 0.8.0, which is the first version published under that name — the dependency was renamed without a version constraint, so nothing recorded that a pre-rename <code>aniframe</code> will not do.</p></li>
 <li><p>The core data structures come from <code>anicore</code>, which is what the <code>aniframe</code> package was renamed to in its 0.8.0 (animovement/anicore#84). The <code>aniframe</code> class keeps its name; only the package providing it changed.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="fixed-development-version">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version"></a></h3>
-<ul><li><p>Rotating a frame with more than one temporal group no longer multiplies its rows (<a href="https://github.com/animovement/anispace/issues/20" class="external-link">#20</a>). <code><a href="../reference/rotate_coords.html">rotate_coords()</a></code> joined the rotation angles by the index alone, so every trial’s angle matched every trial’s rows: two trials turned 12 rows into 48, of which 36 were duplicates. It returned plausible-looking data rather than an error. The standing <code># TODO: Will likely break with multiple trials</code> is resolved.</p></li>
+<h3 id="fixed-0-3-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-3-0"></a></h3>
+<ul><li>
+<p><code><a href="../reference/map_to_polar.html">map_to_polar()</a></code>, <code><a href="../reference/map_to_cylindrical.html">map_to_cylindrical()</a></code> and <code><a href="../reference/map_to_spherical.html">map_to_spherical()</a></code> declare the system they mapped to (<a href="https://github.com/animovement/anispace/issues/27" class="external-link">#27</a>). They returned frames whose metadata still described the system they came from — <code>variables_where</code> naming <code>x</code> and <code>y</code> on a frame that no longer had them, and <code>coordinate_system</code> still <code>cartesian_2d</code>, which <code>validate_aniframe()</code> rejects outright.</p>
+<p>It went unnoticed because <code>ensure_is_polar()</code> matched column names, so <code>rho</code> and <code>phi</code> being present satisfied it whatever the metadata said. Those predicates now read <code>coordinate_system</code> and fail correctly. The trailing <code>as_aniframe()</code> would have re-derived the declaration, but it runs <em>after</em> the check, so the check had never validated the object being returned.</p>
+</li>
+<li><p>Rotating a frame with more than one temporal group no longer multiplies its rows (<a href="https://github.com/animovement/anispace/issues/20" class="external-link">#20</a>). <code><a href="../reference/rotate_coords.html">rotate_coords()</a></code> joined the rotation angles by the index alone, so every trial’s angle matched every trial’s rows: two trials turned 12 rows into 48, of which 36 were duplicates. It returned plausible-looking data rather than an error. The standing <code># TODO: Will likely break with multiple trials</code> is resolved.</p></li>
 <li><p>Rotating three-dimensional coordinates works (<a href="https://github.com/animovement/anispace/issues/4" class="external-link">#4</a>). It aborted with “not yet supported”. Two alignment points give the minimal rotation onto the target axis, leaving the roll about it as it was; a third fixes the orientation outright. Two dimensions are the same code with the rotation axis fixed to <code>z</code>.</p></li>
 <li><p><code>translate_coords_keypoint()</code> looped with <code>1:length()</code>, which runs twice on empty input (<a href="https://github.com/animovement/anispace/issues/15" class="external-link">#15</a>). The loops are gone entirely, replaced by grouped operations.</p></li>
 <li>
@@ -73,7 +78,7 @@
 </li>
 </ul></div>
 <div class="section level3">
-<h3 id="removed-development-version">Removed<a class="anchor" aria-label="anchor" href="#removed-development-version"></a></h3>
+<h3 id="removed-0-3-0">Removed<a class="anchor" aria-label="anchor" href="#removed-0-3-0"></a></h3>
 <ul><li>
 <code>convert_nan_to_na()</code>, which was neither called, exported nor tested — left behind when the mappers were rewritten.</li>
 </ul></div>

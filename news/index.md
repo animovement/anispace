@@ -1,6 +1,6 @@
 # Changelog
 
-## anispace (development version)
+## anispace 0.3.0 (2026-08-28)
 
 ### Changed
 
@@ -49,12 +49,35 @@
   They are angle arithmetic rather than coordinate transformation. Use
   [`anicore::wrap_angle()`](https://animovement.dev/anicore/reference/wrap_angle.html).
 
+- The minimum `anicore` is 0.8.0, which is the first version published
+  under that name — the dependency was renamed without a version
+  constraint, so nothing recorded that a pre-rename `aniframe` will not
+  do.
+
 - The core data structures come from `anicore`, which is what the
   `aniframe` package was renamed to in its 0.8.0
   (animovement/anicore#84). The `aniframe` class keeps its name; only
   the package providing it changed.
 
 ### Fixed
+
+- [`map_to_polar()`](https://animovement.dev/anispace/reference/map_to_polar.md),
+  [`map_to_cylindrical()`](https://animovement.dev/anispace/reference/map_to_cylindrical.md)
+  and
+  [`map_to_spherical()`](https://animovement.dev/anispace/reference/map_to_spherical.md)
+  declare the system they mapped to
+  ([\#27](https://github.com/animovement/anispace/issues/27)). They
+  returned frames whose metadata still described the system they came
+  from — `variables_where` naming `x` and `y` on a frame that no longer
+  had them, and `coordinate_system` still `cartesian_2d`, which
+  `validate_aniframe()` rejects outright.
+
+  It went unnoticed because `ensure_is_polar()` matched column names, so
+  `rho` and `phi` being present satisfied it whatever the metadata said.
+  Those predicates now read `coordinate_system` and fail correctly. The
+  trailing `as_aniframe()` would have re-derived the declaration, but it
+  runs *after* the check, so the check had never validated the object
+  being returned.
 
 - Rotating a frame with more than one temporal group no longer
   multiplies its rows

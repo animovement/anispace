@@ -220,7 +220,7 @@ get_vector_angle <- function(data, kp1, kp2, ind = "A", t = 1) {
 test_that("rotate_coords preserves horizontal alignment at 0 degrees", {
   data <- create_horizontal_alignment_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # Points already aligned horizontally, should remain unchanged
   expect_equal(result$x, data$x, tolerance = 1e-10)
@@ -230,7 +230,7 @@ test_that("rotate_coords preserves horizontal alignment at 0 degrees", {
 test_that("rotate_coords rotates vertical line to horizontal", {
   data <- create_vertical_alignment_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # After rotation, alignment points should be on x-axis (y should be ~0)
   head_coords <- result |> dplyr::filter(keypoint == "head")
@@ -246,7 +246,7 @@ test_that("rotate_coords rotates vertical line to horizontal", {
 test_that("rotate_coords rotates diagonal line to horizontal", {
   data <- create_diagonal_alignment_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # After rotation, alignment points should be on x-axis
   head_coords <- result |> dplyr::filter(keypoint == "head")
@@ -261,7 +261,8 @@ test_that("rotate_coords with align_perpendicular makes horizontal line vertical
 
   result <- rotate_coords(
     data,
-    alignment_points = c("head", "tail"),
+    level = "keypoint",
+    align = c("head", "tail"),
     align_perpendicular = TRUE
   )
 
@@ -281,7 +282,8 @@ test_that("rotate_coords with align_perpendicular makes vertical line horizontal
 
   result <- rotate_coords(
     data,
-    alignment_points = c("head", "tail"),
+    level = "keypoint",
+    align = c("head", "tail"),
     align_perpendicular = TRUE
   )
 
@@ -306,7 +308,7 @@ test_that("rotate_coords preserves distances between points", {
         data$y[data$keypoint == "tail"][1])^2
   )
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # Calculate rotated distances
   rot_dist_head_tail <- sqrt(
@@ -322,7 +324,7 @@ test_that("rotate_coords preserves distances between points", {
 test_that("rotate_coords rotates all keypoints together", {
   data <- create_three_keypoint_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # All points should be rotated, not just alignment points
   expect_equal(nrow(result), nrow(data))
@@ -333,7 +335,7 @@ test_that("rotate_coords rotates all keypoints together", {
 test_that("rotate_coords processes each individual independently", {
   data <- create_multi_individual_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # Check that both individuals are in result
   expect_true(all(c("A", "B") %in% unique(result$individual)))
@@ -358,7 +360,7 @@ test_that("rotate_coords processes each individual independently", {
 test_that("rotate_coords maintains individual separation", {
   data <- create_multi_individual_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # Check row counts per individual
   expect_equal(
@@ -375,7 +377,7 @@ test_that("rotate_coords maintains individual separation", {
 test_that("rotate_coords handles different angles at different times", {
   data <- create_varying_angle_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # At each time point, alignment should be horizontal
   for (t in 1:3) {
@@ -389,7 +391,7 @@ test_that("rotate_coords handles different angles at different times", {
 test_that("rotate_coords applies different rotations per time point", {
   data <- create_varying_angle_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # Body position should differ across time (different rotations applied)
   body_coords <- result |> dplyr::filter(keypoint == "body")
@@ -402,7 +404,7 @@ test_that("rotate_coords applies different rotations per time point", {
 test_that("rotate_coords preserves data structure", {
   data <- create_horizontal_alignment_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   expect_equal(nrow(result), nrow(data))
   expect_equal(names(result), names(data))
@@ -414,7 +416,7 @@ test_that("rotate_coords preserves data structure", {
 test_that("rotate_coords returns aniframe object", {
   data <- create_horizontal_alignment_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   expect_true("aniframe" %in% class(result))
 })
@@ -422,23 +424,24 @@ test_that("rotate_coords returns aniframe object", {
 test_that("rotate_coords preserves all keypoints", {
   data <- create_three_keypoint_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   expect_setequal(unique(result$keypoint), unique(data$keypoint))
 })
 
 # Tests for error handling ----
-test_that("rotate_coords errors with wrong number of alignment points", {
+test_that("rotate_coords errors with the wrong number of alignment points", {
   data <- create_horizontal_alignment_data()
 
   expect_error(
-    rotate_coords(data, alignment_points = c("head")),
-    "exactly 2 keypoint names"
+    rotate_coords(data, level = "keypoint", align = c("head")),
+    "two or three values"
   )
 
+  # A third point only means something in three dimensions.
   expect_error(
-    rotate_coords(data, alignment_points = c("head", "body", "tail")),
-    "exactly 2 keypoint names"
+    rotate_coords(data, level = "keypoint", align = c("head", "body", "tail")),
+    "three dimensions"
   )
 })
 
@@ -446,8 +449,8 @@ test_that("rotate_coords errors with non-existent keypoints", {
   data <- create_horizontal_alignment_data()
 
   expect_error(
-    rotate_coords(data, alignment_points = c("head", "nonexistent")),
-    "not found in data"
+    rotate_coords(data, level = "keypoint", align = c("head", "nonexistent")),
+    "not (a value|values) of"
   )
 })
 
@@ -455,8 +458,8 @@ test_that("rotate_coords errors with missing keypoints", {
   data <- create_horizontal_alignment_data()
 
   expect_error(
-    rotate_coords(data, alignment_points = c("nose", "ear")),
-    "not found in data"
+    rotate_coords(data, level = "keypoint", align = c("nose", "ear")),
+    "not (a value|values) of"
   )
 })
 
@@ -465,7 +468,7 @@ test_that("rotate_coords handles single time point", {
   data <- create_horizontal_alignment_data() |>
     dplyr::filter(time == 1)
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   expect_equal(nrow(result), nrow(data))
 })
@@ -489,7 +492,7 @@ test_that("rotate_coords handles points at origin", {
 
   data <- dplyr::bind_rows(data_head, data_tail) |> anicore::as_aniframe()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   expect_equal(nrow(result), nrow(data))
 })
@@ -513,7 +516,7 @@ test_that("rotate_coords handles negative coordinates", {
 
   data <- dplyr::bind_rows(data_head, data_tail) |> anicore::as_aniframe()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   # Should align to x-axis
   head_coords <- result |> dplyr::filter(keypoint == "head")
@@ -527,7 +530,7 @@ test_that("rotate_coords produces correct angle for 90-degree rotation", {
   data <- create_vertical_alignment_data()
 
   # Vertical line (90 degrees) should rotate to 0 degrees (horizontal)
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   angle_after <- get_vector_angle(result, "head", "tail", "A", 1)
   expect_equal(angle_after, 0, tolerance = 1e-10)
@@ -536,7 +539,7 @@ test_that("rotate_coords produces correct angle for 90-degree rotation", {
 test_that("rotate_coords produces correct angle for 45-degree rotation", {
   data <- create_diagonal_alignment_data()
 
-  result <- rotate_coords(data, alignment_points = c("head", "tail"))
+  result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
   angle_after <- get_vector_angle(result, "head", "tail", "A", 1)
   expect_equal(angle_after, 0, tolerance = 1e-10)
@@ -547,7 +550,8 @@ test_that("rotate_coords perpendicular creates 90-degree angle", {
 
   result <- rotate_coords(
     data,
-    alignment_points = c("head", "tail"),
+    level = "keypoint",
+    align = c("head", "tail"),
     align_perpendicular = TRUE
   )
 
@@ -587,7 +591,7 @@ create_three_keypoint_3d <- function() {
 
 # test_that("rotate_coords correctly aligns a diagonal 3D vector to x-axis", {
 #   data <- create_diagonal_3d()
-#   result <- rotate_coords(data, alignment_points = c("head", "tail"))
+#   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 #
 #   # The vector from head to tail should lie on x-axis → y,z ≈ 0
 #   head <- dplyr::filter(result, keypoint == "head")
@@ -599,7 +603,7 @@ create_three_keypoint_3d <- function() {
 #
 # test_that("rotate_coords aligns vertical 3D vector to x-axis", {
 #   data <- create_vertical_3d()
-#   result <- rotate_coords(data, alignment_points = c("head", "tail"))
+#   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 #   head <- dplyr::filter(result, keypoint == "head")
 #   tail <- dplyr::filter(result, keypoint == "tail")
 #   expect_equal(tail$y - head$y, 0, tolerance = 1e-10)
@@ -608,7 +612,7 @@ create_three_keypoint_3d <- function() {
 #
 # test_that("rotate_coords aligns depth 3D vector (z-axis) to x-axis", {
 #   data <- create_depth_3d()
-#   result <- rotate_coords(data, alignment_points = c("head", "tail"))
+#   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 #   head <- dplyr::filter(result, keypoint == "head")
 #   tail <- dplyr::filter(result, keypoint == "tail")
 #   expect_equal(tail$y - head$y, 0, tolerance = 1e-10)
@@ -617,7 +621,7 @@ create_three_keypoint_3d <- function() {
 #
 # test_that("rotate_coords_3d with align_perpendicular rotates to y-axis", {
 #   data <- create_horizontal_3d()
-#   result <- rotate_coords(data, alignment_points = c("head", "tail"), align_perpendicular = TRUE)
+#   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"), align_perpendicular = TRUE)
 #   head <- dplyr::filter(result, keypoint == "head")
 #   tail <- dplyr::filter(result, keypoint == "tail")
 #   expect_equal(tail$x - head$x, 0, tolerance = 1e-10)
@@ -628,7 +632,7 @@ create_three_keypoint_3d <- function() {
 #   data <- create_three_keypoint_3d()
 #   d_before <- sqrt(sum((dplyr::filter(data, keypoint == "head")[, c("x", "y", "z")] -
 #                           dplyr::filter(data, keypoint == "tail")[, c("x", "y", "z")])^2))
-#   result <- rotate_coords(data, alignment_points = c("head", "tail"))
+#   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 #   d_after <- sqrt(sum((dplyr::filter(result, keypoint == "head")[, c("x", "y", "z")] -
 #                          dplyr::filter(result, keypoint == "tail")[, c("x", "y", "z")])^2))
 #   expect_equal(d_before, d_after, tolerance = 1e-10)
@@ -636,14 +640,14 @@ create_three_keypoint_3d <- function() {
 #
 # test_that("rotate_coords_3d rotates all keypoints consistently", {
 #   data <- create_three_keypoint_3d()
-#   result <- rotate_coords(data, alignment_points = c("head", "tail"))
+#   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 #   expect_equal(nrow(result), nrow(data))
 #   expect_setequal(unique(result$keypoint), unique(data$keypoint))
 # })
 #
 # test_that("rotate_coords_3d preserves data structure and class", {
 #   data <- create_diagonal_3d()
-#   result <- rotate_coords(data, alignment_points = c("head", "tail"))
+#   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 #   expect_true("aniframe" %in% class(result))
 #   expect_equal(names(result), names(data))
 #   expect_equal(nrow(result), nrow(data))

@@ -12,8 +12,9 @@ make_frame <- function() {
 test_that("transform_to_egocentric() puts the reference keypoint at the origin", {
   ego <- transform_to_egocentric(
     make_frame(),
-    to_keypoint = "head",
-    alignment_points = c("head", "neck")
+    level = "keypoint",
+    to = "head",
+    align = c("head", "neck")
   )
 
   head_rows <- ego[ego$keypoint == "head", ]
@@ -24,8 +25,9 @@ test_that("transform_to_egocentric() puts the reference keypoint at the origin",
 test_that("transform_to_egocentric() aligns the chosen axis", {
   ego <- transform_to_egocentric(
     make_frame(),
-    to_keypoint = "head",
-    alignment_points = c("head", "neck")
+    level = "keypoint",
+    to = "head",
+    align = c("head", "neck")
   )
 
   # With head at the origin, neck should lie on the x-axis
@@ -36,13 +38,15 @@ test_that("transform_to_egocentric() aligns the chosen axis", {
 test_that("align_perpendicular rotates the axis by a quarter turn", {
   along <- transform_to_egocentric(
     make_frame(),
-    to_keypoint = "head",
-    alignment_points = c("head", "neck")
+    level = "keypoint",
+    to = "head",
+    align = c("head", "neck")
   )
   across <- transform_to_egocentric(
     make_frame(),
-    to_keypoint = "head",
-    alignment_points = c("head", "neck"),
+    level = "keypoint",
+    to = "head",
+    align = c("head", "neck"),
     align_perpendicular = TRUE
   )
 
@@ -62,8 +66,9 @@ test_that("transform_to_egocentric() keeps every row and returns an aniframe", {
   df <- make_frame()
   ego <- transform_to_egocentric(
     df,
-    to_keypoint = "head",
-    alignment_points = c("head", "neck")
+    level = "keypoint",
+    to = "head",
+    align = c("head", "neck")
   )
 
   expect_true(anicore::is_aniframe(ego))

@@ -1,21 +1,29 @@
 #' Transform coordinates to an egocentric reference frame
 #'
-#' Places the animal at the centre of its own coordinate system, by translating
-#' all coordinates onto a reference keypoint and then rotating so that two
-#' chosen keypoints define the forward axis. Positions then describe the
-#' animal's own geometry rather than where it happened to be in the arena,
-#' which is what makes poses comparable across frames and individuals.
+#' @description
+#' Places the subject at the centre of its own coordinate system: translating
+#' onto a reference member, and then, if alignment points are given, rotating
+#' so they define the axes. Positions then describe the subject's own geometry
+#' rather than where it happened to be in the arena, which is what makes poses
+#' comparable across moments and individuals.
+#'
+#' Translation alone re-centres without changing orientation. Rotation alone
+#' is [rotate_coords()], which turns the frame about the coordinate origin
+#' rather than about the subject.
 #'
 #' @param data An aniframe in a Cartesian coordinate system.
-#' @param to_keypoint A character string naming the keypoint to place at the
-#'   origin.
-#' @param alignment_points A character vector of length 2 naming the keypoints
-#'   that define the axis.
-#' @param align_perpendicular A logical value (default `FALSE`) determining the
-#'   axis of alignment. `FALSE` aligns `alignment_points` with the forward axis;
-#'   `TRUE` rotates them perpendicular to it.
-#' @return An aniframe with translated and rotated coordinates, in which
-#'   `to_keypoint` sits at the origin.
+#' @param to A value of `level` to place at the origin.
+#' @param align Optionally, two or three values of `level` defining the axes.
+#'   Two give a direction; in 3D a third fixes the roll about it. Omitted, the
+#'   frame is re-centred and left as it was oriented.
+#' @param level The identity variable `to` and `align` name members of.
+#'   Defaults to the frame's only one; a frame declaring several has to be
+#'   told.
+#' @param align_perpendicular Put the primary axis across the target rather
+#'   than along it.
+#'
+#' @return An aniframe centred on `to`, with `reference_frame` set to
+#'   `"egocentric"`.
 #' @family coordinate transforms
 #' @seealso [translate_coords()] and [rotate_coords()], which this combines.
 #' @examples
@@ -24,39 +32,38 @@
 #' # The head becomes the origin, and the head-neck axis points forward
 #' transform_to_egocentric(
 #'   af,
-#'   to_keypoint = "head",
-#'   alignment_points = c("head", "neck")
+#'   to = "head",
+#'   align = c("head", "neck"),
+#'   level = "keypoint"
 #' )
 #'
-#' # Aligning perpendicular instead puts that axis across the forward direction
-#' transform_to_egocentric(
-#'   af,
-#'   to_keypoint = "head",
-#'   alignment_points = c("head", "neck"),
-#'   align_perpendicular = TRUE
-#' )
+#' # Re-centre without reorienting
+#' transform_to_egocentric(af, to = "head", level = "keypoint")
+#'
 #' @export
 transform_to_egocentric <- function(
   data,
-  to_keypoint, # Reference point for translation
-  alignment_points, # Two keypoint names to use for alignment
-  align_perpendicular = FALSE # If TRUE, alignment_points will be made perpendicular to 0°
+  to,
+  align = NULL,
+  level = NULL,
+  align_perpendicular = FALSE
 ) {
-  # First translate
-  translated_data <- translate_coords(data, to_keypoint = to_keypoint)
+  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_cartesian(data)
 
-  # Then rotate
-  transformed_data <- rotate_coords(
-    translated_data,
-    alignment_points,
-    align_perpendicular
-  )
+  level <- resolve_level(data, level)
+  out <- translate_coords(data, to = to, level = level)
 
-  transformed_data <- transformed_data |>
-    anicore::as_aniframe() |>
-    anicore::set_metadata(
-      reference_frame = "egocentric"
+  if (!is.null(align)) {
+    # Rotating about the origin is correct here precisely because the
+    # translation has already put the subject there.
+    out <- rotate_coords(
+      out,
+      align = align,
+      level = level,
+      align_perpendicular = align_perpendicular
     )
+  }
 
-  transformed_data
+  anicore::set_metadata(out, reference_frame = "egocentric")
 }

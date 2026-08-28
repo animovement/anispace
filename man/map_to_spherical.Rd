@@ -10,7 +10,10 @@ map_to_spherical(data)
 \item{data}{An aniframe in a Cartesian coordinate system.}
 }
 \value{
-An aniframe with \code{rho}, \code{phi} and \code{theta} in place of \code{x}, \code{y} and \code{z}.
+An aniframe with \code{rho}, \code{phi} and \code{theta} in place of \code{x}, \code{y} and
+\code{z}. \code{rho} is the radial distance from the origin, \code{theta} the
+inclination from the positive z-axis, and \code{phi} the azimuth — the
+convention of ISO 80000-2.
 }
 \description{
 Map from Cartesian to spherical coordinates

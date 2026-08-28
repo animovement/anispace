@@ -57,8 +57,10 @@ map_to_cartesian_spherical <- function(data) {
   anicore::ensure_is_spherical(data)
   data |>
     dplyr::mutate(
-      x = polar_to_x(.data$rho, .data$phi),
-      y = polar_to_y(.data$rho, .data$phi),
+      # `rho` is the radial distance, so the projection onto the xy-plane —
+      # which is what the polar helpers expect — is rho * sin(theta).
+      x = polar_to_x(.data$rho * sin(.data$theta), .data$phi),
+      y = polar_to_y(.data$rho * sin(.data$theta), .data$phi),
       z = spherical_to_z(.data$rho, .data$theta)
     ) |>
     dplyr::select(-c("rho", "phi", "theta"))

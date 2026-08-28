@@ -111,99 +111,68 @@ test_that("cartesian_to_phi() handles axes and quadrants correctly", {
 # -------------------------------------------------------------
 # Tests for spherical_to_z()
 # -------------------------------------------------------------
+# `rho` is the radial distance from the origin, so z = rho * cos(theta).
+# These previously encoded z = rho / tan(theta), which is the cylindrical
+# formulation and only correct when rho is the xy-plane radius (#19).
 
-# -----------------------------------------------------------------
-# Helper: tiny tolerance for floating‑point comparisons
-# -----------------------------------------------------------------
 tol <- 1e-8
 
-# -----------------------------------------------------------------
-# 1️⃣  Regular case – sin(theta) != 0  →  z = rho / tan(theta)
-# -----------------------------------------------------------------
 test_that("spherical_to_z() returns correct z for generic angles", {
-  # Choose a set of (rho, theta) pairs where tan(theta) is well‑behaved
   rho_vals <- c(1, 2, 5, 10)
-  theta_vals <- c(pi / 6, pi / 4, pi / 3, pi / 2) # 30°,45°,60°,90°
+  theta_vals <- c(pi / 6, pi / 4, pi / 3, pi / 2)
 
-  # Expected values from the analytic formula
-  exp_z <- rho_vals / tan(theta_vals)
-
-  got_z <- spherical_to_z(rho_vals, theta_vals)
-
-  expect_equal(got_z, exp_z, tolerance = tol)
-})
-
-# -----------------------------------------------------------------
-# 2️⃣  Pole handling – theta ≈ 0  (positive z‑axis)
-# -----------------------------------------------------------------
-test_that("spherical_to_z() treats the +z axis correctly", {
-  # On the +z axis rho must be (practically) zero; we test a few tiny values
-  rho_vals <- c(0, 0, 0)
-  theta_vals <- c(0, 1e-12, 5e-13) # very close to 0
-
-  # By definition the point lies on the +z axis, so z = 0 (or could be NA)
-  # Our implementation returns 0 for these cases
-  expect_equal(spherical_to_z(rho_vals, theta_vals), rep(0, 3))
-})
-
-# -----------------------------------------------------------------
-# 3️⃣  Pole handling – theta ≈ π  (negative z‑axis)
-# -----------------------------------------------------------------
-test_that("spherical_to_z() treats the -z axis correctly", {
-  rho_vals <- c(0, 0, 0)
-  theta_vals <- c(pi, pi - 1e-12, pi - 5e-13) # just below π
-
-  # Should also return 0 (the radius in the xy‑plane is zero)
-  expect_equal(spherical_to_z(rho_vals, theta_vals), rep(0, 3))
-})
-
-# -----------------------------------------------------------------
-# 4️⃣  Mixed vector input – ensure element‑wise operation
-# -----------------------------------------------------------------
-test_that("spherical_to_z() works element‑wise on mixed vectors", {
-  rho_vals <- c(3, 0, 4, 0)
-  theta_vals <- c(pi / 4, 0, pi, pi / 2) # mix of regular and pole angles
-
-  # Manually compute expected results
-  exp_z <- numeric(4)
-  # 1) regular case
-  exp_z[1] <- rho_vals[1] / tan(theta_vals[1])
-  # 2) +z axis (rho = 0, theta ≈ 0) → 0
-  exp_z[2] <- 0
-  # 3) -z axis (rho = 0, theta ≈ π) → 0 (negative side, but still 0)
-  exp_z[3] <- 0
-  # 4) regular case with theta = π/2 → tan = Inf → 0 (since rho / Inf = 0)
-  exp_z[4] <- rho_vals[4] / tan(theta_vals[4])
+  exp_z <- rho_vals * cos(theta_vals)
 
   expect_equal(spherical_to_z(rho_vals, theta_vals), exp_z, tolerance = tol)
 })
 
-# -----------------------------------------------------------------
-# 5️⃣  Non‑finite inputs – propagate NA / NaN appropriately
-# -----------------------------------------------------------------
+test_that("spherical_to_z() recovers full height on the +z axis", {
+  # The case the cylindrical formulation could not express: on the axis the
+  # xy-plane radius is 0, so the height was unrecoverable and returned as 0.
+  # With the radial distance it is simply rho.
+  expect_equal(spherical_to_z(c(1, 5, 10), c(0, 0, 0)), c(1, 5, 10))
+})
+
+test_that("spherical_to_z() recovers full height on the -z axis", {
+  expect_equal(spherical_to_z(c(1, 5, 10), rep(pi, 3)), c(-1, -5, -10))
+})
+
+test_that("spherical_to_z() is zero in the xy-plane", {
+  expect_equal(
+    spherical_to_z(c(3, 7), c(pi / 2, pi / 2)),
+    c(0, 0),
+    tolerance = tol
+  )
+})
+
+test_that("spherical_to_z() works element-wise on mixed vectors", {
+  rho_vals <- c(3, 1, 4, 2)
+  theta_vals <- c(pi / 4, 0, pi, pi / 2)
+
+  exp_z <- rho_vals * cos(theta_vals)
+
+  expect_equal(spherical_to_z(rho_vals, theta_vals), exp_z, tolerance = tol)
+})
+
 test_that("spherical_to_z() propagates NA / NaN values", {
   rho_vals <- c(1, NA, 2, NaN)
   theta_vals <- c(pi / 3, pi / 4, NA, pi / 6)
 
   got_z <- spherical_to_z(rho_vals, theta_vals)
 
-  expect_true(is.na(got_z[2])) # NA in rho → NA result
-  expect_true(is.na(got_z[3])) # NA in theta → NA result
-  expect_true(is.na(got_z[4])) # NaN propagates
-  # First element should be a valid numeric value
-  expect_false(is.na(got_z[1]))
+  expect_true(is.na(got_z[2]))
+  expect_true(is.na(got_z[3]))
+  expect_true(is.na(got_z[4]))
   expect_false(is.na(got_z[1]))
 })
 
-# -----------------------------------------------------------------
-# 6️⃣  Negative rho (physically meaningless but mathematically allowed)
-# -----------------------------------------------------------------
 test_that("spherical_to_z() handles negative rho gracefully", {
   rho_vals <- c(-3, -5)
   theta_vals <- c(pi / 4, pi / 3)
 
-  # Formula still applies: z = rho / tan(theta)
-  exp_z <- rho_vals / tan(theta_vals)
-
-  expect_equal(spherical_to_z(rho_vals, theta_vals), exp_z, tolerance = tol)
+  expect_equal(
+    spherical_to_z(rho_vals, theta_vals),
+    rho_vals * cos(theta_vals),
+    tolerance = tol
+  )
 })

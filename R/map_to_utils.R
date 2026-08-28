@@ -115,8 +115,7 @@ polar_to_y <- function(rho, phi) {
 
 #' Cartesian z-coordinate from spherical coordinates
 #'
-#' Handles the two pole regions (inclination near `0` or `pi`) as well as
-#' regular points. Non-finite inputs return `NA`.
+#' Non-finite inputs return `NA`.
 #'
 #' @param rho A numeric vector of cylindrical radii, that is `sqrt(x^2 + y^2)`.
 #' @param theta A numeric vector of inclination angles measured from the
@@ -130,48 +129,11 @@ polar_to_y <- function(rho, phi) {
 #' spherical_to_z(c(1, NA), c(pi / 4, pi / 4))
 #' @export
 spherical_to_z <- function(rho, theta) {
-  # Initialise output with NA so that any non-finite input stays NA.
-  z <- rep(NA_real_, length(rho))
-
-  ## -----------------------------------------------------------------
-  ## 1.  Identify well-behaved (non-pole, finite) entries
-  ## -----------------------------------------------------------------
-  ok_idx <- is.finite(rho) &
-    is.finite(theta) &
-    abs(sin(theta)) > .Machine$double.eps # sin(theta) ≠ 0 → not a pole
-
-  if (any(ok_idx)) {
-    # Regular case:  z = ρ / tan(θ)  (equivalently ρ * cot(θ))
-    z[ok_idx] <- rho[ok_idx] / tan(theta[ok_idx])
-  }
-
-  ## -----------------------------------------------------------------
-  ## 2.  Handle the two pole regions (θ ≈ 0  or  θ ≈ π)
-  ## -----------------------------------------------------------------
-  # Positive-z pole (θ ≈ 0)
-  pos_pole_idx <- is.finite(rho) &
-    is.finite(theta) &
-    !ok_idx &
-    theta < 0.5 * .Machine$double.eps
-
-  if (any(pos_pole_idx)) {
-    # By definition the point lies on the +z axis → z = 0
-    z[pos_pole_idx] <- 0
-  }
-
-  # Negative-z pole (θ ≈ π)
-  neg_pole_idx <- is.finite(rho) &
-    is.finite(theta) &
-    !ok_idx &
-    abs(theta - pi) < 0.5 * .Machine$double.eps
-
-  if (any(neg_pole_idx)) {
-    # Point lies on the -z axis → z = 0 (sign is irrelevant because radius = 0)
-    z[neg_pole_idx] <- 0
-  }
-
-  ## -----------------------------------------------------------------
-  ## 3.  Anything left untouched remains NA (covers NA/NaN/Inf inputs)
-  ## -----------------------------------------------------------------
+  # z = r * cos(theta). The pole cases need no special handling: cos(0) = 1
+  # and cos(pi) = -1 recover the full height, which the old cylindrical
+  # formulation could not — with rho as the xy-plane radius, a point on the
+  # z-axis has rho = 0 and its height is unrecoverable (#19).
+  z <- rho * cos(theta)
+  z[!is.finite(rho) | !is.finite(theta)] <- NA_real_
   z
 }

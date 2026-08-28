@@ -1,5 +1,7 @@
 # Changelog
 
+## anispace (development version)
+
 ## anispace 0.3.0 (2026-08-28)
 
 ### Changed

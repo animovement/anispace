@@ -16,7 +16,7 @@ An aniframe with \code{rho}, \code{phi} and \code{theta} in place of \code{x}, \
 Map from Cartesian to spherical coordinates
 }
 \examples{
-af <- aniframe::example_aniframe(
+af <- anicore::example_aniframe(
   n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
 )
 map_to_spherical(af)

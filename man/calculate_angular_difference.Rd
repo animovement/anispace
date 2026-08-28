@@ -27,8 +27,6 @@ calculate_angular_difference(0.1, 2 * pi - 0.1)
 }
 \seealso{
 Other angle utilities:
-\code{\link[=diff_angle]{diff_angle()}},
-\code{\link[=unwrap_angle]{unwrap_angle()}},
-\code{\link[=wrap_angle]{wrap_angle()}}
+\code{\link[=diff_angle]{diff_angle()}}
 }
 \concept{angle utilities}

@@ -1,5 +1,9 @@
 # anispace (development version)
 
+## Changed
+
+* `wrap_angle()` and `unwrap_angle()` move to `anicore`, which already held `deg_to_rad()` and `rad_to_deg()` (animovement/aniframe#128). They are angle arithmetic rather than coordinate transformation. Use `anicore::wrap_angle()`.
+
 # anispace 0.2.0 (2026-08-18)
 
 First tagged release. anispace has been usable for a while but was never

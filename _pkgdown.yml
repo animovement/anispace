@@ -32,6 +32,4 @@ reference:
     desc:
     contents:
     - calculate_angular_difference
-    - wrap_angle
-    - unwrap_angle
     - diff_angle

@@ -31,8 +31,6 @@ diff_angle(angles, lag = 2L)
 }
 \seealso{
 Other angle utilities:
-\code{\link[=calculate_angular_difference]{calculate_angular_difference()}},
-\code{\link[=unwrap_angle]{unwrap_angle()}},
-\code{\link[=wrap_angle]{wrap_angle()}}
+\code{\link[=calculate_angular_difference]{calculate_angular_difference()}}
 }
 \concept{angle utilities}

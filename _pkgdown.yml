@@ -7,6 +7,11 @@ home:
 template:
   bootstrap: 5
   package: animovementtemplate
+  bslib:
+    primary: "#122451"
+    # Bootstrap's 40% tint of this hue is too dark against the
+    # dark background.
+    link_color_dark: "#848DA5"
 
 reference:
   - title: "Transformations"

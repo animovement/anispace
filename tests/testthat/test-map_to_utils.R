@@ -93,7 +93,7 @@ test_that("cartesian_to_phi() handles axes and quadrants correctly", {
 
   # Expect roughly -pi/2 radians at (x=0, y<0)
   expect_true(
-    calculate_angular_difference(
+    anicore::circ_difference(
       abs(cartesian_to_phi(0, -1) + pi / 2),
       0
     ) <

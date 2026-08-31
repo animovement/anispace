@@ -12,7 +12,9 @@
 #' @param level The identity variable `to` is a member of. Defaults to the
 #'   frame's only one; a frame declaring several has to be told.
 #' @param by Named numeric giving a fixed offset per axis role, e.g.
-#'   `c(x = 100, y = 50)`. Mutually exclusive with `to`.
+#'   `c(x = 100, y = 50)`. The offset moves the *origin*, as `to` does, so the
+#'   coordinates shift by the negative of it: `c(x = 100)` moves every point
+#'   100 to the left. Mutually exclusive with `to`.
 #'
 #' @return An aniframe with translated coordinates.
 #' @family coordinate transforms
@@ -22,7 +24,8 @@
 #' # Everything becomes relative to the head, which sits at the origin
 #' translate_coords(af, to = "head", level = "keypoint")
 #'
-#' # Or shift by a fixed amount
+#' # Or move the origin by a fixed amount, which shifts the coordinates the
+#' # other way: x becomes x - 100
 #' translate_coords(af, by = c(x = 100, y = 50))
 #'
 #' @export

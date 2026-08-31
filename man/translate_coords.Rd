@@ -16,7 +16,9 @@ become relative to it.}
 frame's only one; a frame declaring several has to be told.}
 
 \item{by}{Named numeric giving a fixed offset per axis role, e.g.
-\code{c(x = 100, y = 50)}. Mutually exclusive with \code{to}.}
+\code{c(x = 100, y = 50)}. The offset moves the \emph{origin}, as \code{to} does, so the
+coordinates shift by the negative of it: \code{c(x = 100)} moves every point
+100 to the left. Mutually exclusive with \code{to}.}
 }
 \value{
 An aniframe with translated coordinates.
@@ -33,7 +35,8 @@ af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 # Everything becomes relative to the head, which sits at the origin
 translate_coords(af, to = "head", level = "keypoint")
 
-# Or shift by a fixed amount
+# Or move the origin by a fixed amount, which shifts the coordinates the
+# other way: x becomes x - 100
 translate_coords(af, by = c(x = 100, y = 50))
 
 }

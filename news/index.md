@@ -2,6 +2,29 @@
 
 ## anispace (development version)
 
+### Removed
+
+- `calculate_angular_difference()` and `diff_angle()` move to anicore,
+  as `circ_difference()` and `circ_successive_difference()`
+  (animovement/anicore#147). Both are general-purpose circular
+  primitives rather than spatial transforms — the shortest signed
+  distance between two angles, and that distance applied along a vector
+  — and `calculate_angular_difference()` was already a one-line wrapper
+  over
+  [`anicore::wrap_angle()`](https://animovement.dev/anicore/reference/wrap_angle.html).
+  anicore owns the angle utilities, and keeping the circular family
+  together means it can be split out on its own later without unpicking
+  anispace.
+
+  The new names follow anicore’s convention: `circ_*()` computes with
+  the wraparound, `*_angle()` manipulates how an angle is written. Call
+  [`anicore::circ_difference()`](https://animovement.dev/anicore/reference/circ_difference.html)
+  and
+  [`anicore::circ_successive_difference()`](https://animovement.dev/anicore/reference/circ_successive_difference.html)
+  instead; both are attached by
+  [`library(animovement)`](https://rdrr.io/r/base/library.html), so a
+  script using the metapackage needs no change.
+
 ## anispace 0.3.0 (2026-08-28)
 
 ### Changed
@@ -149,10 +172,8 @@ tagged, so this marks the current state rather than a change in it.
   [`polar_to_y()`](https://animovement.dev/anispace/reference/polar_to_y.md)
   and
   [`spherical_to_z()`](https://animovement.dev/anispace/reference/spherical_to_z.md).
-- Angular arithmetic: `wrap_angle()`, `unwrap_angle()`,
-  [`diff_angle()`](https://animovement.dev/anispace/reference/diff_angle.md)
-  and
-  [`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md).
+- Angular arithmetic: `wrap_angle()`, `unwrap_angle()`, `diff_angle()`
+  and `circ_difference()`.
 - Rigid transformations:
   [`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md),
   [`translate_coords()`](https://animovement.dev/anispace/reference/translate_coords.md)

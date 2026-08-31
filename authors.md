@@ -33,6 +33,6 @@ transformation methods for movement data.”
       author = {Mikkel Roald-Arbøl},
       year = {2026},
       doi = {10.5281/zenodo.21996854},
-      version = {0.3.0.9000},
+      version = {0.3.0.9001},
       url = {https://animovement.dev/anispace/},
     }

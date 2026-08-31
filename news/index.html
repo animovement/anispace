@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">anispace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="anispace-development-version">anispace (development version)<a class="anchor" aria-label="anchor" href="#anispace-development-version"></a></h2>
+<div class="section level3">
+<h3 id="removed-development-version">Removed<a class="anchor" aria-label="anchor" href="#removed-development-version"></a></h3>
+<ul><li>
+<p><code>calculate_angular_difference()</code> and <code>diff_angle()</code> move to anicore, as <code>circ_difference()</code> and <code>circ_successive_difference()</code> (animovement/anicore#147). Both are general-purpose circular primitives rather than spatial transforms — the shortest signed distance between two angles, and that distance applied along a vector — and <code>calculate_angular_difference()</code> was already a one-line wrapper over <code><a href="https://animovement.dev/anicore/reference/wrap_angle.html" class="external-link">anicore::wrap_angle()</a></code>. anicore owns the angle utilities, and keeping the circular family together means it can be split out on its own later without unpicking anispace.</p>
+<p>The new names follow anicore’s convention: <code>circ_*()</code> computes with the wraparound, <code>*_angle()</code> manipulates how an angle is written. Call <code><a href="https://animovement.dev/anicore/reference/circ_difference.html" class="external-link">anicore::circ_difference()</a></code> and <code><a href="https://animovement.dev/anicore/reference/circ_successive_difference.html" class="external-link">anicore::circ_successive_difference()</a></code> instead; both are attached by <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library(animovement)</a></code>, so a script using the metapackage needs no change.</p>
+</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="anispace-030-2026-08-28">anispace 0.3.0 (2026-08-28)<a class="anchor" aria-label="anchor" href="#anispace-030-2026-08-28"></a></h2>
@@ -92,7 +99,7 @@
 <div class="section level3">
 <h3 id="added-0-2-0">Added<a class="anchor" aria-label="anchor" href="#added-0-2-0"></a></h3>
 <ul><li>Coordinate-system conversion: <code><a href="../reference/map_to_cartesian.html">map_to_cartesian()</a></code>, <code><a href="../reference/map_to_polar.html">map_to_polar()</a></code>, <code><a href="../reference/map_to_cylindrical.html">map_to_cylindrical()</a></code> and <code><a href="../reference/map_to_spherical.html">map_to_spherical()</a></code>, with the element-wise helpers behind them — <code><a href="../reference/cartesian_to_rho.html">cartesian_to_rho()</a></code>, <code><a href="../reference/cartesian_to_phi.html">cartesian_to_phi()</a></code>, <code><a href="../reference/cartesian_to_theta.html">cartesian_to_theta()</a></code>, <code><a href="../reference/polar_to_x.html">polar_to_x()</a></code>, <code><a href="../reference/polar_to_y.html">polar_to_y()</a></code> and <code><a href="../reference/spherical_to_z.html">spherical_to_z()</a></code>.</li>
-<li>Angular arithmetic: <code>wrap_angle()</code>, <code>unwrap_angle()</code>, <code><a href="../reference/diff_angle.html">diff_angle()</a></code> and <code><a href="../reference/calculate_angular_difference.html">calculate_angular_difference()</a></code>.</li>
+<li>Angular arithmetic: <code>wrap_angle()</code>, <code>unwrap_angle()</code>, <code>diff_angle()</code> and <code>circ_difference()</code>.</li>
 <li>Rigid transformations: <code><a href="../reference/rotate_coords.html">rotate_coords()</a></code>, <code><a href="../reference/translate_coords.html">translate_coords()</a></code> and <code><a href="../reference/transform_to_egocentric.html">transform_to_egocentric()</a></code>.</li>
 </ul></div>
 <div class="section level3">

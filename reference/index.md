@@ -32,10 +32,3 @@ coordinates.
   : Cartesian y-coordinate from polar coordinates
 - [`spherical_to_z()`](https://animovement.dev/anispace/reference/spherical_to_z.md)
   : Cartesian z-coordinate from spherical coordinates
-
-## Helpers
-
-- [`calculate_angular_difference()`](https://animovement.dev/anispace/reference/calculate_angular_difference.md)
-  : Shortest signed distance between two angles
-- [`diff_angle()`](https://animovement.dev/anispace/reference/diff_angle.md)
-  : Differences between successive angles

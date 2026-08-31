@@ -32,9 +32,3 @@ reference:
     - polar_to_x
     - polar_to_y
     - spherical_to_z
-
-  - title: "Helpers"
-    desc:
-    contents:
-    - calculate_angular_difference
-    - diff_angle

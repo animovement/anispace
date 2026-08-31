@@ -247,3 +247,13 @@ test_that("a non-Cartesian frame is refused", {
 
   expect_error(translate_coords(polar, to = "head"), "artesian")
 })
+
+test_that("the documented direction is the one implemented", {
+  # `by` moves the origin, so the coordinates shift by its negative (#38).
+  af <- simple()
+
+  expect_equal(
+    as.data.frame(translate_coords(af, by = c(x = 100)))$x,
+    as.data.frame(af)$x - 100
+  )
+})

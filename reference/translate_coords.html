@@ -13,7 +13,7 @@ subject rather than the arena."><meta property="og:image" content="https://animo
 
     <a class="navbar-brand me-2" href="../index.html">anispace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,9 @@ frame's only one; a frame declaring several has to be told.</p></dd>
 
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
 <dd><p>Named numeric giving a fixed offset per axis role, e.g.
-<code>c(x = 100, y = 50)</code>. Mutually exclusive with <code>to</code>.</p></dd>
+<code>c(x = 100, y = 50)</code>. The offset moves the <em>origin</em>, as <code>to</code> does, so the
+coordinates shift by the negative of it: <code>c(x = 100)</code> moves every point
+100 to the left. Mutually exclusive with <code>to</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -124,7 +126,8 @@ frame's only one; a frame declaring several has to be told.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span>          1 shoulder_right       1     1     2 -<span style="color: #BB0000;">1.13</span>  -<span style="color: #BB0000;">0.855</span>      0.890</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span>          1 shoulder_right       1     1     3  0.813 -<span style="color: #BB0000;">0.391</span>      0.599</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Or shift by a fixed amount</span></span></span>
+<span class="r-in"><span><span class="co"># Or move the origin by a fixed amount, which shifts the coordinates the</span></span></span>
+<span class="r-in"><span><span class="co"># other way: x becomes x - 100</span></span></span>
 <span class="r-in"><span><span class="fu">translate_coords</span><span class="op">(</span><span class="va">af</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">100</span>, y <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Individuals: 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Keypoints:   head, neck, shoulder_right</span></span>

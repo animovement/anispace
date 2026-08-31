@@ -30,7 +30,9 @@ translate_coords(data, to = NULL, level = NULL, by = NULL)
 - by:
 
   Named numeric giving a fixed offset per axis role, e.g.
-  `c(x = 100, y = 50)`. Mutually exclusive with `to`.
+  `c(x = 100, y = 50)`. The offset moves the *origin*, as `to` does, so
+  the coordinates shift by the negative of it: `c(x = 100)` moves every
+  point 100 to the left. Mutually exclusive with `to`.
 
 ## Value
 
@@ -65,7 +67,8 @@ translate_coords(af, to = "head", level = "keypoint")
 #> 8          1 shoulder_right       1     1     2 -1.13  -0.855      0.890
 #> 9          1 shoulder_right       1     1     3  0.813 -0.391      0.599
 
-# Or shift by a fixed amount
+# Or move the origin by a fixed amount, which shifts the coordinates the
+# other way: x becomes x - 100
 translate_coords(af, by = c(x = 100, y = 50))
 #> # Individuals: 1
 #> # Keypoints:   head, neck, shoulder_right

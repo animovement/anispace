@@ -1,5 +1,11 @@
 # anispace (development version)
 
+## Removed
+
+* `calculate_angular_difference()` and `diff_angle()` move to anicore, as `circ_difference()` and `circ_successive_difference()` (animovement/anicore#147). Both are general-purpose circular primitives rather than spatial transforms — the shortest signed distance between two angles, and that distance applied along a vector — and `calculate_angular_difference()` was already a one-line wrapper over `anicore::wrap_angle()`. anicore owns the angle utilities, and keeping the circular family together means it can be split out on its own later without unpicking anispace.
+
+  The new names follow anicore's convention: `circ_*()` computes with the wraparound, `*_angle()` manipulates how an angle is written. Call `anicore::circ_difference()` and `anicore::circ_successive_difference()` instead; both are attached by `library(animovement)`, so a script using the metapackage needs no change.
+
 # anispace 0.3.0 (2026-08-28)
 
 ## Changed
@@ -50,7 +56,7 @@ First tagged release. anispace had been usable for a while but was never tagged,
 ## Added
 
 * Coordinate-system conversion: `map_to_cartesian()`, `map_to_polar()`, `map_to_cylindrical()` and `map_to_spherical()`, with the element-wise helpers behind them — `cartesian_to_rho()`, `cartesian_to_phi()`, `cartesian_to_theta()`, `polar_to_x()`, `polar_to_y()` and `spherical_to_z()`.
-* Angular arithmetic: `wrap_angle()`, `unwrap_angle()`, `diff_angle()` and `calculate_angular_difference()`.
+* Angular arithmetic: `wrap_angle()`, `unwrap_angle()`, `diff_angle()` and `circ_difference()`.
 * Rigid transformations: `rotate_coords()`, `translate_coords()` and `transform_to_egocentric()`.
 
 ## Changed

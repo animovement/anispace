@@ -32,3 +32,15 @@ reference:
     - polar_to_x
     - polar_to_y
     - spherical_to_z
+
+  - title: "Rotations"
+    desc: |
+      Unit quaternions (Hamilton, scalar first) for 3D orientation: algebra,
+      conversion to and from axis-angle, matrices and Euler angles, and
+      interpolation, averaging and angular velocity.
+    contents:
+    - quaternions
+    - quat_from_axis_angle
+    - quat_from_euler
+    - quat_slerp
+    - transform_euler_to_quaternion

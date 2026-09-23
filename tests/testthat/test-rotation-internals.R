@@ -58,7 +58,7 @@ test_that("a missing alignment point leaves the row unrotated", {
 # The guards ----
 
 test_that("a frame declaring no identity is refused", {
-  af <- suppressWarnings(anicore::as_aniframe(
+  af <- suppressWarnings(anicore::as_anipoint(
     data.frame(time = 1:3, x = 1:3, y = 1:3),
     variables_what = character(0)
   ))
@@ -67,7 +67,7 @@ test_that("a frame declaring no identity is refused", {
 })
 
 test_that("the level has to be a single name", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
   expect_error(
     translate_coords(af, to = "head", level = c("individual", "keypoint")),
@@ -76,7 +76,7 @@ test_that("the level has to be a single name", {
 })
 
 test_that("a frame with fewer than two axes is refused", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(time = 1:3, keypoint = "head", x = 1:3),
     variables_what = "keypoint",
     variables_where = "x"

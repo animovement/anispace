@@ -7,13 +7,13 @@
 #'   convention of ISO 80000-2.
 #' @family coordinate systems
 #' @examples
-#' af <- anicore::example_aniframe(
+#' af <- anicore::example_anipoint(
 #'   n_obs = 5, n_individuals = 1, n_keypoints = 1, n_dims = 3
 #' )
 #' map_to_spherical(af)
 #' @export
 map_to_spherical <- function(data) {
-  anicore::ensure_is_aniframe(data) # your existing sanity check
+  anicore::ensure_is_anipoint(data) # your existing sanity check
   anicore::ensure_is_cartesian(data) # makes sure x, y, z exist
 
   data <- data |>
@@ -23,7 +23,7 @@ map_to_spherical <- function(data) {
       theta = cartesian_to_theta(.data$x, .data$y, .data$z) # polar angle
     ) |>
     dplyr::select(-c("x", "y", "z")) |>
-    anicore::set_variables_where(c("rho", "phi", "theta"))
+    anicore::set_variables(where = c(rho = "rho", phi = "phi", theta = "theta"))
 
   anicore::ensure_is_spherical(data) # optional validator (see below)
   data

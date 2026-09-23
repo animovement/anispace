@@ -1,5 +1,9 @@
 # anispace (development version)
 
+## Changed
+
+* Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). The transforms now require an anipoint, so the error for other input reads "not an anipoint".
+
 ## Removed
 
 * `calculate_angular_difference()` and `diff_angle()` move to anicore, as `circ_difference()` and `circ_successive_difference()` (animovement/anicore#147). Both are general-purpose circular primitives rather than spatial transforms — the shortest signed distance between two angles, and that distance applied along a vector — and `calculate_angular_difference()` was already a one-line wrapper over `anicore::wrap_angle()`. anicore owns the angle utilities, and keeping the circular family together means it can be split out on its own later without unpicking anispace.

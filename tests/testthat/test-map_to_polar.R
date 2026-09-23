@@ -5,7 +5,7 @@ test_that("map_to_polar() correctly converts simple Cartesian data", {
     x = c(1, 0, -1, 0),
     y = c(0, 1, 0, -1)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   pol <- map_to_polar(df)
 
@@ -16,7 +16,7 @@ test_that("map_to_polar() correctly converts simple Cartesian data", {
 
 test_that("map_to_polar() drops the Cartesian columns", {
   df <- data.frame(time = 1:2, keypoint = "nose", x = c(3, 0), y = c(4, 1)) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   pol <- map_to_polar(df)
 
@@ -31,7 +31,7 @@ test_that("map_to_polar() round-trips through map_to_cartesian()", {
     x = c(1, 2, -3),
     y = c(4, -5, 6)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   back <- map_to_cartesian(map_to_polar(df))
 
@@ -41,7 +41,7 @@ test_that("map_to_polar() round-trips through map_to_cartesian()", {
 
 test_that("map_to_polar() rejects data that is not already Cartesian", {
   df <- data.frame(time = 1:2, keypoint = "nose", x = c(1, 2), y = c(3, 4)) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   expect_error(map_to_polar(map_to_polar(df)))
 })

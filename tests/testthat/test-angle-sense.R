@@ -17,7 +17,7 @@ sweep <- function(y_dir) {
     d$y <- -d$y
   }
 
-  anicore::as_aniframe(d, variables_what = "keypoint") |>
+  anicore::as_anipoint(d, variables_what = "keypoint") |>
     anicore::set_axis_directions(c(x = "right", y = y_dir))
 }
 
@@ -45,7 +45,7 @@ test_that("the declared sense survives the transform", {
 test_that("the two are reconcilable, which is what makes them comparable", {
   # 315 clockwise and 45 counter-clockwise are the same physical direction.
   # The metadata is what says so, and normalising is the caller's to ask for.
-  normalised <- anicore::set_angle_direction(sweep("down"), "counter_clockwise")
+  normalised <- anicore::reflect_axis(sweep("down"), "y")
 
   expect_equal(degrees(map_to_polar(normalised)), c(0, 45, 90))
   expect_equal(

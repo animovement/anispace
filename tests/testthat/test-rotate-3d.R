@@ -6,7 +6,7 @@
 # about it free, three fix the orientation outright.
 
 body_3d <- function() {
-  anicore::as_aniframe(
+  anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 3),
       keypoint = rep(c("head", "tail", "ear"), 2),
@@ -56,7 +56,7 @@ test_that("three points put the second axis into the xy plane", {
 })
 
 test_that("a third point is refused on a 2D frame", {
-  flat <- anicore::as_aniframe(
+  flat <- anicore::as_anipoint(
     data.frame(
       time = 1,
       keypoint = c("head", "tail", "ear"),

@@ -44,7 +44,7 @@ is \code{\link[=rotate_coords]{rotate_coords()}}, which turns the frame about th
 rather than about the subject.
 }
 \examples{
-af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
 # The head becomes the origin, and the head-neck axis points forward
 transform_to_egocentric(

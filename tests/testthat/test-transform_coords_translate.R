@@ -5,7 +5,7 @@
 # `y` literally, so a frame declaring anything else failed outright.
 
 simple <- function() {
-  anicore::as_aniframe(
+  anicore::as_anipoint(
     data.frame(
       individual = "a",
       time = rep(1:2, each = 3),
@@ -58,14 +58,14 @@ test_that("the row count and declaration are unchanged", {
   expect_equal(nrow(out), nrow(af))
   expect_s3_class(out, "aniframe")
   expect_equal(
-    anicore::get_variables_what(out),
-    anicore::get_variables_what(af)
+    anicore::get_variables(out, "what"),
+    anicore::get_variables(af, "what")
   )
   expect_equal(anicore::get_index(out), anicore::get_index(af))
 })
 
 test_that("each subject is centred on its own reference", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       individual = rep(c("a", "b"), each = 2),
       time = 1,
@@ -87,7 +87,7 @@ test_that("each subject is centred on its own reference", {
 
 test_that("a frame with no individual column works", {
   # The issue's second reproducer: `.data$individual` did not exist.
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 3),
       keypoint = rep(c("head", "neck", "tail"), 2),
@@ -103,7 +103,7 @@ test_that("a frame with no individual column works", {
 })
 
 test_that("a frame indexed by something other than time works", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       frame = rep(1:2, each = 3),
       individual = "a",
@@ -122,7 +122,7 @@ test_that("a frame indexed by something other than time works", {
 })
 
 test_that("coordinates carried by columns of any name work", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 2),
       keypoint = rep(c("head", "tail"), 2),
@@ -176,7 +176,7 @@ test_that("a negative offset moves the other way", {
 })
 
 test_that("3D coordinates translate too", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = 1:2,
       keypoint = "head",
@@ -240,7 +240,7 @@ test_that("an offset has to name its axes", {
 })
 
 test_that("a non-Cartesian frame is refused", {
-  polar <- anicore::as_aniframe(
+  polar <- anicore::as_anipoint(
     data.frame(time = 1:3, keypoint = "head", rho = 1:3, phi = c(0, 1, 2)),
     variables_what = "keypoint"
   )

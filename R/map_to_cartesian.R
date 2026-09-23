@@ -9,13 +9,13 @@
 #'   three-dimensional) in place of the polar columns.
 #' @family coordinate systems
 #' @examples
-#' af <- anicore::example_aniframe(n_obs = 5, n_individuals = 1, n_keypoints = 1)
+#' af <- anicore::example_anipoint(n_obs = 5, n_individuals = 1, n_keypoints = 1)
 #'
 #' # Round-trips back to the coordinates it started from
 #' map_to_cartesian(map_to_polar(af))
 #' @export
 map_to_cartesian <- function(data) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
   if (anicore::is_polar(data)) {
     data <- map_to_cartesian_polar(data)
   } else if (anicore::is_cylindrical(data)) {
@@ -26,7 +26,7 @@ map_to_cartesian <- function(data) {
     cli::cli_abort("Data is neither polar, cylindrical or spherical.")
   }
 
-  anicore::as_aniframe(data)
+  anicore::as_anipoint(data)
 }
 
 #' @keywords internal

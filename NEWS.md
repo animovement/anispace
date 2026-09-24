@@ -1,5 +1,9 @@
 # anispace (development version)
 
+## Added
+
+* Quaternions for 3D orientation (#7): `quat_multiply()`, `quat_conjugate()`, `quat_normalise()`, `quat_rotate()` and `quat_distance()`; conversion with `quat_from_axis_angle()` / `quat_to_axis_angle()`, `quat_from_matrix()` / `quat_to_matrix()` and `quat_from_euler()` / `quat_to_euler()` (all twelve sequences, with `sequence` and `intrinsic` always stated); and `quat_slerp()`, `quat_mean()`, `quat_continuous()` and `quat_angular_velocity()`. `transform_euler_to_quaternion()` turns exported Euler angles into a declared quaternion orientation (animovement/anicore#46), records their convention, and `transform_quaternion_to_euler()` gives them back as a derived view, in the recorded convention unless another is given.
+
 ## Changed
 
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). The transforms now require an anipoint, so the error for other input reads "not an anipoint".

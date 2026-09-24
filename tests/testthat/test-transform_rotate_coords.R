@@ -12,7 +12,7 @@ make_pair <- function(name1, x1, y1, z1, name2, x2, y2, z2, n = 3, ind = "A") {
     make_point(t, ind, name1, x1, y1, z1),
     make_point(t, ind, name2, x2, y2, z2)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 angle_2d <- function(p1, p2) atan2(p2$y - p1$y, p2$x - p1$x)
@@ -33,7 +33,7 @@ create_rotation_test_data <- function() {
     x = c(0, 0, 0),
     y = c(0, 0, 0)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 create_horizontal_alignment_data <- function() {
@@ -55,7 +55,7 @@ create_horizontal_alignment_data <- function() {
   )
 
   dplyr::bind_rows(data_head, data_tail) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 create_vertical_alignment_data <- function() {
@@ -77,7 +77,7 @@ create_vertical_alignment_data <- function() {
   )
 
   dplyr::bind_rows(data_head, data_tail) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 create_diagonal_alignment_data <- function() {
@@ -99,7 +99,7 @@ create_diagonal_alignment_data <- function() {
   )
 
   dplyr::bind_rows(data_head, data_tail) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 create_three_keypoint_data <- function() {
@@ -129,7 +129,7 @@ create_three_keypoint_data <- function() {
   )
 
   dplyr::bind_rows(data_head, data_body, data_tail) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 create_multi_individual_data <- function() {
@@ -168,7 +168,7 @@ create_multi_individual_data <- function() {
   )
 
   dplyr::bind_rows(data_a_head, data_a_tail, data_b_head, data_b_tail) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 create_varying_angle_data <- function() {
@@ -198,7 +198,7 @@ create_varying_angle_data <- function() {
   )
 
   dplyr::bind_rows(data_head, data_tail, data_body) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 # Helper functions ----
@@ -490,7 +490,7 @@ test_that("rotate_coords handles points at origin", {
     y = 0
   )
 
-  data <- dplyr::bind_rows(data_head, data_tail) |> anicore::as_aniframe()
+  data <- dplyr::bind_rows(data_head, data_tail) |> anicore::as_anipoint()
 
   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
@@ -514,7 +514,7 @@ test_that("rotate_coords handles negative coordinates", {
     y = 1
   )
 
-  data <- dplyr::bind_rows(data_head, data_tail) |> anicore::as_aniframe()
+  data <- dplyr::bind_rows(data_head, data_tail) |> anicore::as_anipoint()
 
   result <- rotate_coords(data, level = "keypoint", align = c("head", "tail"))
 
@@ -584,7 +584,7 @@ create_three_keypoint_3d <- function() {
     make_point(t, "A", "body", 1, 0.5, 0.5),
     make_point(t, "A", "tail", 2, 0, 1)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 # ==== 3D rotation tests ======================================================

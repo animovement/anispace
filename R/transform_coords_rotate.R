@@ -21,7 +21,7 @@
 #' @return An aniframe with rotated coordinates.
 #' @family coordinate transforms
 #' @examples
-#' af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+#' af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 #'
 #' # Align the head-neck axis with x, rotating about the origin
 #' rotate_coords(af, align = c("head", "neck"), level = "keypoint")
@@ -37,7 +37,7 @@ rotate_coords <- function(
   about = NULL,
   align_perpendicular = FALSE
 ) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
   anicore::ensure_is_cartesian(data)
 
   axes <- cartesian_columns(data)

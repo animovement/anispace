@@ -19,7 +19,7 @@
 #' @return An aniframe with translated coordinates.
 #' @family coordinate transforms
 #' @examples
-#' af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+#' af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 #'
 #' # Everything becomes relative to the head, which sits at the origin
 #' translate_coords(af, to = "head", level = "keypoint")
@@ -30,7 +30,7 @@
 #'
 #' @export
 translate_coords <- function(data, to = NULL, level = NULL, by = NULL) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
   anicore::ensure_is_cartesian(data)
 
   if (!is.null(to) && !is.null(by)) {

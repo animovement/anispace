@@ -19,8 +19,8 @@
 #' @keywords internal
 transform_grouping <- function(data, level) {
   unique(c(
-    setdiff(anicore::get_variables_what(data), level),
-    anicore::get_variables_when(data),
+    setdiff(anicore::get_variables(data, "what"), level),
+    anicore::get_variables(data, "when", "keys"),
     anicore::get_index(data)
   ))
 }
@@ -39,13 +39,13 @@ transform_grouping <- function(data, level) {
 #' @return Length-one character vector naming the column.
 #' @keywords internal
 resolve_level <- function(data, level = NULL, call = rlang::caller_env()) {
-  what <- anicore::get_variables_what(data)
+  what <- anicore::get_variables(data, "what")
 
   if (length(what) == 0L) {
     cli::cli_abort(
       c(
         "This aniframe declares no identity variables.",
-        "i" = "A reference point is a member of one; see {.fn anicore::set_variables_what}."
+        "i" = "A reference point is a member of one; see {.fn anicore::set_variables}."
       ),
       call = call
     )
@@ -141,7 +141,7 @@ cartesian_columns <- function(data, call = rlang::caller_env()) {
 #' Re-declare a transformed frame the way its source was declared
 #'
 #' A transform changes coordinates, never the declaration, so letting
-#' `as_aniframe()` re-detect risks it inventing an identity column and
+#' `as_anipoint()` re-detect risks it inventing an identity column and
 #' replacing the metadata. The rest of the source's metadata comes with it.
 #'
 #' @param transformed A plain data frame derived from `source`.
@@ -150,10 +150,10 @@ cartesian_columns <- function(data, call = rlang::caller_env()) {
 #' @return `transformed` as an aniframe, declared as `source` was.
 #' @keywords internal
 redeclare_like <- function(transformed, source) {
-  out <- anicore::as_aniframe(
+  out <- anicore::as_anipoint(
     transformed,
-    variables_what = anicore::get_variables_what(source),
-    variables_when = anicore::get_variables_when(source),
+    variables_what = anicore::get_variables(source, "what"),
+    variables_when = anicore::get_variables(source, "when", "keys"),
     variables_where = anicore::get_axes(source),
     index = anicore::get_index(source)
   )

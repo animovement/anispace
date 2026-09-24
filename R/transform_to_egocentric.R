@@ -27,7 +27,7 @@
 #' @family coordinate transforms
 #' @seealso [translate_coords()] and [rotate_coords()], which this combines.
 #' @examples
-#' af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+#' af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 #'
 #' # The head becomes the origin, and the head-neck axis points forward
 #' transform_to_egocentric(
@@ -48,7 +48,7 @@ transform_to_egocentric <- function(
   level = NULL,
   align_perpendicular = FALSE
 ) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
   anicore::ensure_is_cartesian(data)
 
   level <- resolve_level(data, level)

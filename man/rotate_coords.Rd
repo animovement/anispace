@@ -39,7 +39,7 @@ define the axes. Two members give a direction; in three dimensions a third
 fixes the roll about it, which two cannot.
 }
 \examples{
-af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
 # Align the head-neck axis with x, rotating about the origin
 rotate_coords(af, align = c("head", "neck"), level = "keypoint")

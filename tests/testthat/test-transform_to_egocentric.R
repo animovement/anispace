@@ -6,7 +6,7 @@ make_frame <- function() {
     x = c(1, 0, -1, 2, 1, 0),
     y = c(0, 0, 0, 1, 1, 1)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 test_that("transform_to_egocentric() puts the reference keypoint at the origin", {
@@ -71,6 +71,6 @@ test_that("transform_to_egocentric() keeps every row and returns an aniframe", {
     align = c("head", "neck")
   )
 
-  expect_true(anicore::is_aniframe(ego))
+  expect_true(anicore::is_anipoint(ego))
   expect_equal(nrow(ego), nrow(df))
 })

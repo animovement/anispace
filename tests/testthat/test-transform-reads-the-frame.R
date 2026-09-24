@@ -6,7 +6,7 @@
 test_that("two trials are rotated separately, not joined together", {
   # `left_join(angles, by = "time")` matched every trial's angle to every
   # trial's rows, so 12 rows came back as 48 with 36 duplicates.
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       individual = "a",
       trial = rep(c(1, 2), each = 6),
@@ -28,7 +28,7 @@ test_that("two trials are rotated separately, not joined together", {
 
 test_that("the egocentric transform works without an individual column", {
   # The issue's second reproducer.
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 3),
       keypoint = rep(c("head", "neck", "tail"), 2),
@@ -46,7 +46,7 @@ test_that("the egocentric transform works without an individual column", {
 })
 
 test_that("a frame indexed by something other than time works", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       frame = rep(1:2, each = 3),
       individual = "a",
@@ -77,7 +77,7 @@ test_that("a frame indexed by something other than time works", {
 # Centring the rotation ----
 
 test_that("rotation is about the origin by default", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = 1,
       keypoint = c("head", "tail"),
@@ -100,7 +100,7 @@ test_that("rotation is about the origin by default", {
 })
 
 test_that("about names a member to rotate around", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = 1,
       keypoint = c("head", "tail"),
@@ -120,7 +120,7 @@ test_that("about names a member to rotate around", {
 })
 
 test_that("about takes a fixed point too", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = 1,
       keypoint = c("head", "tail"),
@@ -142,7 +142,7 @@ test_that("about takes a fixed point too", {
 # Egocentric without rotating ----
 
 test_that("omitting align re-centres without reorienting", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
   centred <- transform_to_egocentric(af, to = "head", level = "keypoint")
   translated <- translate_coords(af, to = "head", level = "keypoint")
@@ -160,7 +160,7 @@ test_that("omitting align re-centres without reorienting", {
 test_that("perpendicular follows the frame's declared sense", {
   # A quarter turn from +x lands on +y counter-clockwise and on -y
   # clockwise. Which one a frame means is what its axis directions say.
-  base <- anicore::as_aniframe(
+  base <- anicore::as_anipoint(
     data.frame(
       time = 1,
       keypoint = c("head", "tail"),
@@ -188,7 +188,7 @@ test_that("perpendicular follows the frame's declared sense", {
 })
 
 test_that("a frame declaring nothing keeps the counter-clockwise convention", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = 1,
       keypoint = c("head", "tail"),
@@ -206,7 +206,7 @@ test_that("a frame declaring nothing keeps the counter-clockwise convention", {
 })
 
 test_that("a row whose alignment point is missing is left unrotated", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 2),
       keypoint = rep(c("head", "tail"), 2),

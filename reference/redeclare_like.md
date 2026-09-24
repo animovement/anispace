@@ -1,7 +1,7 @@
 # Re-declare a transformed frame the way its source was declared
 
 A transform changes coordinates, never the declaration, so letting
-`as_aniframe()` re-detect risks it inventing an identity column and
+`as_anipoint()` re-detect risks it inventing an identity column and
 replacing the metadata. The rest of the source's metadata comes with it.
 
 ## Usage

@@ -2,6 +2,47 @@
 
 ## anispace (development version)
 
+### Added
+
+- Quaternions for 3D orientation
+  ([\#7](https://github.com/animovement/anispace/issues/7)):
+  [`quat_multiply()`](https://animovement.dev/anispace/reference/quaternions.md),
+  [`quat_conjugate()`](https://animovement.dev/anispace/reference/quaternions.md),
+  [`quat_normalise()`](https://animovement.dev/anispace/reference/quaternions.md),
+  [`quat_rotate()`](https://animovement.dev/anispace/reference/quaternions.md)
+  and
+  [`quat_distance()`](https://animovement.dev/anispace/reference/quaternions.md);
+  conversion with
+  [`quat_from_axis_angle()`](https://animovement.dev/anispace/reference/quat_from_axis_angle.md)
+  /
+  [`quat_to_axis_angle()`](https://animovement.dev/anispace/reference/quat_from_axis_angle.md),
+  [`quat_from_matrix()`](https://animovement.dev/anispace/reference/quat_from_axis_angle.md)
+  /
+  [`quat_to_matrix()`](https://animovement.dev/anispace/reference/quat_from_axis_angle.md)
+  and
+  [`quat_from_euler()`](https://animovement.dev/anispace/reference/quat_from_euler.md)
+  /
+  [`quat_to_euler()`](https://animovement.dev/anispace/reference/quat_from_euler.md)
+  (all twelve sequences, with `sequence` and `intrinsic` always stated);
+  and
+  [`quat_slerp()`](https://animovement.dev/anispace/reference/quat_slerp.md),
+  [`quat_mean()`](https://animovement.dev/anispace/reference/quat_slerp.md),
+  [`quat_continuous()`](https://animovement.dev/anispace/reference/quat_slerp.md)
+  and
+  [`quat_angular_velocity()`](https://animovement.dev/anispace/reference/quat_slerp.md).
+  [`transform_euler_to_quaternion()`](https://animovement.dev/anispace/reference/transform_euler_to_quaternion.md)
+  turns exported Euler angles into a declared quaternion orientation
+  (animovement/anicore#46), records their convention, and
+  [`transform_quaternion_to_euler()`](https://animovement.dev/anispace/reference/transform_euler_to_quaternion.md)
+  gives them back as a derived view, in the recorded convention unless
+  another is given.
+
+### Changed
+
+- Works with anicore’s `anipoint` class and rebuilt accessor API
+  (animovement/anicore#154). The transforms now require an anipoint, so
+  the error for other input reads “not an anipoint”.
+
 ### Removed
 
 - `calculate_angular_difference()` and `diff_angle()` move to anicore,

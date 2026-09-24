@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">anispace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,8 +148,53 @@
 
         </dt>
         <dd>Cartesian z-coordinate from spherical coordinates</dd>
+      </dl></div><div class="section level2">
+      <h2 id="rotations">Rotations<a class="anchor" aria-label="anchor" href="#rotations"></a></h2>
+
+      <div class="section-desc"><p>Unit quaternions (Hamilton, scalar first) for 3D orientation: algebra, conversion to and from axis-angle, matrices and Euler angles, and interpolation, averaging and angular velocity.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="quaternions.html">quat_multiply()</a></code> <code><a href="quaternions.html">quat_conjugate()</a></code> <code><a href="quaternions.html">quat_normalise()</a></code> <code><a href="quaternions.html">quat_rotate()</a></code> <code><a href="quaternions.html">quat_distance()</a></code>
+
+        </dt>
+        <dd>Quaternion algebra</dd>
+
+        <dt>
+
+          <code><a href="quat_from_axis_angle.html">quat_from_axis_angle()</a></code> <code><a href="quat_from_axis_angle.html">quat_to_axis_angle()</a></code> <code><a href="quat_from_axis_angle.html">quat_from_matrix()</a></code> <code><a href="quat_from_axis_angle.html">quat_to_matrix()</a></code>
+
+        </dt>
+        <dd>Quaternions from and to other rotation representations</dd>
+
+        <dt>
+
+          <code><a href="quat_from_euler.html">quat_from_euler()</a></code> <code><a href="quat_from_euler.html">quat_to_euler()</a></code>
+
+        </dt>
+        <dd>Quaternions from and to Euler angles</dd>
+
+        <dt>
+
+          <code><a href="quat_slerp.html">quat_slerp()</a></code> <code><a href="quat_slerp.html">quat_mean()</a></code> <code><a href="quat_slerp.html">quat_continuous()</a></code> <code><a href="quat_slerp.html">quat_angular_velocity()</a></code>
+
+        </dt>
+        <dd>Interpolate, average and differentiate rotations</dd>
+
+        <dt>
+
+          <code><a href="transform_euler_to_quaternion.html">transform_euler_to_quaternion()</a></code> <code><a href="transform_euler_to_quaternion.html">transform_quaternion_to_euler()</a></code>
+
+        </dt>
+        <dd>Convert orientation between Euler angles and quaternions</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

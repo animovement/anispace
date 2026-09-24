@@ -7,6 +7,7 @@
 <url><loc>https://animovement.dev/anispace/index.html</loc></url>
 <url><loc>https://animovement.dev/anispace/news/index.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/anispace.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/as_quat.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/cartesian_columns.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/cartesian_to_phi.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/cartesian_to_rho.html</loc></url>
@@ -23,6 +24,10 @@
 <url><loc>https://animovement.dev/anispace/reference/pad3.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/polar_to_x.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/polar_to_y.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/quat_from_axis_angle.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/quat_from_euler.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/quat_slerp.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/quaternions.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/redeclare_like.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/resolve_level.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/rotate_about_origin.html</loc></url>
@@ -33,6 +38,7 @@
 <url><loc>https://animovement.dev/anispace/reference/rotation_onto_basis.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/rotation_targets.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/spherical_to_z.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/transform_euler_to_quaternion.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/transform_grouping.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/transform_to_egocentric.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/translate_by_offset.html</loc></url>

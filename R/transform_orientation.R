@@ -8,15 +8,19 @@
 #' convention is stated once.
 #'
 #' * `transform_euler_to_quaternion()` adds quaternion columns computed from
-#'   the Euler columns and declares them as the frame's orientation.
+#'   the Euler columns, declares them as the frame's orientation, and records
+#'   the convention (`euler_sequence`, `euler_intrinsic`).
 #' * `transform_quaternion_to_euler()` adds Euler columns computed from the
-#'   declared orientation, as a derived view for reporting or plotting.
+#'   declared orientation, as a derived view for reporting or plotting. It
+#'   uses the recorded convention unless another is given.
 #'
 #' Angles are read and written in the frame's `unit_angle`.
 #'
 #' @param data A 3D anipoint.
 #' @param euler The three Euler angle columns, in `sequence` order.
 #' @param sequence,intrinsic The Euler convention; see [quat_from_euler()].
+#'   For `transform_quaternion_to_euler()`, `NULL` uses the convention the
+#'   frame recorded.
 #' @param names Names for the new columns.
 #'
 #' @return `data` with the new columns; for `transform_euler_to_quaternion()`,
@@ -63,11 +67,16 @@ transform_euler_to_quaternion <- function(
   for (i in 1:4) {
     data[[names[[i]]]] <- q[, i]
   }
-  anicore::set_variables(
+  data <- anicore::set_variables(
     data,
     where = list(
       orientation = stats::setNames(names, c("qw", "qx", "qy", "qz"))
     )
+  )
+  anicore::set_metadata(
+    data,
+    euler_sequence = sequence,
+    euler_intrinsic = intrinsic
   )
 }
 
@@ -76,11 +85,23 @@ transform_euler_to_quaternion <- function(
 #' @export
 transform_quaternion_to_euler <- function(
   data,
-  sequence,
-  intrinsic,
+  sequence = NULL,
+  intrinsic = NULL,
   names = c("euler_1", "euler_2", "euler_3")
 ) {
   anicore::ensure_is_anipoint(data)
+  if (is.null(sequence) || is.null(intrinsic)) {
+    recorded_sequence <- anicore::get_metadata(data, "euler_sequence")
+    recorded_intrinsic <- anicore::get_metadata(data, "euler_intrinsic")
+    if (is.na(recorded_sequence %||% NA) || is.na(recorded_intrinsic %||% NA)) {
+      cli::cli_abort(c(
+        "No Euler convention is recorded for this frame.",
+        "i" = "Pass {.arg sequence} and {.arg intrinsic}, or record one with {.code anicore::set_metadata(data, euler_sequence = , euler_intrinsic = )}."
+      ))
+    }
+    sequence <- sequence %||% recorded_sequence
+    intrinsic <- intrinsic %||% recorded_intrinsic
+  }
   ensure_new_columns(data, names, 3L)
   orientation <- anicore::get_variables(data, "where", "orientation")
   if (!all(c("qw", "qx", "qy", "qz") %in% names(orientation))) {

@@ -308,3 +308,33 @@ test_that("vectors can be given as a data frame", {
     rbind(c(0, 1, 0), c(-1, 0, 0))
   )
 })
+
+test_that("the Euler convention is recorded and used as the default view", {
+  df <- data.frame(
+    time = 1:2,
+    x = 0,
+    y = 0,
+    z = 0,
+    a = c(0.1, 0.2),
+    b = 0.05,
+    c = 0
+  )
+  af <- anicore::as_anipoint(df) |>
+    transform_euler_to_quaternion(c("a", "b", "c"), "ZYX", TRUE)
+  expect_equal(anicore::get_metadata(af, "euler_sequence"), "ZYX")
+  expect_true(anicore::get_metadata(af, "euler_intrinsic"))
+
+  back <- transform_quaternion_to_euler(af)
+  expect_equal(back$euler_1, df$a)
+  other <- transform_quaternion_to_euler(af, "XYZ", FALSE)
+  expect_equal(other$euler_3, df$a)
+  partial <- transform_quaternion_to_euler(af, intrinsic = TRUE)
+  expect_equal(partial$euler_2, df$b)
+
+  unrecorded <- anicore::set_metadata(
+    af,
+    euler_sequence = NA,
+    euler_intrinsic = NA
+  )
+  expect_error(transform_quaternion_to_euler(unrecorded), "No Euler convention")
+})

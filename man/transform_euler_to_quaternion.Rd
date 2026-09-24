@@ -15,8 +15,8 @@ transform_euler_to_quaternion(
 
 transform_quaternion_to_euler(
   data,
-  sequence,
-  intrinsic,
+  sequence = NULL,
+  intrinsic = NULL,
   names = c("euler_1", "euler_2", "euler_3")
 )
 }
@@ -25,7 +25,9 @@ transform_quaternion_to_euler(
 
 \item{euler}{The three Euler angle columns, in \code{sequence} order.}
 
-\item{sequence, intrinsic}{The Euler convention; see \code{\link[=quat_from_euler]{quat_from_euler()}}.}
+\item{sequence, intrinsic}{The Euler convention; see \code{\link[=quat_from_euler]{quat_from_euler()}}.
+For \code{transform_quaternion_to_euler()}, \code{NULL} uses the convention the
+frame recorded.}
 
 \item{names}{Names for the new columns.}
 }
@@ -41,9 +43,11 @@ wraparound. These functions are where the two meet, and where the Euler
 convention is stated once.
 \itemize{
 \item \code{transform_euler_to_quaternion()} adds quaternion columns computed from
-the Euler columns and declares them as the frame's orientation.
+the Euler columns, declares them as the frame's orientation, and records
+the convention (\code{euler_sequence}, \code{euler_intrinsic}).
 \item \code{transform_quaternion_to_euler()} adds Euler columns computed from the
-declared orientation, as a derived view for reporting or plotting.
+declared orientation, as a derived view for reporting or plotting. It
+uses the recorded convention unless another is given.
 }
 
 Angles are read and written in the frame's \code{unit_angle}.

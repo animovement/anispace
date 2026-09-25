@@ -1,10 +1,10 @@
 # Convert orientation between Euler angles and quaternions
 
-Trackers such as FicTrac and motion-capture software export orientation
-as three Euler angles, but an anipoint stores 3D orientation as a unit
-quaternion (animovement/anicore#46), which has no gimbal lock and no
-wraparound. These functions are where the two meet, and where the Euler
-convention is stated once.
+Motion-capture software often exports 3D orientation as three Euler
+angles, but an anipoint stores 3D orientation as a unit quaternion
+(animovement/anicore#46), which has no gimbal lock and no wraparound.
+These functions are where the two meet, and where the Euler convention
+is stated once.
 
 - `transform_euler_to_quaternion()` adds quaternion columns computed
   from the Euler columns, declares them as the frame's orientation, and

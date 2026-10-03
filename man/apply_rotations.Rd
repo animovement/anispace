@@ -11,7 +11,10 @@ apply_rotations(data, axes, rotations, grouping)
 
 \item{axes}{Named character vector, axis role to column.}
 
-\item{rotations}{One row per group, as from \code{\link[=alignment_rotations]{alignment_rotations()}}.}
+\item{rotations}{One row per group, as from \code{\link[=alignment_rotations]{alignment_rotations()}}:
+\code{.rot} turns the positions and \code{.turn} the orientation, and the two must
+be the same rotation. A rotation of \code{NA}s makes the rows it applies to
+\code{NA}.}
 
 \item{grouping}{The columns to join \code{rotations} on.}
 }

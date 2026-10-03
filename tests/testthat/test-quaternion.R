@@ -338,3 +338,100 @@ test_that("the Euler convention is recorded and used as the default view", {
   )
   expect_error(transform_quaternion_to_euler(unrecorded), "No Euler convention")
 })
+
+# quat_from_vectors() -------------------------------------------------------
+
+body_axes_in_frame <- function(q) {
+  quat_rotate(q, rbind(c(1, 0, 0), c(0, 1, 0), c(0, 0, 1)))
+}
+
+test_that("quat_from_vectors() maps the primary axis exactly", {
+  set.seed(1)
+  primary <- matrix(rnorm(30), ncol = 3)
+  secondary <- matrix(rnorm(30), ncol = 3)
+  q <- quat_from_vectors(primary, secondary)
+
+  expect_equal(rowSums(q^2), rep(1, 10))
+  expect_equal(
+    quat_rotate(q, c(1, 0, 0)),
+    primary / sqrt(rowSums(primary^2)),
+    ignore_attr = TRUE
+  )
+})
+
+test_that("the secondary vector fixes the side, and need not be perpendicular", {
+  q <- quat_from_vectors(c(0, 1, 0), c(-1, 5, 0))
+  expect_equal(
+    body_axes_in_frame(q),
+    rbind(c(0, 1, 0), c(-1, 0, 0), c(0, 0, 1)),
+    ignore_attr = TRUE
+  )
+
+  # The other side gives the body's y the other way, and a right-handed z
+  flipped <- quat_from_vectors(c(0, 1, 0), c(1, 5, 0))
+  expect_equal(
+    body_axes_in_frame(flipped),
+    rbind(c(0, 1, 0), c(1, 0, 0), c(0, 0, -1)),
+    ignore_attr = TRUE
+  )
+})
+
+test_that("any pair of body axes can be given, in either order", {
+  # Each case maps the frame's own axes onto themselves: the identity
+  pairs <- list(
+    c("x", "y"),
+    c("y", "x"),
+    c("y", "z"),
+    c("z", "y"),
+    c("z", "x"),
+    c("x", "z")
+  )
+  unit <- list(x = c(1, 0, 0), y = c(0, 1, 0), z = c(0, 0, 1))
+  for (axes in pairs) {
+    q <- quat_from_vectors(unit[[axes[1]]], unit[[axes[2]]], axes = axes)
+    expect_equal(
+      as.vector(q),
+      c(1, 0, 0, 0),
+      label = paste(axes, collapse = ",")
+    )
+  }
+})
+
+test_that("it agrees with three-point alignment in rotate_coords()", {
+  # Three keypoints of a rigid body, turned arbitrarily
+  r <- quat_from_axis_angle(c(1, 2, 3), 1.1)
+  body <- rbind(tail = c(0, 0, 0), head = c(2, 0, 0), left = c(0.5, 1, 0))
+  world <- quat_rotate(r, body)
+
+  q <- quat_from_vectors(world[2, ] - world[1, ], world[3, ] - world[1, ])
+  expect_equal(quat_distance(q, r), 0, tolerance = 1e-12)
+})
+
+test_that("degenerate rows give NA", {
+  q <- quat_from_vectors(
+    rbind(c(1, 0, 0), c(0, 0, 0), c(1, 0, 0), c(NA, 0, 0), c(1, 0, 0)),
+    rbind(c(0, 1, 0), c(0, 1, 0), c(2, 0, 0), c(0, 1, 0), c(0, NA, 1))
+  )
+  expect_equal(as.vector(q[1, ]), c(1, 0, 0, 0))
+  expect_true(all(is.na(q[2:5, ])))
+  expect_true(all(is.na(quat_from_vectors(c(0, 0, 0), c(0, 1, 0)))))
+})
+
+test_that("a single row is recycled, and arguments are checked", {
+  q <- quat_from_vectors(c(1, 0, 0), rbind(c(0, 1, 0), c(0, 0, 1)))
+  expect_equal(nrow(q), 2L)
+
+  expect_error(quat_from_vectors(c(1, 0), c(0, 1, 0)), "length 3")
+  expect_error(
+    quat_from_vectors(c(1, 0, 0), c(0, 1, 0), axes = "x"),
+    "two distinct"
+  )
+  expect_error(
+    quat_from_vectors(c(1, 0, 0), c(0, 1, 0), axes = c("x", "x")),
+    "two distinct"
+  )
+  expect_error(
+    quat_from_vectors(c(1, 0, 0), c(0, 1, 0), axes = c("x", "w")),
+    "two distinct"
+  )
+})

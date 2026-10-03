@@ -22,6 +22,8 @@ vector is missing or zero, or the two are parallel, since the roll is
 then undefined.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 The orientation whose body axis \code{axes[1]} points along \code{primary}, and
 whose body axis \code{axes[2]} points towards \code{secondary}. Only the part of
 \code{secondary} perpendicular to \code{primary} is used, so it need not be at right

@@ -47,6 +47,12 @@ rows, in radians per unit of \code{dt}, about the fixed frame's axes
 is \code{NA}.
 }
 
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} \code{quat_angular_velocity()} is
+experimental, and may change without a deprecation cycle: how it
+differences successive rows -- here, each row against the one before -- is
+to be settled with animetric's angular velocity from orientation
+(animovement/animetric#85). The other three are stable.
+
 Rows with \code{NA} are skipped by \code{quat_mean()} and carried through by the
 others.
 }

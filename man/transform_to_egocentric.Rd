@@ -19,9 +19,10 @@ transform_to_egocentric(
 
 \item{align}{Optionally, how to rotate. Two or three values of \code{level}
 define the axes: two give a direction, and in 3D a third fixes the roll
-about it. \code{"orientation"} turns each subject to face \code{+x} by its declared
-orientation; see below. Omitted, the frame is re-centred and left as it
-was oriented.}
+about it. \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} \code{"orientation"} turns each
+subject to face \code{+x} by its declared orientation; see below. This option
+is experimental, and may change without a deprecation cycle. Omitted, the
+frame is re-centred and left as it was oriented.}
 
 \item{level}{The identity variable \code{to} and \code{align} name members of.
 Defaults to the frame's only one; a frame declaring several has to be

@@ -18,6 +18,10 @@ three-dimensional) in place of the polar columns.
 Converts an aniframe back to Cartesian coordinates, detecting whether it is
 currently polar, cylindrical or spherical.
 }
+\details{
+The polar columns are read from the frame's declared axes, so they can
+have any name, and the angles in the frame's \code{unit_angle}.
+}
 \examples{
 af <- anicore::example_anipoint(n_obs = 5, n_individuals = 1, n_keypoints = 1)
 

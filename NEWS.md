@@ -8,6 +8,12 @@
 
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). The transforms now require an anipoint, so the error for other input reads "not an anipoint".
 
+## Fixed
+
+* `map_to_cartesian()`, `map_to_polar()`, `map_to_cylindrical()` and `map_to_spherical()` honour the frame's `unit_angle` (#47). They treated every angle as radians, so a frame declared in degrees converted wrongly: `phi = 90` was read as 90 radians, and `map_to_polar()` wrote radians under a `"deg"` label. A frame that arrived in degrees, from a reader or from `anicore::convert_unit_angle()`, came out wrong. A round trip only looked right because both directions made the same mistake. They now read and write `phi` and `theta` in the frame's unit, through `anicore::angle_to_rad()` and `anicore::angle_from_rad()` (animovement/anicore#170). The component converters (`cartesian_to_phi()`, `polar_to_x()`, ...) stay in radians.
+
+* The same functions read their input columns from the frame's declared axes, so they work on frames whose columns are not called `x`, `y`, `z`, `rho`, `phi` and `theta`. They used to stop with "Column `rho` not found". A cylindrical frame's `z` keeps its column name through both directions.
+
 ## Removed
 
 * `calculate_angular_difference()` and `diff_angle()` move to anicore, as `circ_difference()` and `circ_successive_difference()` (animovement/anicore#147). Both are general-purpose circular primitives rather than spatial transforms — the shortest signed distance between two angles, and that distance applied along a vector — and `calculate_angular_difference()` was already a one-line wrapper over `anicore::wrap_angle()`. anicore owns the angle utilities, and keeping the circular family together means it can be split out on its own later without unpicking anispace.

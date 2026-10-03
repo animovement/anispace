@@ -16,7 +16,8 @@ inclination from the positive z-axis, and \code{phi} the azimuth — the
 convention of ISO 80000-2.
 }
 \description{
-Map from Cartesian to spherical coordinates
+The Cartesian columns are read from the frame's declared axes, so they can
+have any name. \code{phi} and \code{theta} are written in the frame's \code{unit_angle}.
 }
 \examples{
 af <- anicore::example_anipoint(

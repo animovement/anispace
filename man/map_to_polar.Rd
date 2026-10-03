@@ -13,7 +13,8 @@ map_to_polar(data)
 An aniframe with \code{rho} and \code{phi} in place of \code{x} and \code{y}.
 }
 \description{
-Map from Cartesian to polar coordinates
+The Cartesian columns are read from the frame's declared axes, so they can
+have any name. \code{phi} is written in the frame's \code{unit_angle}.
 }
 \examples{
 af <- anicore::example_anipoint(

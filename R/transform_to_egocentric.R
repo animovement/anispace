@@ -44,9 +44,10 @@
 #' @param to A value of `level` to place at the origin.
 #' @param align Optionally, how to rotate. Two or three values of `level`
 #'   define the axes: two give a direction, and in 3D a third fixes the roll
-#'   about it. `"orientation"` turns each subject to face `+x` by its declared
-#'   orientation; see below. Omitted, the frame is re-centred and left as it
-#'   was oriented.
+#'   about it. `r lifecycle::badge("experimental")` `"orientation"` turns each
+#'   subject to face `+x` by its declared orientation; see below. This option
+#'   is experimental, and may change without a deprecation cycle. Omitted, the
+#'   frame is re-centred and left as it was oriented.
 #' @param level The identity variable `to` and `align` name members of.
 #'   Defaults to the frame's only one; a frame declaring several has to be
 #'   told.

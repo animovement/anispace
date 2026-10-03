@@ -10,6 +10,8 @@
 
 ## Changed
 
+* Help pages show each function's lifecycle stage (animovement/.github#46). An unlabelled function is stable, and changes only through a deprecation cycle. Five new interfaces are labelled experimental, so they may still change without one: `transform_euler_to_quaternion()` and `transform_quaternion_to_euler()`, `quat_from_vectors()`, `quat_angular_velocity()`, and `transform_to_egocentric(align = "orientation")`. The rest of the quaternion toolkit, and aligning on members, are stable.
+
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). The transforms now require an anipoint, so the error for other input reads "not an anipoint".
 
 ## Fixed

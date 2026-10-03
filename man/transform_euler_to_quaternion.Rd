@@ -36,6 +36,8 @@ frame recorded.}
 with \code{where$orientation} declared.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Motion-capture software often exports 3D orientation as three Euler
 angles, but an anipoint stores 3D orientation as a unit
 quaternion (animovement/anicore#46), which has no gimbal lock and no

@@ -15,6 +15,12 @@
 #'   (`frame = "fixed"`) or the body's own (`frame = "body"`). The first row
 #'   is `NA`.
 #'
+#' `r lifecycle::badge("experimental")` `quat_angular_velocity()` is
+#' experimental, and may change without a deprecation cycle: how it
+#' differences successive rows -- here, each row against the one before -- is
+#' to be settled with animetric's angular velocity from orientation
+#' (animovement/animetric#85). The other three are stable.
+#'
 #' Rows with `NA` are skipped by `quat_mean()` and carried through by the
 #' others.
 #'

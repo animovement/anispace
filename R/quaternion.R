@@ -193,6 +193,8 @@ quat_to_matrix <- function(q) {
 #' Quaternions from two body axes given as vectors
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' The orientation whose body axis `axes[1]` points along `primary`, and
 #' whose body axis `axes[2]` points towards `secondary`. Only the part of
 #' `secondary` perpendicular to `primary` is used, so it need not be at right

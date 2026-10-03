@@ -43,6 +43,38 @@
   (animovement/anicore#154). The transforms now require an anipoint, so
   the error for other input reads “not an anipoint”.
 
+### Fixed
+
+- [`map_to_cartesian()`](https://animovement.dev/anispace/reference/map_to_cartesian.md),
+  [`map_to_polar()`](https://animovement.dev/anispace/reference/map_to_polar.md),
+  [`map_to_cylindrical()`](https://animovement.dev/anispace/reference/map_to_cylindrical.md)
+  and
+  [`map_to_spherical()`](https://animovement.dev/anispace/reference/map_to_spherical.md)
+  honour the frame’s `unit_angle`
+  ([\#47](https://github.com/animovement/anispace/issues/47)). They
+  treated every angle as radians, so a frame declared in degrees
+  converted wrongly: `phi = 90` was read as 90 radians, and
+  [`map_to_polar()`](https://animovement.dev/anispace/reference/map_to_polar.md)
+  wrote radians under a `"deg"` label. A frame that arrived in degrees,
+  from a reader or from
+  [`anicore::convert_unit_angle()`](https://animovement.dev/anicore/reference/convert_unit_angle.html),
+  came out wrong. A round trip only looked right because both directions
+  made the same mistake. They now read and write `phi` and `theta` in
+  the frame’s unit, through
+  [`anicore::angle_to_rad()`](https://animovement.dev/anicore/reference/angle_to_rad.html)
+  and
+  [`anicore::angle_from_rad()`](https://animovement.dev/anicore/reference/angle_to_rad.html)
+  (animovement/anicore#170). The component converters
+  ([`cartesian_to_phi()`](https://animovement.dev/anispace/reference/cartesian_to_phi.md),
+  [`polar_to_x()`](https://animovement.dev/anispace/reference/polar_to_x.md),
+  …) stay in radians.
+
+- The same functions read their input columns from the frame’s declared
+  axes, so they work on frames whose columns are not called `x`, `y`,
+  `z`, `rho`, `phi` and `theta`. They used to stop with “Column `rho`
+  not found”. A cylindrical frame’s `z` keeps its column name through
+  both directions.
+
 ### Removed
 
 - `calculate_angular_difference()` and `diff_angle()` move to anicore,

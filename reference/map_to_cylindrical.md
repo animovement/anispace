@@ -1,6 +1,7 @@
 # Map from Cartesian to cylindrical coordinates
 
-Map from Cartesian to cylindrical coordinates
+The Cartesian columns are read from the frame's declared axes, so they
+can have any name. `phi` is written in the frame's `unit_angle`.
 
 ## Usage
 

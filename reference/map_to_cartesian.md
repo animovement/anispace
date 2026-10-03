@@ -20,6 +20,11 @@ map_to_cartesian(data)
 An aniframe with `x` and `y` (and `z`, where the input was
 three-dimensional) in place of the polar columns.
 
+## Details
+
+The polar columns are read from the frame's declared axes, so they can
+have any name, and the angles in the frame's `unit_angle`.
+
 ## See also
 
 Other coordinate systems:

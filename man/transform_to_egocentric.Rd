@@ -41,7 +41,8 @@ comparable across moments and individuals.
 
 Translation alone re-centres without changing orientation. Rotation alone
 is \code{\link[=rotate_coords]{rotate_coords()}}, which turns the frame about the coordinate origin
-rather than about the subject.
+rather than about the subject. A declared orientation is turned with the
+positions, as \code{\link[=rotate_coords]{rotate_coords()}} describes.
 }
 \examples{
 af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)

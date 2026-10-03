@@ -31,6 +31,7 @@ export(transform_euler_to_quaternion)
 export(transform_quaternion_to_euler)
 export(transform_to_egocentric)
 export(translate_coords)
+importFrom(lifecycle,deprecated)
 importFrom(rlang,
   "%||%",
   .data

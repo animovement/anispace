@@ -22,6 +22,7 @@ Imports:
   anicore (>= 0.8.0.9004),
   cli,
   dplyr,
+    lifecycle,
   rlang
 Suggests: 
   knitr,

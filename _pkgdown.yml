@@ -41,6 +41,7 @@ reference:
     contents:
     - quaternions
     - quat_from_axis_angle
+    - quat_from_vectors
     - quat_from_euler
     - quat_slerp
     - transform_euler_to_quaternion

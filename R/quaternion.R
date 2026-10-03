@@ -190,6 +190,100 @@ quat_to_matrix <- function(q) {
 }
 
 
+#' Quaternions from two body axes given as vectors
+#'
+#' @description
+#' The orientation whose body axis `axes[1]` points along `primary`, and
+#' whose body axis `axes[2]` points towards `secondary`. Only the part of
+#' `secondary` perpendicular to `primary` is used, so it need not be at right
+#' angles to it; it only has to fix the roll about `primary`. The third axis
+#' completes a right-handed set.
+#'
+#' This is how three points define an orientation: `primary` from one point to
+#' a second, and `secondary` from the first towards any third point off that
+#' line. With the default `axes`, `primary` is the body's forward axis (`x`)
+#' and the third point lies on the side of its `y` axis. With
+#' `axes = c("y", "x")`, `primary` runs across the body and `secondary` fixes
+#' which way is forward.
+#'
+#' @param primary Vectors (length 3, or 3 columns) along body axis
+#'   `axes[1]`. Need not be unit length.
+#' @param secondary Vectors (length 3, or 3 columns) towards body axis
+#'   `axes[2]`. Need not be unit length or perpendicular to `primary`.
+#' @param axes Two distinct body axes from `"x"`, `"y"`, `"z"`: the one
+#'   `primary` is mapped onto, then the one `secondary` points towards.
+#'
+#' @return A quaternion matrix; see [quaternions]. A row is `NA` where either
+#'   vector is missing or zero, or the two are parallel, since the roll is
+#'   then undefined.
+#'
+#' @seealso [quat_from_matrix()], which this builds the rotation for.
+#'
+#' @examples
+#' # Facing +y, with the body's left (+y) towards -x: a quarter turn about z
+#' quat_from_vectors(c(0, 1, 0), c(-1, 0, 0))
+#'
+#' # The secondary vector need not be perpendicular
+#' quat_from_vectors(c(0, 1, 0), c(-1, 5, 0))
+#'
+#' # Across the body: right-to-left along +y, forward towards +x
+#' quat_from_vectors(c(0, 1, 0), c(1, 0, 0), axes = c("y", "x"))
+#' @export
+quat_from_vectors <- function(primary, secondary, axes = c("x", "y")) {
+  primary <- as_rows(primary, 3L, "primary")
+  secondary <- as_rows(secondary, 3L, "secondary")
+  roles <- c("x", "y", "z")
+  if (
+    !is.character(axes) ||
+      length(axes) != 2L ||
+      !all(axes %in% roles) ||
+      axes[1] == axes[2]
+  ) {
+    cli::cli_abort(
+      "{.arg axes} must be two distinct axes from {.val {roles}}."
+    )
+  }
+
+  n <- max(nrow(primary), nrow(secondary))
+  primary <- recycle_quat(primary, n)
+  secondary <- recycle_quat(secondary, n)
+
+  # The primary direction, then the part of the secondary perpendicular to it
+  u <- primary / sqrt(rowSums(primary^2))
+  along <- rowSums(secondary * u)
+  v <- secondary - along * u
+  v <- v / sqrt(rowSums(v^2))
+
+  # A right-handed set: the third axis is the cross product taken in cyclic
+  # order (x, y, z), whichever two were given.
+  first <- match(axes[1], roles)
+  second <- match(axes[2], roles)
+  third <- setdiff(1:3, c(first, second))
+  w <- if ((second - first) %% 3 == 1) cross_rows3(u, v) else cross_rows3(v, u)
+
+  valid <- stats::complete.cases(u, v, w) &
+    sqrt(rowSums(primary^2)) > 1e-12 &
+    sqrt(rowSums((secondary - along * u)^2)) > 1e-12 * sqrt(rowSums(primary^2))
+  valid[is.na(valid)] <- FALSE
+
+  out <- quat_matrix(
+    rep(NA_real_, n),
+    rep(NA_real_, n),
+    rep(NA_real_, n),
+    rep(NA_real_, n)
+  )
+  if (any(valid)) {
+    # Each body axis's coordinates in the frame form a column of the rotation
+    rotation <- array(NA_real_, dim = c(3, 3, sum(valid)))
+    rotation[, first, ] <- t(u[valid, , drop = FALSE])
+    rotation[, second, ] <- t(v[valid, , drop = FALSE])
+    rotation[, third, ] <- t(w[valid, , drop = FALSE])
+    out[valid, ] <- quat_from_matrix(rotation)
+  }
+  out
+}
+
+
 # Shepperd's method: pivot on the largest of w, x, y, z for stability.
 matrix_to_quat <- function(r) {
   trace <- r[1, 1] + r[2, 2] + r[3, 3]

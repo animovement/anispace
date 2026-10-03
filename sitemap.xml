@@ -6,7 +6,9 @@
 <url><loc>https://animovement.dev/anispace/authors.html</loc></url>
 <url><loc>https://animovement.dev/anispace/index.html</loc></url>
 <url><loc>https://animovement.dev/anispace/news/index.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/alignment_rotations.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/anispace.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/apply_rotations.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/as_quat.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/cartesian_columns.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/cartesian_to_phi.html</loc></url>
@@ -14,12 +16,14 @@
 <url><loc>https://animovement.dev/anispace/reference/cartesian_to_theta.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/cross3.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/ensure_members.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/ensure_orientation_of.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/index.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/map_to_cartesian.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/map_to_cylindrical.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/map_to_polar.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/map_to_spherical.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/member_offsets.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/orientation_rotations.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/orthonormal_basis.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/pad3.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/polar_to_x.html</loc></url>
@@ -32,6 +36,8 @@
 <url><loc>https://animovement.dev/anispace/reference/resolve_level.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/rotate_about_origin.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/rotate_coords.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/rotate_onto_orientation.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/rotate_orientation.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/rotation_for.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/rotation_from_axis_angle.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/rotation_onto.html</loc></url>
@@ -45,5 +51,7 @@
 <url><loc>https://animovement.dev/anispace/reference/translate_coords.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/translate_onto_member.html</loc></url>
 <url><loc>https://animovement.dev/anispace/reference/translate_onto_member_back.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/turn_of.html</loc></url>
+<url><loc>https://animovement.dev/anispace/reference/wrap_like.html</loc></url>
 </urlset>
 

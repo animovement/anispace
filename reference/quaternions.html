@@ -12,7 +12,14 @@ quat_rotate(q, v): rotates 3D vectors v (length 3, or 3 columns).
 quat_distance(p, q): the angle of the rotation between p and q, in
 [0, pi]. q and -q are the same rotation, so their distance is 0.
 
-"><meta property="og:description" content="Row-wise operations on unit quaternions. A quaternion argument is a numeric
+
+An orientation q maps a vector in the body's own axes into the frame's
+coordinates, quat_rotate(q, v), so which side a rotation r multiplies
+on decides which axes it turns about. A rotation in the frame's
+coordinates – the one rotate_coords() applies to positions –
+pre-multiplies: quat_multiply(r, q), which carries quat_rotate(q, v)
+to quat_rotate(r, quat_rotate(q, v)). A rotation about the body's own
+axes post-multiplies: quat_multiply(q, r)."><meta property="og:description" content="Row-wise operations on unit quaternions. A quaternion argument is a numeric
 vector of length 4, or a matrix or data frame with four columns, in the
 order w, x, y, z (Hamilton convention, scalar first). Columns named
 w/x/y/z or qw/qx/qy/qz are matched by name. A single row is
@@ -25,7 +32,14 @@ quat_rotate(q, v): rotates 3D vectors v (length 3, or 3 columns).
 quat_distance(p, q): the angle of the rotation between p and q, in
 [0, pi]. q and -q are the same rotation, so their distance is 0.
 
-"><meta property="og:image" content="https://animovement.dev/anispace/logo.svg"></head><body>
+
+An orientation q maps a vector in the body's own axes into the frame's
+coordinates, quat_rotate(q, v), so which side a rotation r multiplies
+on decides which axes it turns about. A rotation in the frame's
+coordinates – the one rotate_coords() applies to positions –
+pre-multiplies: quat_multiply(r, q), which carries quat_rotate(q, v)
+to quat_rotate(r, quat_rotate(q, v)). A rotation about the body's own
+axes post-multiplies: quat_multiply(q, r)."><meta property="og:image" content="https://animovement.dev/anispace/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -88,7 +102,14 @@ followed by <code>p</code>.</p></li>
 <li><p><code>quat_rotate(q, v)</code>: rotates 3D vectors <code>v</code> (length 3, or 3 columns).</p></li>
 <li><p><code>quat_distance(p, q)</code>: the angle of the rotation between <code>p</code> and <code>q</code>, in
 <code>[0, pi]</code>. <code>q</code> and <code>-q</code> are the same rotation, so their distance is 0.</p></li>
-</ul></div>
+</ul><p>An orientation <code>q</code> maps a vector in the body's own axes into the frame's
+coordinates, <code>quat_rotate(q, v)</code>, so which side a rotation <code>r</code> multiplies
+on decides which axes it turns about. A rotation in the frame's
+coordinates – the one <code><a href="rotate_coords.html">rotate_coords()</a></code> applies to positions –
+pre-multiplies: <code>quat_multiply(r, q)</code>, which carries <code>quat_rotate(q, v)</code>
+to <code>quat_rotate(r, quat_rotate(q, v))</code>. A rotation about the body's own
+axes post-multiplies: <code>quat_multiply(q, r)</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>

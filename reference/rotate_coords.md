@@ -4,6 +4,17 @@ Rotates each subject's coordinates so that chosen members of its
 identity define the axes. Two members give a direction; in three
 dimensions a third fixes the roll about it, which two cannot.
 
+A declared orientation (`where$orientation`) turns with the coordinates,
+by the same rotation, so the two keep describing the same body: in 2D
+the rotation's angle is added to `yaw`, in the frame's `unit_angle` and
+wrapped to the range the input used (signed if any value is negative);
+in 3D the quaternion is pre-multiplied by the rotation's,
+`quat_multiply(r, q)` (see
+[quaternions](https://animovement.dev/anispace/reference/quaternions.md)).
+The centre of rotation moves positions but not orientation. A moment
+whose rotation is undefined, because an alignment point is missing, is
+left as it was, orientation included.
+
 ## Usage
 
 ``` r
@@ -45,7 +56,7 @@ rotate_coords(
 
 ## Value
 
-An aniframe with rotated coordinates.
+An aniframe with rotated coordinates, and orientation if declared.
 
 ## See also
 

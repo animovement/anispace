@@ -20,6 +20,16 @@ name. A single row is recycled against the other argument.
   in `[0, pi]`. `q` and `-q` are the same rotation, so their distance is
   0.
 
+An orientation `q` maps a vector in the body's own axes into the frame's
+coordinates, `quat_rotate(q, v)`, so which side a rotation `r`
+multiplies on decides which axes it turns about. A rotation in the
+frame's coordinates – the one
+[`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md)
+applies to positions – pre-multiplies: `quat_multiply(r, q)`, which
+carries `quat_rotate(q, v)` to `quat_rotate(r, quat_rotate(q, v))`. A
+rotation about the body's own axes post-multiplies:
+`quat_multiply(q, r)`.
+
 ## Usage
 
 ``` r

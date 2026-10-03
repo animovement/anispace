@@ -4,6 +4,23 @@
 
 ### Added
 
+- `transform_to_egocentric(align = "orientation")` aligns each subject
+  by its own declared orientation
+  ([\#49](https://github.com/animovement/anispace/issues/49)). Alignment
+  used to need two or three keypoints defining an axis. Many datasets
+  have none but do record an orientation: FicTrac, rigid-body motion
+  capture, or a centroid with a heading. Where both exist, the measured
+  orientation is often better than a noisy keypoint axis. The frame is
+  centred on `to`, then each subject at each moment is turned by the
+  inverse of its `to` member’s orientation, so it faces +x. In 2D that
+  is a rotation by `-yaw`, after which `yaw` is exactly 0. In 3D it is
+  the inverse quaternion, after which the body axes lie along the
+  coordinate axes and the orientation is the identity.
+  `align_perpendicular` faces it across, as for keypoints. A moment
+  whose `to` member has no orientation comes back `NA`, not unrotated. A
+  single value can never be alignment points, so `"orientation"` is
+  unambiguous even when a member has that name.
+
 - Quaternions for 3D orientation
   ([\#7](https://github.com/animovement/anispace/issues/7)):
   [`quat_multiply()`](https://animovement.dev/anispace/reference/quaternions.md),
@@ -44,6 +61,40 @@
   the error for other input reads “not an anipoint”.
 
 ### Fixed
+
+- [`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md),
+  and through it
+  [`transform_to_egocentric()`](https://animovement.dev/anispace/reference/transform_to_egocentric.md),
+  rotate a declared orientation along with the positions
+  ([\#49](https://github.com/animovement/anispace/issues/49)). They
+  turned the positions and left `yaw` or the quaternion as it was, so
+  the two disagreed: aligning a body on its tail-to-head axis put the
+  head on +x while `yaw` still gave its old heading. The orientation is
+  now turned by the same rotation, per subject and moment. In 2D the
+  rotation’s angle is added to `yaw`, in the frame’s `unit_angle`, and
+  wrapped to the range the input used — signed if any value is negative,
+  as
+  [`anicore::reflect_axis()`](https://animovement.dev/anicore/reference/reflect_axis.html)
+  decides it. In 3D the quaternion is pre-multiplied by the rotation’s,
+  which is the side a rotation in the frame’s coordinates goes on; the
+  quaternion help now says so. The centre of rotation (`about`) plays no
+  part, and a moment left unrotated for want of an alignment point keeps
+  its orientation as it keeps its positions.
+  [`translate_coords()`](https://animovement.dev/anispace/reference/translate_coords.md)
+  leaves orientation alone, as before.
+
+- [`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md)
+  gives every moment its own rotation even when some have none. A moment
+  whose alignment point was missing dropped out of the list of rotations
+  rather than holding a place in it, so when it was the last moment the
+  list came up short: with two moments the first’s rotation was recycled
+  onto the second’s rows, and with more the call failed with “Assigned
+  data `rotations` must be compatible with existing data”. The alignment
+  points were also paired up by row position rather than by moment, so a
+  member with no row at some moment failed with “non-conformable
+  arrays”, or, with equal counts, paired one moment’s point with
+  another’s. They are now matched on the moment, and a moment without
+  one is left unrotated, as was intended.
 
 - [`map_to_cartesian()`](https://animovement.dev/anispace/reference/map_to_cartesian.md),
   [`map_to_polar()`](https://animovement.dev/anispace/reference/map_to_polar.md),

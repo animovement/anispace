@@ -9,7 +9,8 @@
 #'
 #' Translation alone re-centres without changing orientation. Rotation alone
 #' is [rotate_coords()], which turns the frame about the coordinate origin
-#' rather than about the subject.
+#' rather than about the subject. A declared orientation is turned with the
+#' positions, as [rotate_coords()] describes.
 #'
 #' @param data An aniframe in a Cartesian coordinate system.
 #' @param to A value of `level` to place at the origin.

@@ -31,12 +31,21 @@ onto its subject.}
 than along it.}
 }
 \value{
-An aniframe with rotated coordinates.
+An aniframe with rotated coordinates, and orientation if declared.
 }
 \description{
 Rotates each subject's coordinates so that chosen members of its identity
 define the axes. Two members give a direction; in three dimensions a third
 fixes the roll about it, which two cannot.
+
+A declared orientation (\code{where$orientation}) turns with the coordinates,
+by the same rotation, so the two keep describing the same body: in 2D the
+rotation's angle is added to \code{yaw}, in the frame's \code{unit_angle} and wrapped
+to the range the input used (signed if any value is negative); in 3D the
+quaternion is pre-multiplied by the rotation's, \code{quat_multiply(r, q)}
+(see \link{quaternions}). The centre of rotation moves positions but not
+orientation. A moment whose rotation is undefined, because an alignment
+point is missing, is left as it was, orientation included.
 }
 \examples{
 af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)

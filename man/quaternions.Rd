@@ -43,6 +43,14 @@ followed by \code{p}.
 \item \code{quat_distance(p, q)}: the angle of the rotation between \code{p} and \code{q}, in
 \verb{[0, pi]}. \code{q} and \code{-q} are the same rotation, so their distance is 0.
 }
+
+An orientation \code{q} maps a vector in the body's own axes into the frame's
+coordinates, \code{quat_rotate(q, v)}, so which side a rotation \code{r} multiplies
+on decides which axes it turns about. A rotation in the frame's
+coordinates -- the one \code{\link[=rotate_coords]{rotate_coords()}} applies to positions --
+pre-multiplies: \code{quat_multiply(r, q)}, which carries \code{quat_rotate(q, v)}
+to \code{quat_rotate(r, quat_rotate(q, v))}. A rotation about the body's own
+axes post-multiplies: \code{quat_multiply(q, r)}.
 }
 \examples{
 quarter_z <- quat_from_axis_angle(c(0, 0, 1), pi / 2)

@@ -5,6 +5,15 @@
 #' define the axes. Two members give a direction; in three dimensions a third
 #' fixes the roll about it, which two cannot.
 #'
+#' A declared orientation (`where$orientation`) turns with the coordinates,
+#' by the same rotation, so the two keep describing the same body: in 2D the
+#' rotation's angle is added to `yaw`, in the frame's `unit_angle` and wrapped
+#' to the range the input used (signed if any value is negative); in 3D the
+#' quaternion is pre-multiplied by the rotation's, `quat_multiply(r, q)`
+#' (see [quaternions]). The centre of rotation moves positions but not
+#' orientation. A moment whose rotation is undefined, because an alignment
+#' point is missing, is left as it was, orientation included.
+#'
 #' @param data An aniframe in a Cartesian coordinate system.
 #' @param align Two or three values of `level`. The first two define the
 #'   primary axis. A third, in 3D, defines the plane and so the orientation
@@ -18,7 +27,7 @@
 #' @param align_perpendicular Put the primary axis across the target rather
 #'   than along it.
 #'
-#' @return An aniframe with rotated coordinates.
+#' @return An aniframe with rotated coordinates, and orientation if declared.
 #' @family coordinate transforms
 #' @examples
 #' af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
@@ -138,9 +147,7 @@ rotate_about_origin <- function(
   level,
   align_perpendicular = FALSE
 ) {
-  columns <- unname(axes)
   grouping <- transform_grouping(data, level)
-  bare <- dplyr::ungroup(dplyr::as_tibble(data))
 
   # Putting a stored vector onto stored +x is the same operation whichever
   # way the frame says its angles run. What the sense does decide is which
@@ -151,30 +158,78 @@ rotate_about_origin <- function(
     anicore::get_angle_direction(data)
   )
 
+  rotations <- alignment_rotations(data, axes, align, level, grouping, target)
+  apply_rotations(data, axes, rotations, grouping)
+}
+
+
+#' The rotation for each subject at each moment, from its alignment points
+#'
+#' Each alignment point is looked up in every group by joining on the
+#' grouping, not by position, so a member missing from a moment leaves that
+#' moment without a rotation rather than pairing the points of different
+#' moments.
+#'
+#' @param data An aniframe.
+#' @param axes Named character vector, axis role to column.
+#' @param align Values of `level` defining the axes.
+#' @param level The identity variable they belong to.
+#' @param grouping The columns a rotation is held constant within.
+#' @param target Where the alignment axes should end up; see
+#'   [rotation_targets()].
+#'
+#' @return A tibble with one row per group: the `grouping` columns, and
+#'   `.rot`, a list of 3x3 rotation matrices, `NULL` where the rotation is
+#'   undefined.
+#' @keywords internal
+alignment_rotations <- function(data, axes, align, level, grouping, target) {
+  columns <- unname(axes)
+  bare <- dplyr::ungroup(dplyr::as_tibble(data))
+  groups <- dplyr::distinct(bare[grouping])
+
   point <- function(member) {
-    rows <- bare[as.character(bare[[level]]) == member, , drop = FALSE]
-    rows[c(grouping, columns)]
+    rows <- dplyr::filter(bare, as.character(.data[[level]]) == member)
+    found <- suppressMessages(dplyr::left_join(
+      groups,
+      rows[c(grouping, columns)],
+      by = grouping
+    ))
+    as.matrix(found[columns])
   }
   points <- lapply(align, point)
+  vectors <- lapply(points[-1], \(p) p - points[[1]])
 
-  reference <- points[[1]][grouping]
-  vectors <- lapply(points[-1], \(p) {
-    as.matrix(p[columns]) - as.matrix(points[[1]][columns])
-  })
-
-  rotations <- vector("list", nrow(reference))
-  for (i in seq_len(nrow(reference))) {
+  rotations <- vector("list", nrow(groups))
+  for (i in seq_len(nrow(groups))) {
     primary <- pad3(vectors[[1]][i, ], length(axes))
     secondary <- if (length(vectors) > 1) {
       pad3(vectors[[2]][i, ], length(axes))
     } else {
       NULL
     }
-    rotations[[i]] <- rotation_for(primary, secondary, target)
+    # `[<-` with `list()` keeps a `NULL`; `[[<-` would drop the element and
+    # shift every later rotation onto the wrong moment.
+    rotations[i] <- list(rotation_for(primary, secondary, target))
   }
 
-  reference$.rot <- rotations
-  joined <- suppressMessages(dplyr::left_join(bare, reference, by = grouping))
+  groups$.rot <- rotations
+  groups
+}
+
+
+#' Apply a rotation per group to the coordinates and orientation
+#'
+#' @param data An aniframe.
+#' @param axes Named character vector, axis role to column.
+#' @param rotations One row per group, as from [alignment_rotations()].
+#' @param grouping The columns to join `rotations` on.
+#'
+#' @return `data`, rotated.
+#' @keywords internal
+apply_rotations <- function(data, axes, rotations, grouping) {
+  columns <- unname(axes)
+  bare <- dplyr::ungroup(dplyr::as_tibble(data))
+  joined <- suppressMessages(dplyr::left_join(bare, rotations, by = grouping))
 
   coords <- as.matrix(joined[columns])
   out <- coords
@@ -187,10 +242,82 @@ rotate_about_origin <- function(
     }
   }
   joined[columns] <- out
+  joined <- rotate_orientation(joined, joined$.rot, data)
 
   joined |>
     dplyr::select(-".rot") |>
     redeclare_like(data)
+}
+
+
+#' Turn a declared orientation by the rotation applied to the positions
+#'
+#' In 2D, `yaw` is measured from `x` toward `y`, the sense a rotation about
+#' `z` turns in, so the rotation's angle is added to it. In 3D, the
+#' quaternion expresses the body's axes in the frame's coordinates, so a
+#' rotation of the frame's coordinates pre-multiplies it,
+#' `quat_multiply(r, q)`. The centre of rotation plays no part; orientation
+#' is a direction, not a place.
+#'
+#' @param rows A data frame holding the orientation columns.
+#' @param rotations A list, one element per row of `rows`: a 3x3 rotation
+#'   matrix, or `NULL` to leave the row as it is.
+#' @param data The aniframe the orientation is declared on.
+#'
+#' @return `rows`, with the orientation columns turned.
+#' @keywords internal
+rotate_orientation <- function(rows, rotations, data) {
+  orientation <- anicore::get_variables(data, "where", "orientation")
+  turned <- !vapply(rotations, is.null, logical(1))
+  if (length(orientation) == 0L || !any(turned)) {
+    return(rows)
+  }
+
+  if ("yaw" %in% names(orientation)) {
+    column <- orientation[["yaw"]]
+    yaw <- rows[[column]]
+    angle <- vapply(rotations[turned], \(r) atan2(r[2, 1], r[1, 1]), numeric(1))
+    radians <- anicore::angle_to_rad(yaw[turned], data) + angle
+    signed <- any(yaw < 0, na.rm = TRUE)
+    rows[[column]][turned] <- anicore::angle_from_rad(
+      wrap_like(radians, signed),
+      data
+    )
+    return(rows)
+  }
+
+  columns <- unname(orientation[c("qw", "qx", "qy", "qz")])
+  q <- as.matrix(rows[turned, columns])
+  r <- quat_from_matrix(simplify2array(rotations[turned]))
+  turned_q <- quat_normalise(quat_multiply(r, q))
+  for (i in seq_along(columns)) {
+    rows[[columns[[i]]]][turned] <- turned_q[, i]
+  }
+  rows
+}
+
+
+#' Wrap angles to the range their source used
+#'
+#' Signed, `(-pi, pi]`, or unsigned, `[0, 2 pi)`, as `anicore::reflect_axis()`
+#' decides it. A value within a rounding error of where the range wraps can
+#' land exactly on the end it excludes -- `-1e-17` wraps to `2 pi` -- so
+#' that end is folded onto the other, which is the same angle.
+#'
+#' @param radians Numeric vector of angles in radians.
+#' @param signed Wrap to `(-pi, pi]` rather than `[0, 2 pi)`.
+#'
+#' @return `radians`, wrapped.
+#' @keywords internal
+wrap_like <- function(radians, signed) {
+  if (signed) {
+    wrapped <- anicore::wrap_angle(radians, modulo = "pi")
+    wrapped[!is.na(wrapped) & wrapped <= -pi] <- pi
+  } else {
+    wrapped <- anicore::wrap_angle(radians, modulo = "2pi")
+    wrapped[!is.na(wrapped) & wrapped >= 2 * pi] <- 0
+  }
+  wrapped
 }
 
 

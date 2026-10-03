@@ -59,9 +59,7 @@ transform_euler_to_quaternion <- function(
   if (!is.numeric(angles)) {
     cli::cli_abort("The Euler columns must be numeric.")
   }
-  if (is_degrees(data)) {
-    angles <- angles * pi / 180
-  }
+  angles <- anicore::angle_to_rad(angles, data)
 
   q <- quat_from_euler(angles, sequence, intrinsic)
   for (i in 1:4) {
@@ -113,9 +111,7 @@ transform_quaternion_to_euler <- function(
 
   q <- as.matrix(as.data.frame(data)[, orientation[c("qw", "qx", "qy", "qz")]])
   angles <- quat_to_euler(q, sequence, intrinsic)
-  if (is_degrees(data)) {
-    angles <- angles * 180 / pi
-  }
+  angles <- anicore::angle_from_rad(angles, data)
   for (i in 1:3) {
     data[[names[[i]]]] <- angles[, i]
   }
@@ -133,10 +129,4 @@ ensure_new_columns <- function(data, names, n) {
     cli::cli_abort("Column{?s} {.val {taken}} already exist{?s/}.")
   }
   invisible(TRUE)
-}
-
-
-#' @keywords internal
-is_degrees <- function(data) {
-  identical(as.character(anicore::get_metadata(data, "unit_angle")), "deg")
 }

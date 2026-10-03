@@ -17,9 +17,11 @@ transform_to_egocentric(
 
 \item{to}{A value of \code{level} to place at the origin.}
 
-\item{align}{Optionally, two or three values of \code{level} defining the axes.
-Two give a direction; in 3D a third fixes the roll about it. Omitted, the
-frame is re-centred and left as it was oriented.}
+\item{align}{Optionally, how to rotate. Two or three values of \code{level}
+define the axes: two give a direction, and in 3D a third fixes the roll
+about it. \code{"orientation"} turns each subject to face \code{+x} by its declared
+orientation; see below. Omitted, the frame is re-centred and left as it
+was oriented.}
 
 \item{level}{The identity variable \code{to} and \code{align} name members of.
 Defaults to the frame's only one; a frame declaring several has to be
@@ -34,16 +36,46 @@ An aniframe centred on \code{to}, with \code{reference_frame} set to
 }
 \description{
 Places the subject at the centre of its own coordinate system: translating
-onto a reference member, and then, if alignment points are given, rotating
-so they define the axes. Positions then describe the subject's own geometry
-rather than where it happened to be in the arena, which is what makes poses
-comparable across moments and individuals.
+onto a reference member, and then, if asked, rotating it to face a fixed
+direction. Positions then describe the subject's own geometry rather than
+where it happened to be in the arena, which is what makes poses comparable
+across moments and individuals.
+
+The rotation comes from one of two places. Alignment points are members
+whose positions define the axes. Alternatively, \code{align = "orientation"}
+uses the subject's declared orientation (\code{where$orientation}), for data
+that has one -- FicTrac, rigid-body motion capture, a centroid with a
+heading -- whether or not it also has keypoints to align on.
 
 Translation alone re-centres without changing orientation. Rotation alone
 is \code{\link[=rotate_coords]{rotate_coords()}}, which turns the frame about the coordinate origin
 rather than about the subject. A declared orientation is turned with the
 positions, as \code{\link[=rotate_coords]{rotate_coords()}} describes.
 }
+\section{Aligning by orientation}{
+
+Each subject at each moment is turned by the inverse of its own
+orientation, so that it faces \code{+x}. In 2D that is a rotation by \code{-yaw},
+after which its \code{yaw} is 0. In 3D it is the inverse of its quaternion,
+after which its body axes lie along the coordinate axes and its
+orientation is the identity, \verb{(1, 0, 0, 0)}. With \code{align_perpendicular},
+it faces across instead, as for alignment points.
+
+Orientation is declared per row, so the subject's is read from its \code{to}
+member: the member it is centred on is the one it is turned to face with.
+Any other member's orientation is turned with it, and so ends up relative
+to the \code{to} member's. To centre on one member and face by another's
+orientation, align on the second and then \code{\link[=translate_coords]{translate_coords()}} onto the
+first; translating changes no orientation.
+
+A moment whose \code{to} member has no orientation cannot be aligned, and its
+positions and orientation come back \code{NA} rather than unrotated.
+
+A single value can never be alignment points, which come in twos and
+threes, so \code{"orientation"} is unambiguous even when \code{level} has a member
+of that name: \code{c("orientation", "head")} aligns on that member.
+}
+
 \examples{
 af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
@@ -57,6 +89,20 @@ transform_to_egocentric(
 
 # Re-centre without reorienting
 transform_to_egocentric(af, to = "head", level = "keypoint")
+
+# Face the way the declared heading says, whatever the keypoints do
+heading <- anicore::as_anipoint(data.frame(
+  time = rep(1:2, each = 2),
+  keypoint = c("centroid", "head"),
+  x = c(0, 1, 5, 5),
+  y = c(0, 1, 5, 6),
+  yaw = rep(c(pi / 4, pi / 2), each = 2)
+)) |>
+  anicore::set_variables(where = list(
+    position = c(x = "x", y = "y"),
+    orientation = c(yaw = "yaw")
+  ))
+transform_to_egocentric(heading, to = "centroid", align = "orientation")
 
 }
 \seealso{

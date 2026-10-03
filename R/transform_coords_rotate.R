@@ -178,9 +178,9 @@ rotate_about_origin <- function(
 #' @param target Where the alignment axes should end up; see
 #'   [rotation_targets()].
 #'
-#' @return A tibble with one row per group: the `grouping` columns, and
-#'   `.rot`, a list of 3x3 rotation matrices, `NULL` where the rotation is
-#'   undefined.
+#' @return A tibble with one row per group: the `grouping` columns; `.rot`,
+#'   a list of 3x3 rotation matrices, `NULL` where the rotation is undefined;
+#'   and `.turn`, the same rotations as [turn_of()] gives them.
 #' @keywords internal
 alignment_rotations <- function(data, axes, align, level, grouping, target) {
   columns <- unname(axes)
@@ -213,7 +213,27 @@ alignment_rotations <- function(data, axes, align, level, grouping, target) {
   }
 
   groups$.rot <- rotations
+  groups$.turn <- lapply(rotations, turn_of, n_axes = length(axes))
   groups
+}
+
+
+#' A rotation as it turns an orientation
+#'
+#' @param rotation A 3x3 rotation matrix, or `NULL`.
+#' @param n_axes How many spatial axes the frame has.
+#'
+#' @return `NULL` for `NULL`. In 2D, the angle in radians it turns about `z`;
+#'   in 3D, its quaternion.
+#' @keywords internal
+turn_of <- function(rotation, n_axes) {
+  if (is.null(rotation)) {
+    return(NULL)
+  }
+  if (n_axes < 3L) {
+    return(atan2(rotation[2, 1], rotation[1, 1]))
+  }
+  quat_from_matrix(rotation)[1, ]
 }
 
 
@@ -221,7 +241,10 @@ alignment_rotations <- function(data, axes, align, level, grouping, target) {
 #'
 #' @param data An aniframe.
 #' @param axes Named character vector, axis role to column.
-#' @param rotations One row per group, as from [alignment_rotations()].
+#' @param rotations One row per group, as from [alignment_rotations()]:
+#'   `.rot` turns the positions and `.turn` the orientation, and the two must
+#'   be the same rotation. A rotation of `NA`s makes the rows it applies to
+#'   `NA`.
 #' @param grouping The columns to join `rotations` on.
 #'
 #' @return `data`, rotated.
@@ -242,10 +265,10 @@ apply_rotations <- function(data, axes, rotations, grouping) {
     }
   }
   joined[columns] <- out
-  joined <- rotate_orientation(joined, joined$.rot, data)
+  joined <- rotate_orientation(joined, joined$.turn, data)
 
   joined |>
-    dplyr::select(-".rot") |>
+    dplyr::select(-c(".rot", ".turn")) |>
     redeclare_like(data)
 }
 
@@ -260,15 +283,15 @@ apply_rotations <- function(data, axes, rotations, grouping) {
 #' is a direction, not a place.
 #'
 #' @param rows A data frame holding the orientation columns.
-#' @param rotations A list, one element per row of `rows`: a 3x3 rotation
-#'   matrix, or `NULL` to leave the row as it is.
+#' @param turns A list, one element per row of `rows`: the rotation as
+#'   [turn_of()] gives it, or `NULL` to leave the row as it is.
 #' @param data The aniframe the orientation is declared on.
 #'
 #' @return `rows`, with the orientation columns turned.
 #' @keywords internal
-rotate_orientation <- function(rows, rotations, data) {
+rotate_orientation <- function(rows, turns, data) {
   orientation <- anicore::get_variables(data, "where", "orientation")
-  turned <- !vapply(rotations, is.null, logical(1))
+  turned <- !vapply(turns, is.null, logical(1))
   if (length(orientation) == 0L || !any(turned)) {
     return(rows)
   }
@@ -276,8 +299,7 @@ rotate_orientation <- function(rows, rotations, data) {
   if ("yaw" %in% names(orientation)) {
     column <- orientation[["yaw"]]
     yaw <- rows[[column]]
-    angle <- vapply(rotations[turned], \(r) atan2(r[2, 1], r[1, 1]), numeric(1))
-    radians <- anicore::angle_to_rad(yaw[turned], data) + angle
+    radians <- anicore::angle_to_rad(yaw[turned], data) + unlist(turns[turned])
     signed <- any(yaw < 0, na.rm = TRUE)
     rows[[column]][turned] <- anicore::angle_from_rad(
       wrap_like(radians, signed),
@@ -288,7 +310,7 @@ rotate_orientation <- function(rows, rotations, data) {
 
   columns <- unname(orientation[c("qw", "qx", "qy", "qz")])
   q <- as.matrix(rows[turned, columns])
-  r <- quat_from_matrix(simplify2array(rotations[turned]))
+  r <- do.call(rbind, turns[turned])
   turned_q <- quat_normalise(quat_multiply(r, q))
   for (i in seq_along(columns)) {
     rows[[columns[[i]]]][turned] <- turned_q[, i]

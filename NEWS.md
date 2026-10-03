@@ -2,6 +2,8 @@
 
 ## Added
 
+* `transform_to_egocentric(align = "orientation")` aligns each subject by its own declared orientation (#49). Alignment used to need two or three keypoints defining an axis. Many datasets have none but do record an orientation: FicTrac, rigid-body motion capture, or a centroid with a heading. Where both exist, the measured orientation is often better than a noisy keypoint axis. The frame is centred on `to`, then each subject at each moment is turned by the inverse of its `to` member's orientation, so it faces +x. In 2D that is a rotation by `-yaw`, after which `yaw` is exactly 0. In 3D it is the inverse quaternion, after which the body axes lie along the coordinate axes and the orientation is the identity. `align_perpendicular` faces it across, as for keypoints. A moment whose `to` member has no orientation comes back `NA`, not unrotated. A single value can never be alignment points, so `"orientation"` is unambiguous even when a member has that name.
+
 * Quaternions for 3D orientation (#7): `quat_multiply()`, `quat_conjugate()`, `quat_normalise()`, `quat_rotate()` and `quat_distance()`; conversion with `quat_from_axis_angle()` / `quat_to_axis_angle()`, `quat_from_matrix()` / `quat_to_matrix()` and `quat_from_euler()` / `quat_to_euler()` (all twelve sequences, with `sequence` and `intrinsic` always stated); and `quat_slerp()`, `quat_mean()`, `quat_continuous()` and `quat_angular_velocity()`. `transform_euler_to_quaternion()` turns exported Euler angles into a declared quaternion orientation (animovement/anicore#46), records their convention, and `transform_quaternion_to_euler()` gives them back as a derived view, in the recorded convention unless another is given.
 
 ## Changed

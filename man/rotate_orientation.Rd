@@ -4,13 +4,13 @@
 \alias{rotate_orientation}
 \title{Turn a declared orientation by the rotation applied to the positions}
 \usage{
-rotate_orientation(rows, rotations, data)
+rotate_orientation(rows, turns, data)
 }
 \arguments{
 \item{rows}{A data frame holding the orientation columns.}
 
-\item{rotations}{A list, one element per row of \code{rows}: a 3x3 rotation
-matrix, or \code{NULL} to leave the row as it is.}
+\item{turns}{A list, one element per row of \code{rows}: the rotation as
+\code{\link[=turn_of]{turn_of()}} gives it, or \code{NULL} to leave the row as it is.}
 
 \item{data}{The aniframe the orientation is declared on.}
 }

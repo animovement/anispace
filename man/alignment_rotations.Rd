@@ -21,9 +21,9 @@ alignment_rotations(data, axes, align, level, grouping, target)
 \code{\link[=rotation_targets]{rotation_targets()}}.}
 }
 \value{
-A tibble with one row per group: the \code{grouping} columns, and
-\code{.rot}, a list of 3x3 rotation matrices, \code{NULL} where the rotation is
-undefined.
+A tibble with one row per group: the \code{grouping} columns; \code{.rot},
+a list of 3x3 rotation matrices, \code{NULL} where the rotation is undefined;
+and \code{.turn}, the same rotations as \code{\link[=turn_of]{turn_of()}} gives them.
 }
 \description{
 Each alignment point is looked up in every group by joining on the

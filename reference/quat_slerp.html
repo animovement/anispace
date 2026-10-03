@@ -16,6 +16,11 @@ rows, in radians per unit of dt, about the fixed frame's axes
 is NA.
 
 
+ quat_angular_velocity() is
+experimental, and may change without a deprecation cycle: how it
+differences successive rows – here, each row against the one before – is
+to be settled with animetric's angular velocity from orientation
+(animovement/animetric#85). The other three are stable.
 Rows with NA are skipped by quat_mean() and carried through by the
 others."><meta property="og:description" content="
 
@@ -34,6 +39,11 @@ rows, in radians per unit of dt, about the fixed frame's axes
 is NA.
 
 
+ quat_angular_velocity() is
+experimental, and may change without a deprecation cycle: how it
+differences successive rows – here, each row against the one before – is
+to be settled with animetric's angular velocity from orientation
+(animovement/animetric#85). The other three are stable.
 Rows with NA are skipped by quat_mean() and carried through by the
 others."><meta property="og:image" content="https://animovement.dev/anispace/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -101,7 +111,12 @@ wrong wherever the sign jumps.</p></li>
 rows, in radians per unit of <code>dt</code>, about the fixed frame's axes
 (<code>frame = "fixed"</code>) or the body's own (<code>frame = "body"</code>). The first row
 is <code>NA</code>.</p></li>
-</ul><p>Rows with <code>NA</code> are skipped by <code>quat_mean()</code> and carried through by the
+</ul><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> <code>quat_angular_velocity()</code> is
+experimental, and may change without a deprecation cycle: how it
+differences successive rows – here, each row against the one before – is
+to be settled with animetric's angular velocity from orientation
+(animovement/animetric#85). The other three are stable.</p>
+<p>Rows with <code>NA</code> are skipped by <code>quat_mean()</code> and carried through by the
 others.</p>
     </div>
 

@@ -1,5 +1,7 @@
 # Convert orientation between Euler angles and quaternions
 
+**\[experimental\]**
+
 Motion-capture software often exports 3D orientation as three Euler
 angles, but an anipoint stores 3D orientation as a unit quaternion
 (animovement/anicore#46), which has no gimbal lock and no wraparound.

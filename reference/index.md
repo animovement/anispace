@@ -51,7 +51,7 @@ interpolation, averaging and angular velocity.
   [`quat_to_matrix()`](https://animovement.dev/anispace/reference/quat_from_axis_angle.md)
   : Quaternions from and to other rotation representations
 - [`quat_from_vectors()`](https://animovement.dev/anispace/reference/quat_from_vectors.md)
-  : Quaternions from two body axes given as vectors
+  **\[experimental\]** : Quaternions from two body axes given as vectors
 - [`quat_from_euler()`](https://animovement.dev/anispace/reference/quat_from_euler.md)
   [`quat_to_euler()`](https://animovement.dev/anispace/reference/quat_from_euler.md)
   : Quaternions from and to Euler angles
@@ -59,7 +59,9 @@ interpolation, averaging and angular velocity.
   [`quat_mean()`](https://animovement.dev/anispace/reference/quat_slerp.md)
   [`quat_continuous()`](https://animovement.dev/anispace/reference/quat_slerp.md)
   [`quat_angular_velocity()`](https://animovement.dev/anispace/reference/quat_slerp.md)
-  : Interpolate, average and differentiate rotations
+  **\[experimental\]** : Interpolate, average and differentiate
+  rotations
 - [`transform_euler_to_quaternion()`](https://animovement.dev/anispace/reference/transform_euler_to_quaternion.md)
   [`transform_quaternion_to_euler()`](https://animovement.dev/anispace/reference/transform_euler_to_quaternion.md)
-  : Convert orientation between Euler angles and quaternions
+  **\[experimental\]** : Convert orientation between Euler angles and
+  quaternions

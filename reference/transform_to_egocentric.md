@@ -46,9 +46,10 @@ transform_to_egocentric(
 
   Optionally, how to rotate. Two or three values of `level` define the
   axes: two give a direction, and in 3D a third fixes the roll about it.
-  `"orientation"` turns each subject to face `+x` by its declared
-  orientation; see below. Omitted, the frame is re-centred and left as
-  it was oriented.
+  **\[experimental\]** `"orientation"` turns each subject to face `+x`
+  by its declared orientation; see below. This option is experimental,
+  and may change without a deprecation cycle. Omitted, the frame is
+  re-centred and left as it was oriented.
 
 - level:
 
@@ -120,9 +121,9 @@ transform_to_egocentric(
 #> 1          1 head                 1     1     1 0      0             0.919
 #> 2          1 head                 1     1     2 0      0             0.659
 #> 3          1 head                 1     1     3 0      0             0.795
-#> 4          1 neck                 1     1     1 0.501 -2.78e-17      0.585
-#> 5          1 neck                 1     1     2 1.39  -1.67e-16      0.621
-#> 6          1 neck                 1     1     3 1.23   0             0.942
+#> 4          1 neck                 1     1     1 0.501 -1.49e-17      0.585
+#> 5          1 neck                 1     1     2 1.39  -1.75e-16      0.621
+#> 6          1 neck                 1     1     3 1.23  -1.14e-17      0.942
 #> 7          1 shoulder_right       1     1     1 1.42   3.56e- 1      0.661
 #> 8          1 shoulder_right       1     1     2 2.19   1.42e+ 0      0.450
 #> 9          1 shoulder_right       1     1     3 1.50  -4.54e- 1      0.186

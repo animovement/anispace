@@ -50,6 +50,8 @@ interpolation, averaging and angular velocity.
   [`quat_from_matrix()`](https://animovement.dev/anispace/reference/quat_from_axis_angle.md)
   [`quat_to_matrix()`](https://animovement.dev/anispace/reference/quat_from_axis_angle.md)
   : Quaternions from and to other rotation representations
+- [`quat_from_vectors()`](https://animovement.dev/anispace/reference/quat_from_vectors.md)
+  : Quaternions from two body axes given as vectors
 - [`quat_from_euler()`](https://animovement.dev/anispace/reference/quat_from_euler.md)
   [`quat_to_euler()`](https://animovement.dev/anispace/reference/quat_from_euler.md)
   : Quaternions from and to Euler angles

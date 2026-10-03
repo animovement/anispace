@@ -4,6 +4,15 @@
 
 ### Added
 
+- `quat_from_vectors(primary, secondary, axes)` builds the orientation
+  whose body axis `axes[1]` points along `primary` and whose `axes[2]`
+  points towards `secondary`, using only the part of `secondary`
+  perpendicular to `primary`. Three points define an orientation this
+  way: one axis from the first point to the second, and roll fixed by
+  any third point off that line. It is the primitive behind animetric’s
+  planned `add_orientation()` (animovement/animetric#97). Rows with a
+  missing or zero vector, or parallel vectors, give `NA`.
+
 - `transform_to_egocentric(align = "orientation")` aligns each subject
   by its own declared orientation
   ([\#49](https://github.com/animovement/anispace/issues/49)). Alignment

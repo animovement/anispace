@@ -6,11 +6,12 @@ test_that("cartesian_to_rho() computes Euclidean distance correctly", {
 })
 
 test_that("cartesian_to_phi() behaves consistently with atan2()", {
-  # helper to compare with true atan2
+  # cartesian_to_phi() returns [0, 2pi), so the references name that range
+  # rather than relying on wrap_angle()'s default (animovement/anicore#181)
   truth <- atan2(1, 1)
   expect_equal(
     cartesian_to_phi(1, 1),
-    anicore::wrap_angle(truth),
+    anicore::wrap_angle(truth, "2pi"),
     tolerance = 1e-8
   )
 
@@ -24,7 +25,7 @@ test_that("cartesian_to_phi() behaves consistently with atan2()", {
   for (q in xy) {
     expect_equal(
       cartesian_to_phi(q[1], q[2]),
-      anicore::wrap_angle(atan2(q[2], q[1])),
+      anicore::wrap_angle(atan2(q[2], q[1]), "2pi"),
       tolerance = 1e-8
     )
   }
@@ -73,7 +74,7 @@ test_that("cartesian_to_phi() should match atan2() for key reference points", {
   results <- sapply(test_points, function(pt) cartesian_to_phi(pt[1], pt[2]))
 
   ## Constrain the reference angles and compare
-  expected_constrained <- sapply(expected_angles, anicore::wrap_angle)
+  expected_constrained <- sapply(expected_angles, anicore::wrap_angle, "2pi")
 
   expect_equal(results, expected_constrained, tolerance = 1e-8)
 })

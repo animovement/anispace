@@ -9,7 +9,7 @@ polar_to_x(rho, phi)
 \arguments{
 \item{rho}{A numeric vector of radial distances.}
 
-\item{phi}{A numeric vector of azimuth angles, in radians.}
+\item{phi}{A numeric vector of azimuth angles, in radians, in any range.}
 }
 \value{
 A numeric vector of x-coordinates.

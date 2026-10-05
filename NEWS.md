@@ -1,5 +1,9 @@
 # anispace (development version)
 
+## Breaking changes
+
+* `map_to_polar()`, `map_to_cylindrical()` and `map_to_spherical()` write `phi` in `(-pi, pi]`, or `(-180, 180]` in a degrees frame, instead of `[0, 2 * pi)` (#59). So does `cartesian_to_phi()`, in radians. This is the signed range the suite uses for every direction (animovement/anicore#181), so `phi` now reads like a heading or a course: a point below the x-axis has a negative azimuth, and a point on the negative x-axis has `pi`. No direction changes, only how it is written, and `map_to_cartesian()` reads either range. For the old range, wrap at the end: `anicore::wrap_angle(phi, "2pi")` in radians, or `phi %% 360` in a degrees frame.
+
 ## Added
 
 * `quat_from_vectors(primary, secondary, axes)` builds the orientation whose body axis `axes[1]` points along `primary` and whose `axes[2]` points towards `secondary`, using only the part of `secondary` perpendicular to `primary`. Three points define an orientation this way: one axis from the first point to the second, and roll fixed by any third point off that line. It is the primitive behind animetric's planned `add_orientation()` (animovement/animetric#97). Rows with a missing or zero vector, or parallel vectors, give `NA`.
@@ -13,6 +17,10 @@
 * Help pages show each function's lifecycle stage (animovement/.github#46). An unlabelled function is stable, and changes only through a deprecation cycle. Five new interfaces are labelled experimental, so they may still change without one: `transform_euler_to_quaternion()` and `transform_quaternion_to_euler()`, `quat_from_vectors()`, `quat_angular_velocity()`, and `transform_to_egocentric(align = "orientation")`. The rest of the quaternion toolkit, and aligning on members, are stable.
 
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). The transforms now require an anipoint, so the error for other input reads "not an anipoint".
+
+## Deprecated
+
+* `cartesian_to_phi(centered)` is deprecated (#59). The result is always in `(-pi, pi]`, which `centered = TRUE` used to ask for. `centered = FALSE` still gives `[0, 2 * pi)`, with a warning; use `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
 
 ## Fixed
 

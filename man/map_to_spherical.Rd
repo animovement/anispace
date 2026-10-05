@@ -17,7 +17,9 @@ convention of ISO 80000-2.
 }
 \description{
 The Cartesian columns are read from the frame's declared axes, so they can
-have any name. \code{phi} and \code{theta} are written in the frame's \code{unit_angle}.
+have any name. \code{phi} and \code{theta} are written in the frame's \code{unit_angle}:
+\code{phi} in \verb{(-pi, pi]} or \verb{(-180, 180]} (see \code{\link[=cartesian_to_phi]{cartesian_to_phi()}}), and
+\code{theta} in \verb{[0, pi]} or \verb{[0, 180]}.
 }
 \examples{
 af <- anicore::example_anipoint(

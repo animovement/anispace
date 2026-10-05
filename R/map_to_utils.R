@@ -26,30 +26,58 @@ cartesian_to_rho <- function(x, y, z = NULL) {
 #' Azimuth (phi) from Cartesian coordinates
 #'
 #' Returns the planar angle measured from the positive x-axis towards the
-#' positive y-axis.
+#' positive y-axis, in `(-pi, pi]`. That is the signed range the animovement
+#' suite uses for every direction (see [anicore::wrap_angle()]), and the one
+#' [atan2()] gives, except that a point on the negative x-axis is `pi`, never
+#' `-pi`. For `[0, 2 * pi)`, wrap the result with
+#' `anicore::wrap_angle(phi, "2pi")`.
 #'
 #' @param x A numeric vector of x-coordinates.
 #' @param y A numeric vector of y-coordinates.
-#' @param centered A logical value (default `FALSE`) determining the range of
-#'   the result. `FALSE` maps angles to `[0, 2*pi)`; `TRUE` keeps the native
-#'   [atan2()] range of `[-pi, pi]`.
-#' @return A numeric vector of azimuth angles in radians.
+#' @param centered `r lifecycle::badge("deprecated")` The result is always in
+#'   `(-pi, pi]`, which `centered = TRUE` used to ask for. `centered = FALSE`
+#'   still gives `[0, 2 * pi)`, with a warning, until the argument is removed;
+#'   use `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
+#' @return A numeric vector of azimuth angles in radians, in `(-pi, pi]`.
 #' @family coordinate conversion
 #' @examples
 #' cartesian_to_phi(1, 1)
 #'
-#' # The two ranges differ for points below the x-axis
+#' # Below the x-axis, the azimuth is negative
 #' cartesian_to_phi(-1, -1)
-#' cartesian_to_phi(-1, -1, centered = TRUE)
+#'
+#' # On the negative x-axis, it is pi
+#' cartesian_to_phi(-1, 0)
+#'
+#' # For [0, 2 * pi), wrap the result
+#' anicore::wrap_angle(cartesian_to_phi(-1, -1), "2pi")
 #' @export
-cartesian_to_phi <- function(x, y, centered = FALSE) {
+cartesian_to_phi <- function(x, y, centered = deprecated()) {
   # atan2(y, x) returns angles in [-pi, pi]
   angle <- atan2(y, x)
 
-  if (!centered) {
-    # map to [0, 2*pi)
-    angle <- (angle %% (2 * pi))
+  if (lifecycle::is_present(centered)) {
+    if (isTRUE(centered)) {
+      lifecycle::deprecate_warn(
+        "0.4.0",
+        "cartesian_to_phi(centered)",
+        details = "The result is always in (-pi, pi], so it is not needed."
+      )
+    } else {
+      lifecycle::deprecate_warn(
+        "0.4.0",
+        "cartesian_to_phi(centered)",
+        details = paste(
+          "For [0, 2 * pi), use",
+          "`anicore::wrap_angle(cartesian_to_phi(x, y), \"2pi\")`."
+        )
+      )
+      return(angle %% (2 * pi))
+    }
   }
+
+  # -pi and pi are the same direction; the signed range keeps pi
+  angle[!is.na(angle) & angle == -pi] <- pi
   angle
 }
 
@@ -90,7 +118,7 @@ cartesian_to_theta <- function(x, y, z) {
 #' Cartesian x-coordinate from polar coordinates
 #'
 #' @param rho A numeric vector of radial distances.
-#' @param phi A numeric vector of azimuth angles, in radians.
+#' @param phi A numeric vector of azimuth angles, in radians, in any range.
 #' @return A numeric vector of x-coordinates.
 #' @family coordinate conversion
 #' @examples
@@ -103,7 +131,7 @@ polar_to_x <- function(rho, phi) {
 #' Cartesian y-coordinate from polar coordinates
 #'
 #' @param rho A numeric vector of radial distances.
-#' @param phi A numeric vector of azimuth angles, in radians.
+#' @param phi A numeric vector of azimuth angles, in radians, in any range.
 #' @return A numeric vector of y-coordinates.
 #' @family coordinate conversion
 #' @examples

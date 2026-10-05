@@ -26,7 +26,7 @@ degrees <- function(frame) round(as.data.frame(frame)$phi * 180 / pi, 6)
 
 test_that("phi is measured from +x toward +y, whatever the frame declares", {
   expect_equal(degrees(map_to_polar(sweep("up"))), c(0, 45, 90))
-  expect_equal(degrees(map_to_polar(sweep("down"))), c(0, 315, 270))
+  expect_equal(degrees(map_to_polar(sweep("down"))), c(0, -45, -90))
 })
 
 test_that("the declared sense survives the transform", {

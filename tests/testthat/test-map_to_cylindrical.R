@@ -12,6 +12,6 @@ test_that("map_to_cylindrical() correctly converts simple Cartesian data", {
 
   expect_true(anicore::is_cylindrical(cyl))
   expect_equal(cyl$rho, c(1, 1, 1, 1), tolerance = 1e-8)
-  expect_equal(cyl$phi, c(0, pi / 2, pi, 3 * pi / 2), tolerance = 1e-8)
+  expect_equal(cyl$phi, c(0, pi / 2, pi, -pi / 2), tolerance = 1e-8)
   expect_equal(cyl$z, df$z)
 })

@@ -4,30 +4,40 @@
 \alias{cartesian_to_phi}
 \title{Azimuth (phi) from Cartesian coordinates}
 \usage{
-cartesian_to_phi(x, y, centered = FALSE)
+cartesian_to_phi(x, y, centered = deprecated())
 }
 \arguments{
 \item{x}{A numeric vector of x-coordinates.}
 
 \item{y}{A numeric vector of y-coordinates.}
 
-\item{centered}{A logical value (default \code{FALSE}) determining the range of
-the result. \code{FALSE} maps angles to \verb{[0, 2*pi)}; \code{TRUE} keeps the native
-\code{\link[=atan2]{atan2()}} range of \verb{[-pi, pi]}.}
+\item{centered}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} The result is always in
+\verb{(-pi, pi]}, which \code{centered = TRUE} used to ask for. \code{centered = FALSE}
+still gives \verb{[0, 2 * pi)}, with a warning, until the argument is removed;
+use \code{anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")} instead.}
 }
 \value{
-A numeric vector of azimuth angles in radians.
+A numeric vector of azimuth angles in radians, in \verb{(-pi, pi]}.
 }
 \description{
 Returns the planar angle measured from the positive x-axis towards the
-positive y-axis.
+positive y-axis, in \verb{(-pi, pi]}. That is the signed range the animovement
+suite uses for every direction (see \code{\link[anicore:wrap_angle]{anicore::wrap_angle()}}), and the one
+\code{\link[=atan2]{atan2()}} gives, except that a point on the negative x-axis is \code{pi}, never
+\code{-pi}. For \verb{[0, 2 * pi)}, wrap the result with
+\code{anicore::wrap_angle(phi, "2pi")}.
 }
 \examples{
 cartesian_to_phi(1, 1)
 
-# The two ranges differ for points below the x-axis
+# Below the x-axis, the azimuth is negative
 cartesian_to_phi(-1, -1)
-cartesian_to_phi(-1, -1, centered = TRUE)
+
+# On the negative x-axis, it is pi
+cartesian_to_phi(-1, 0)
+
+# For [0, 2 * pi), wrap the result
+anicore::wrap_angle(cartesian_to_phi(-1, -1), "2pi")
 }
 \seealso{
 Other coordinate conversion:

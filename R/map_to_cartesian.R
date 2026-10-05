@@ -4,7 +4,9 @@
 #' currently polar, cylindrical or spherical.
 #'
 #' The polar columns are read from the frame's declared axes, so they can
-#' have any name, and the angles in the frame's `unit_angle`.
+#' have any name, and the angles in the frame's `unit_angle`. `phi` can be in
+#' any range: `(-pi, pi]`, as [map_to_polar()] writes it, `[0, 2 * pi)`, or
+#' unwrapped.
 #'
 #' @param data An aniframe in a polar, cylindrical or spherical coordinate
 #'   system.

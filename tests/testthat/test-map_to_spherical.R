@@ -12,7 +12,7 @@ test_that("map_to_spherical() correctly converts simple Cartesian data", {
 
   expect_true(anicore::is_spherical(sph))
   expect_equal(sph$rho, c(1, 1, 1, 1), tolerance = 1e-8)
-  expect_equal(sph$phi, c(0, pi / 2, pi, 3 * pi / 2), tolerance = 1e-8)
+  expect_equal(sph$phi, c(0, pi / 2, pi, -pi / 2), tolerance = 1e-8)
   # With z = 0 every point lies in the xy-plane, a quarter turn from +z
   expect_equal(sph$theta, rep(pi / 2, 4), tolerance = 1e-8)
 })

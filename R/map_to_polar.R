@@ -1,7 +1,8 @@
 #' Map from Cartesian to polar coordinates
 #'
 #' The Cartesian columns are read from the frame's declared axes, so they can
-#' have any name. `phi` is written in the frame's `unit_angle`.
+#' have any name. `phi` is written in the frame's `unit_angle`, in `(-pi, pi]`
+#' or `(-180, 180]` (see [cartesian_to_phi()]).
 #'
 #' @param data An aniframe in a Cartesian coordinate system.
 #' @return An aniframe with `rho` and `phi` in place of `x` and `y`.

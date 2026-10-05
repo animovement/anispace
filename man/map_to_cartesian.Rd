@@ -20,7 +20,9 @@ currently polar, cylindrical or spherical.
 }
 \details{
 The polar columns are read from the frame's declared axes, so they can
-have any name, and the angles in the frame's \code{unit_angle}.
+have any name, and the angles in the frame's \code{unit_angle}. \code{phi} can be in
+any range: \verb{(-pi, pi]}, as \code{\link[=map_to_polar]{map_to_polar()}} writes it, \verb{[0, 2 * pi)}, or
+unwrapped.
 }
 \examples{
 af <- anicore::example_anipoint(n_obs = 5, n_individuals = 1, n_keypoints = 1)

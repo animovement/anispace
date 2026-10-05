@@ -14,7 +14,8 @@ An aniframe with \code{rho} and \code{phi} in place of \code{x} and \code{y}, ke
 }
 \description{
 The Cartesian columns are read from the frame's declared axes, so they can
-have any name. \code{phi} is written in the frame's \code{unit_angle}.
+have any name. \code{phi} is written in the frame's \code{unit_angle}, in \verb{(-pi, pi]}
+or \verb{(-180, 180]} (see \code{\link[=cartesian_to_phi]{cartesian_to_phi()}}).
 }
 \examples{
 af <- anicore::example_anipoint(

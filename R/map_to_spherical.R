@@ -1,7 +1,9 @@
 #' Map from Cartesian to spherical coordinates
 #'
 #' The Cartesian columns are read from the frame's declared axes, so they can
-#' have any name. `phi` and `theta` are written in the frame's `unit_angle`.
+#' have any name. `phi` and `theta` are written in the frame's `unit_angle`:
+#' `phi` in `(-pi, pi]` or `(-180, 180]` (see [cartesian_to_phi()]), and
+#' `theta` in `[0, pi]` or `[0, 180]`.
 #'
 #' @param data An aniframe in a Cartesian coordinate system.
 #' @return An aniframe with `rho`, `phi` and `theta` in place of `x`, `y` and

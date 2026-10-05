@@ -5,35 +5,67 @@ test_that("cartesian_to_rho() computes Euclidean distance correctly", {
   expect_equal(cartesian_to_rho(1, 0), 1)
 })
 
-test_that("cartesian_to_phi() behaves consistently with atan2()", {
-  # cartesian_to_phi() returns [0, 2pi), so the references name that range
-  # rather than relying on wrap_angle()'s default (animovement/anicore#181)
-  truth <- atan2(1, 1)
-  expect_equal(
-    cartesian_to_phi(1, 1),
-    anicore::wrap_angle(truth, "2pi"),
-    tolerance = 1e-8
-  )
+test_that("cartesian_to_phi() is atan2() in every quadrant", {
+  # Signed, (-pi, pi], the range the suite uses for every direction
+  # (animovement/anicore#181)
+  x <- c(1, -1, -1, 1, 3, -0.2, -5, 0.1)
+  y <- c(1, 1, -1, -1, 0.5, 4, -0.3, -2)
 
-  # Test all quadrants
-  xy <- list(
-    Q1 = c(1, 1),
-    Q2 = c(-1, 1),
-    Q3 = c(-1, -1),
-    Q4 = c(1, -1)
-  )
-  for (q in xy) {
-    expect_equal(
-      cartesian_to_phi(q[1], q[2]),
-      anicore::wrap_angle(atan2(q[2], q[1]), "2pi"),
-      tolerance = 1e-8
-    )
-  }
+  phi <- cartesian_to_phi(x, y)
+
+  expect_identical(phi, atan2(y, x))
+  expect_equal(phi[1:4], c(1, 3, -3, -1) * pi / 4)
 })
 
-test_that("cartesian_to_phi() centers correctly when centered = TRUE", {
-  phi <- cartesian_to_phi(1, -1, centered = TRUE)
-  expect_true(phi >= -pi && phi <= pi)
+test_that("cartesian_to_phi() puts the axes at 0, pi / 2, pi and -pi / 2", {
+  expect_identical(
+    cartesian_to_phi(c(1, 0, -1, 0), c(0, 1, 0, -1)),
+    c(0, pi / 2, pi, -pi / 2)
+  )
+})
+
+test_that("cartesian_to_phi() gives pi, not -pi, on the negative x-axis", {
+  # atan2() gives -pi when y is a negative zero; it is the same direction
+  expect_identical(atan2(-0, -1), -pi)
+  expect_identical(cartesian_to_phi(-1, 0), pi)
+  expect_identical(cartesian_to_phi(-1, -0), pi)
+  expect_identical(cartesian_to_phi(c(-2, -0.5), c(-0, 0)), c(pi, pi))
+})
+
+test_that("cartesian_to_phi() stays in (-pi, pi]", {
+  grid <- expand.grid(x = seq(-3, 3, by = 0.25), y = seq(-3, 3, by = 0.25))
+  x <- c(grid$x, -1, 0)
+  y <- c(grid$y, -0, -0)
+
+  phi <- cartesian_to_phi(x, y)
+
+  expect_true(all(phi > -pi & phi <= pi))
+})
+
+test_that("cartesian_to_phi() keeps missing values", {
+  expect_identical(
+    cartesian_to_phi(c(-1, NA, 1, NaN), c(-0, 1, NA, 1)),
+    c(pi, NA, NA, NaN)
+  )
+})
+
+test_that("cartesian_to_phi(centered) is deprecated", {
+  x <- c(1, -1, -1, 1, -1)
+  y <- c(1, 1, -1, -1, -0)
+
+  expect_warning(
+    signed <- cartesian_to_phi(x, y, centered = TRUE),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_identical(signed, cartesian_to_phi(x, y))
+
+  # FALSE keeps the [0, 2pi) it used to give, until the argument goes
+  expect_warning(
+    unsigned <- cartesian_to_phi(x, y, centered = FALSE),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_equal(unsigned, c(1, 3, 5, 7, 4) * pi / 4)
+  expect_equal(unsigned, anicore::wrap_angle(cartesian_to_phi(x, y), "2pi"))
 })
 
 test_that("polar_to_x() and polar_to_y() correctly invert Cartesian coordinates", {
@@ -43,63 +75,23 @@ test_that("polar_to_x() and polar_to_y() correctly invert Cartesian coordinates"
   expect_equal(polar_to_y(rho, phi), 1, tolerance = 1e-8)
 })
 
+test_that("polar_to_x() and polar_to_y() accept phi in any range", {
+  rho <- c(1, 2, 3, 4)
+  signed <- c(3 * pi / 4, -3 * pi / 4, -pi / 4, pi)
+  unsigned <- c(3 * pi / 4, 5 * pi / 4, 7 * pi / 4, pi)
+  unwrapped <- signed + c(2, -2, 4, -4) * pi
+  x <- c(-1, -2, 3, -4 * sqrt(2)) / sqrt(2)
+  y <- c(1, -2, -3, 0) / sqrt(2)
+
+  for (phi in list(signed, unsigned, unwrapped)) {
+    expect_equal(polar_to_x(rho, phi), x, tolerance = 1e-12)
+    expect_equal(polar_to_y(rho, phi), y, tolerance = 1e-12)
+  }
+})
+
 test_that("polar_to_x() and polar_to_y() handle zero radius correctly", {
   expect_equal(polar_to_x(0, 1), 0)
   expect_equal(polar_to_y(0, 2), 0)
-})
-
-# -------------------------------------------------------------------------
-# 🚨 Extra diagnostic tests (for updated cartesian_to_phi)
-# -------------------------------------------------------------------------
-
-test_that("cartesian_to_phi() should match atan2() for key reference points", {
-  ## True values using atan2(y, x)
-  expected_angles <- c(
-    atan2(1, 0), # (x = 0, y = 1) → π/2
-    atan2(0, 1), # (x = 1, y = 0) → 0
-    atan2(-1, 0), # (x = 0, y = -1) → -π/2
-    atan2(0, -1) # (x = -1, y = 0) → π (or -π)
-  )
-
-  ## Test points as a list of (x, y) pairs
-  test_points <- list(
-    c(0, 1), # straight up
-    c(1, 0), # right
-    c(0, -1), # down
-    c(-1, 0) # left
-  )
-
-  ## Compute the angles from cartesian_to_phi for each point
-  ## sapply returns a numeric vector (same as map_dbl)
-  results <- sapply(test_points, function(pt) cartesian_to_phi(pt[1], pt[2]))
-
-  ## Constrain the reference angles and compare
-  expected_constrained <- sapply(expected_angles, anicore::wrap_angle, "2pi")
-
-  expect_equal(results, expected_constrained, tolerance = 1e-8)
-})
-
-test_that("cartesian_to_phi() handles axes and quadrants correctly", {
-  # The current implementation will incorrectly swap x/y
-  # This test will fail until cartesian_to_phi() uses atan2(y, x)
-
-  # Expect roughly 0 radians at (x>0, y=0)
-  expect_true(abs(cartesian_to_phi(1, 0) - 0) < 1e-8)
-
-  # Expect roughly pi/2 radians at (x=0, y>0)
-  expect_true(abs(cartesian_to_phi(0, 1) - pi / 2) < 1e-8)
-
-  # Expect roughly pi radians at (x<0, y=0)
-  expect_true(abs(abs(cartesian_to_phi(-1, 0)) - pi) < 1e-8)
-
-  # Expect roughly -pi/2 radians at (x=0, y<0)
-  expect_true(
-    anicore::circ_difference(
-      abs(cartesian_to_phi(0, -1) + pi / 2),
-      0
-    ) <
-      1e-8
-  )
 })
 
 # -------------------------------------------------------------

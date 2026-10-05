@@ -16,7 +16,7 @@ polar_to_x(rho, phi)
 
 - phi:
 
-  A numeric vector of azimuth angles, in radians.
+  A numeric vector of azimuth angles, in radians, in any range.
 
 ## Value
 

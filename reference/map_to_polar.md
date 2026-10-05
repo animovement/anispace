@@ -1,7 +1,9 @@
 # Map from Cartesian to polar coordinates
 
 The Cartesian columns are read from the frame's declared axes, so they
-can have any name. `phi` is written in the frame's `unit_angle`.
+can have any name. `phi` is written in the frame's `unit_angle`, in
+`(-pi, pi]` or `(-180, 180]` (see
+[`cartesian_to_phi()`](https://animovement.dev/anispace/reference/cartesian_to_phi.md)).
 
 ## Usage
 
@@ -37,11 +39,11 @@ map_to_polar(af)
 #> # Keypoints:   centroid
 #> # Sessions:    1
 #> # Trials:      1
-#>   individual keypoint session trial  time   rho   phi confidence
-#>        <int> <fct>      <int> <int> <int> <dbl> <dbl>      <dbl>
-#> 1          1 centroid       1     1     1 0.303 2.74       0.724
-#> 2          1 centroid       1     1     2 1.94  4.55       0.762
-#> 3          1 centroid       1     1     3 1.37  0.679      0.616
-#> 4          1 centroid       1     1     4 0.253 4.99       0.705
-#> 5          1 centroid       1     1     5 0.672 3.45       0.583
+#>   individual keypoint session trial  time   rho    phi confidence
+#>        <int> <fct>      <int> <int> <int> <dbl>  <dbl>      <dbl>
+#> 1          1 centroid       1     1     1 0.303  2.74       0.724
+#> 2          1 centroid       1     1     2 1.94  -1.73       0.762
+#> 3          1 centroid       1     1     3 1.37   0.679      0.616
+#> 4          1 centroid       1     1     4 0.253 -1.29       0.705
+#> 5          1 centroid       1     1     5 0.672 -2.83       0.583
 ```

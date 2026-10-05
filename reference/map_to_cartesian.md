@@ -23,7 +23,10 @@ three-dimensional) in place of the polar columns.
 ## Details
 
 The polar columns are read from the frame's declared axes, so they can
-have any name, and the angles in the frame's `unit_angle`.
+have any name, and the angles in the frame's `unit_angle`. `phi` can be
+in any range: `(-pi, pi]`, as
+[`map_to_polar()`](https://animovement.dev/anispace/reference/map_to_polar.md)
+writes it, `[0, 2 * pi)`, or unwrapped.
 
 ## See also
 

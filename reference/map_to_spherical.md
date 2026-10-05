@@ -2,7 +2,9 @@
 
 The Cartesian columns are read from the frame's declared axes, so they
 can have any name. `phi` and `theta` are written in the frame's
-`unit_angle`.
+`unit_angle`: `phi` in `(-pi, pi]` or `(-180, 180]` (see
+[`cartesian_to_phi()`](https://animovement.dev/anispace/reference/cartesian_to_phi.md)),
+and `theta` in `[0, pi]` or `[0, 180]`.
 
 ## Usage
 
@@ -41,11 +43,11 @@ map_to_spherical(af)
 #> # Keypoints:   centroid
 #> # Sessions:    1
 #> # Trials:      1
-#>   individual keypoint session trial  time   rho    phi theta confidence
-#>        <int> <fct>      <int> <int> <int> <dbl>  <dbl> <dbl>      <dbl>
-#> 1          1 centroid       1     1     1 0.547 4.79   0.467      0.782
-#> 2          1 centroid       1     1     2 2.07  4.74   2.54       0.669
-#> 3          1 centroid       1     1     3 1.85  5.23   2.49       0.450
-#> 4          1 centroid       1     1     4 2.53  2.70   1.46       0.830
-#> 5          1 centroid       1     1     5 3.00  0.0490 1.11       0.438
+#>   individual keypoint session trial  time   rho     phi theta confidence
+#>        <int> <fct>      <int> <int> <int> <dbl>   <dbl> <dbl>      <dbl>
+#> 1          1 centroid       1     1     1 0.547 -1.49   0.467      0.782
+#> 2          1 centroid       1     1     2 2.07  -1.55   2.54       0.669
+#> 3          1 centroid       1     1     3 1.85  -1.06   2.49       0.450
+#> 4          1 centroid       1     1     4 2.53   2.70   1.46       0.830
+#> 5          1 centroid       1     1     5 3.00   0.0490 1.11       0.438
 ```

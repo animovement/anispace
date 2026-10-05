@@ -79,7 +79,9 @@ three-dimensional) in place of the polar columns.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The polar columns are read from the frame's declared axes, so they can
-have any name, and the angles in the frame's <code>unit_angle</code>.</p>
+have any name, and the angles in the frame's <code>unit_angle</code>. <code>phi</code> can be in
+any range: <code>(-pi, pi]</code>, as <code><a href="map_to_polar.html">map_to_polar()</a></code> writes it, <code>[0, 2 * pi)</code>, or
+unwrapped.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

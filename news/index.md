@@ -2,6 +2,26 @@
 
 ## anispace (development version)
 
+### Breaking changes
+
+- [`map_to_polar()`](https://animovement.dev/anispace/reference/map_to_polar.md),
+  [`map_to_cylindrical()`](https://animovement.dev/anispace/reference/map_to_cylindrical.md)
+  and
+  [`map_to_spherical()`](https://animovement.dev/anispace/reference/map_to_spherical.md)
+  write `phi` in `(-pi, pi]`, or `(-180, 180]` in a degrees frame,
+  instead of `[0, 2 * pi)`
+  ([\#59](https://github.com/animovement/anispace/issues/59)). So does
+  [`cartesian_to_phi()`](https://animovement.dev/anispace/reference/cartesian_to_phi.md),
+  in radians. This is the signed range the suite uses for every
+  direction (animovement/anicore#181), so `phi` now reads like a heading
+  or a course: a point below the x-axis has a negative azimuth, and a
+  point on the negative x-axis has `pi`. No direction changes, only how
+  it is written, and
+  [`map_to_cartesian()`](https://animovement.dev/anispace/reference/map_to_cartesian.md)
+  reads either range. For the old range, wrap at the end:
+  `anicore::wrap_angle(phi, "2pi")` in radians, or `phi %% 360` in a
+  degrees frame.
+
 ### Added
 
 - `quat_from_vectors(primary, secondary, axes)` builds the orientation
@@ -80,6 +100,14 @@
 - Works with anicore’s `anipoint` class and rebuilt accessor API
   (animovement/anicore#154). The transforms now require an anipoint, so
   the error for other input reads “not an anipoint”.
+
+### Deprecated
+
+- `cartesian_to_phi(centered)` is deprecated
+  ([\#59](https://github.com/animovement/anispace/issues/59)). The
+  result is always in `(-pi, pi]`, which `centered = TRUE` used to ask
+  for. `centered = FALSE` still gives `[0, 2 * pi)`, with a warning; use
+  `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
 
 ### Fixed
 

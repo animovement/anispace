@@ -65,3 +65,8 @@ quat_mean(rbind(a, b))
 spin <- quat_from_axis_angle(c(0, 0, 1), seq(0, 1, by = 0.1))
 quat_angular_velocity(spin, dt = 1 / 30)
 }
+\references{
+Markley, F. L., Cheng, Y., Crassidis, J. L., & Oshman, Y. (2007).
+Averaging quaternions. \emph{Journal of Guidance, Control, and Dynamics},
+30(4), 1193-1197. \doi{10.2514/1.28949}.
+}

@@ -22,6 +22,12 @@ data*
 The primary aim of the *anispace* package is to provide spatial
 transformation methods for movement data.
 
+Most of *anispace* is stable. A few newer interfaces are experimental,
+and may still change without a deprecation cycle:
+`transform_euler_to_quaternion()`, `transform_quaternion_to_euler()`,
+`quat_from_vectors()`, `quat_angular_velocity()` and
+`transform_to_egocentric(align = "orientation")`.
+
 ## Installation
 
 You can install the development version of *anispace* with:

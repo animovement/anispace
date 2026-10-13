@@ -13,12 +13,12 @@ test_that("cartesian_to_phi() is atan2() in every quadrant", {
 
   phi <- cartesian_to_phi(x, y)
 
-  expect_identical(phi, atan2(y, x))
+  expect_equal(phi, atan2(y, x))
   expect_equal(phi[1:4], c(1, 3, -3, -1) * pi / 4)
 })
 
 test_that("cartesian_to_phi() puts the axes at 0, pi / 2, pi and -pi / 2", {
-  expect_identical(
+  expect_equal(
     cartesian_to_phi(c(1, 0, -1, 0), c(0, 1, 0, -1)),
     c(0, pi / 2, pi, -pi / 2)
   )

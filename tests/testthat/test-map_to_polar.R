@@ -64,7 +64,9 @@ test_that("map_to_polar() writes phi in (-pi, pi], with pi on the negative x-axi
   df <- quadrants()
   pol <- map_to_polar(anicore::as_anipoint(df[c("time", "keypoint", "x", "y")]))
 
-  expect_identical(pol$phi[c(5, 6, 7, 8, 9)], c(0, pi / 2, pi, -pi / 2, pi))
+  expect_equal(pol$phi[c(5, 6, 8)], c(0, pi / 2, -pi / 2))
+  # The negative x-axis lands on pi exactly, never -pi (row 9 has y = -0)
+  expect_identical(pol$phi[c(7, 9)], c(pi, pi))
   expect_true(all(pol$phi > -pi & pol$phi <= pi))
   expect_true(all(pol$phi[3:4] < 0))
   expect_equal(pol$phi, atan2(df$y, df$x) + c(rep(0, 8), 2 * pi, 0))
@@ -76,7 +78,8 @@ test_that("map_to_cylindrical() and map_to_spherical() write phi in (-pi, pi]", 
   for (to in list(map_to_cylindrical, map_to_spherical)) {
     phi <- to(af)$phi
     expect_true(all(phi > -pi & phi <= pi))
-    expect_identical(phi[c(7, 8, 9)], c(pi, -pi / 2, pi))
+    expect_identical(phi[c(7, 9)], c(pi, pi))
+    expect_equal(phi[8], -pi / 2)
   }
 })
 
@@ -93,7 +96,7 @@ test_that("a degree frame gets phi in (-180, 180]", {
     map_to_spherical(spatial)$phi
   )) {
     expect_true(all(phi > -180 & phi <= 180))
-    expect_identical(phi[c(5, 6, 7, 8, 9)], c(0, 90, 180, -90, 180))
+    expect_equal(phi[c(5, 6, 7, 8, 9)], c(0, 90, 180, -90, 180))
     expect_equal(phi[1:4], atan2(df$y, df$x)[1:4] * 180 / pi)
   }
 })

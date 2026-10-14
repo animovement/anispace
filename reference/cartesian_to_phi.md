@@ -11,7 +11,7 @@ that a point on the negative x-axis is `pi`, never `-pi`. For
 ## Usage
 
 ``` r
-cartesian_to_phi(x, y, centered = deprecated())
+cartesian_to_phi(x, y)
 ```
 
 ## Arguments
@@ -23,13 +23,6 @@ cartesian_to_phi(x, y, centered = deprecated())
 - y:
 
   A numeric vector of y-coordinates.
-
-- centered:
-
-  **\[deprecated\]** The result is always in `(-pi, pi]`, which
-  `centered = TRUE` used to ask for. `centered = FALSE` still gives
-  `[0, 2 * pi)`, with a warning, until the argument is removed; use
-  `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
 
 ## Value
 

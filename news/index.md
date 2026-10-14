@@ -104,14 +104,6 @@
   (animovement/anicore#154). The transforms now require an anipoint, so
   the error for other input reads “not an anipoint”.
 
-### Deprecated
-
-- `cartesian_to_phi(centered)` is deprecated
-  ([\#59](https://github.com/animovement/anispace/issues/59)). The
-  result is always in `(-pi, pi]`, which `centered = TRUE` used to ask
-  for. `centered = FALSE` still gives `[0, 2 * pi)`, with a warning; use
-  `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
-
 ### Fixed
 
 - [`rotate_coords()`](https://animovement.dev/anispace/reference/rotate_coords.md),
@@ -179,6 +171,15 @@
   both directions.
 
 ### Removed
+
+- The deprecated `centered` argument of
+  [`cartesian_to_phi()`](https://animovement.dev/anispace/reference/cartesian_to_phi.md)
+  is removed ([\#59](https://github.com/animovement/anispace/issues/59),
+  [\#63](https://github.com/animovement/anispace/issues/63)). The result
+  is always in `(-pi, pi]`, which `centered = TRUE` used to ask for, so
+  drop `centered = TRUE`. For the `[0, 2 * pi)` that `centered = FALSE`
+  gave, use `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")`
+  instead.
 
 - `calculate_angular_difference()` and `diff_angle()` move to anicore,
   as `circ_difference()` and `circ_successive_difference()`

@@ -49,25 +49,6 @@ test_that("cartesian_to_phi() keeps missing values", {
   )
 })
 
-test_that("cartesian_to_phi(centered) is deprecated", {
-  x <- c(1, -1, -1, 1, -1)
-  y <- c(1, 1, -1, -1, -0)
-
-  expect_warning(
-    signed <- cartesian_to_phi(x, y, centered = TRUE),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_identical(signed, cartesian_to_phi(x, y))
-
-  # FALSE keeps the [0, 2pi) it used to give, until the argument goes
-  expect_warning(
-    unsigned <- cartesian_to_phi(x, y, centered = FALSE),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_equal(unsigned, c(1, 3, 5, 7, 4) * pi / 4)
-  expect_equal(unsigned, anicore::wrap_angle(cartesian_to_phi(x, y), "2pi"))
-})
-
 test_that("polar_to_x() and polar_to_y() correctly invert Cartesian coordinates", {
   rho <- sqrt(2)
   phi <- pi / 4

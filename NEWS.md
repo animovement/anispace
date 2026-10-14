@@ -16,10 +16,6 @@
 
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). The transforms now require an anipoint, so the error for other input reads "not an anipoint".
 
-## Deprecated
-
-* `cartesian_to_phi(centered)` is deprecated (#59). The result is always in `(-pi, pi]`, which `centered = TRUE` used to ask for. `centered = FALSE` still gives `[0, 2 * pi)`, with a warning; use `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
-
 ## Fixed
 
 * `rotate_coords()`, and through it `transform_to_egocentric()`, rotate a declared orientation along with the positions (#49). They turned the positions and left `yaw` or the quaternion as it was, so the two disagreed: aligning a body on its tail-to-head axis put the head on +x while `yaw` still gave its old heading. The orientation is now turned by the same rotation, per subject and moment. In 2D the rotation's angle is added to `yaw`, in the frame's `unit_angle`, and wrapped to the range the input used — signed if any value is negative, as `anicore::reflect_axis()` decides it. In 3D the quaternion is pre-multiplied by the rotation's, which is the side a rotation in the frame's coordinates goes on; the quaternion help now says so. The centre of rotation (`about`) plays no part, and a moment left unrotated for want of an alignment point keeps its orientation as it keeps its positions. `translate_coords()` leaves orientation alone, as before.
@@ -31,6 +27,8 @@
 * The same functions read their input columns from the frame's declared axes, so they work on frames whose columns are not called `x`, `y`, `z`, `rho`, `phi` and `theta`. They used to stop with "Column `rho` not found". A cylindrical frame's `z` keeps its column name through both directions.
 
 ## Removed
+
+* The deprecated `centered` argument of `cartesian_to_phi()` is removed (#59, #63). The result is always in `(-pi, pi]`, which `centered = TRUE` used to ask for, so drop `centered = TRUE`. For the `[0, 2 * pi)` that `centered = FALSE` gave, use `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
 
 * `calculate_angular_difference()` and `diff_angle()` move to anicore, as `circ_difference()` and `circ_successive_difference()` (animovement/anicore#147). Both are general-purpose circular primitives rather than spatial transforms — the shortest signed distance between two angles, and that distance applied along a vector — and `calculate_angular_difference()` was already a one-line wrapper over `anicore::wrap_angle()`. anicore owns the angle utilities, and keeping the circular family together means it can be split out on its own later without unpicking anispace.
 

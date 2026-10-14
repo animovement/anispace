@@ -33,6 +33,11 @@
 #' @return A quaternion matrix; `quat_mean()` returns one row;
 #'   `quat_angular_velocity()` returns a matrix with columns `x`, `y`, `z`.
 #'
+#' @references
+#' Markley, F. L., Cheng, Y., Crassidis, J. L., & Oshman, Y. (2007).
+#' Averaging quaternions. *Journal of Guidance, Control, and Dynamics*,
+#' 30(4), 1193-1197. \doi{10.2514/1.28949}.
+#'
 #' @examples
 #' a <- quat_from_axis_angle(c(0, 0, 1), 0)
 #' b <- quat_from_axis_angle(c(0, 0, 1), pi / 2)

@@ -4,17 +4,12 @@
 \alias{cartesian_to_phi}
 \title{Azimuth (phi) from Cartesian coordinates}
 \usage{
-cartesian_to_phi(x, y, centered = deprecated())
+cartesian_to_phi(x, y)
 }
 \arguments{
 \item{x}{A numeric vector of x-coordinates.}
 
 \item{y}{A numeric vector of y-coordinates.}
-
-\item{centered}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} The result is always in
-\verb{(-pi, pi]}, which \code{centered = TRUE} used to ask for. \code{centered = FALSE}
-still gives \verb{[0, 2 * pi)}, with a warning, until the argument is removed;
-use \code{anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")} instead.}
 }
 \value{
 A numeric vector of azimuth angles in radians, in \verb{(-pi, pi]}.

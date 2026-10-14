@@ -34,10 +34,6 @@ cartesian_to_rho <- function(x, y, z = NULL) {
 #'
 #' @param x A numeric vector of x-coordinates.
 #' @param y A numeric vector of y-coordinates.
-#' @param centered `r lifecycle::badge("deprecated")` The result is always in
-#'   `(-pi, pi]`, which `centered = TRUE` used to ask for. `centered = FALSE`
-#'   still gives `[0, 2 * pi)`, with a warning, until the argument is removed;
-#'   use `anicore::wrap_angle(cartesian_to_phi(x, y), "2pi")` instead.
 #' @return A numeric vector of azimuth angles in radians, in `(-pi, pi]`.
 #' @family coordinate conversion
 #' @examples
@@ -52,29 +48,9 @@ cartesian_to_rho <- function(x, y, z = NULL) {
 #' # For [0, 2 * pi), wrap the result
 #' anicore::wrap_angle(cartesian_to_phi(-1, -1), "2pi")
 #' @export
-cartesian_to_phi <- function(x, y, centered = deprecated()) {
+cartesian_to_phi <- function(x, y) {
   # atan2(y, x) returns angles in [-pi, pi]
   angle <- atan2(y, x)
-
-  if (lifecycle::is_present(centered)) {
-    if (isTRUE(centered)) {
-      lifecycle::deprecate_warn(
-        "0.4.0",
-        "cartesian_to_phi(centered)",
-        details = "The result is always in (-pi, pi], so it is not needed."
-      )
-    } else {
-      lifecycle::deprecate_warn(
-        "0.4.0",
-        "cartesian_to_phi(centered)",
-        details = paste(
-          "For [0, 2 * pi), use",
-          "`anicore::wrap_angle(cartesian_to_phi(x, y), \"2pi\")`."
-        )
-      )
-      return(angle %% (2 * pi))
-    }
-  }
 
   # -pi and pi are the same direction; the signed range keeps pi
   angle[!is.na(angle) & angle == -pi] <- pi
